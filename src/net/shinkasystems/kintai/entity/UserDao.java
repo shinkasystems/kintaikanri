@@ -1,6 +1,7 @@
 package net.shinkasystems.kintai.entity;
 
 import net.shinkasystems.kintai.KintaiDB;
+
 import org.seasar.doma.Dao;
 import org.seasar.doma.Delete;
 import org.seasar.doma.Insert;
@@ -18,6 +19,14 @@ public interface UserDao {
      */
     @Select
     User selectById(Integer id);
+    
+    /**
+     * 
+     * @param userName
+     * @return
+     */
+    @Select
+    User selectByUserName(String userName);
 
     /**
      * @param entity
