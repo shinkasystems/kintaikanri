@@ -1,0 +1,26 @@
+<wicket:extend>
+
+<h1>ログイン</h1>
+
+<form id="login-form" action="/login" method="post" class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="user-name">User Name</label>
+        <div class="controls">
+            <input type="text" name="user-name" class="span4">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="plane-password">Password</label>
+        <div class="controls">
+            <input type="password" name="plane-password" class="span4">
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="submit" name="submit" value="ログイン" class="btn">
+        </div>
+    </div>
+</form>
+
+
+</wicket:extend>

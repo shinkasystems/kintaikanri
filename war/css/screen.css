@@ -1,0 +1,16 @@
+
+
+/* レイアウト
+-----------------------------------------------------------------------------*/
+
+h1 {
+	font-size: 150%;
+	border-bottom: double;
+	border-color: #999;
+	margin: 1em 0em;
+}
+footer {
+	padding: 0.5em;
+	text-align: center;
+}
+

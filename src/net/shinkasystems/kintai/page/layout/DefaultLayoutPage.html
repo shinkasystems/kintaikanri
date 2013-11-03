@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1">
+
+	<title>勤怠管理ツール Ver.3.0</title>
+
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+
+	<!-- Bootstrap -->
+	<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+	<!-- Application -->
+	<link href="/css/screen.css" rel="stylesheet" media="screen">
+
+</head>
+<body style="padding-top: 4em;">
+
+	<header class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" href="/">勤怠管理</a>
+				<ul class="nav">
+					<li><a href="/" class="active">一覧</a></li>
+					<li><a href="/apply">申請</a></li>
+				</ul>
+				
+				<ul class="nav pull-right">
+					<li class="dropdown">
+						<a href="" class="dropdown-toggle" data-toggle="dropdown">
+							@username
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="/config"><i class="icon-user"></i> 設定</a></li>
+							<li><a href="/admin"><i class="icon-wrench"></i> 管理</a></li>
+							<li><a href="#"><i class="icon-off"></i> ログアウト</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</header>
+
+
+
+	<section class="container">
+
+<wicket:child>
+	<p>この場所にコンテンツが表示されます</p>
+</wicket:child>
+
+	</section>
+
+
+
+	<footer>
+		<div class="container">
+			&copy; 2013  シンカ・システムズ株式会社
+		</div>
+	</footer>
+
+	<!-- JQuery and Bootstrap -->
+	<script src="http://code.jquery.com/jquery.js"></script>
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

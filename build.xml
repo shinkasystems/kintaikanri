@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+	 2013/08/23
+
+	 勤怠管理ツールビルドAnt
+
+	 Aogiri
+	 ====================================================================== -->
+<project name="" default="build">
+	<description>
+		勤怠管理ツールのアプリケーションをビルドする Ant です。
+	</description>
+
+	<!-- バージョン -->
+	<property name="app.version" value="1.0" />
+
+	<!-- ビルド先 -->
+	<property name="distribution" location="${basedir}${file.separator}..${file.separator}..${file.separator}distribution" />
+
+	<!-- ビルド先 + アプリケーションディレクトリ -->
+	<property name="distribution.appdir" location="${distribution}${file.separator}kintaikanri" />
+
+	<!-- クラスパス -->
+	<path id="classpath.lib">
+		<fileset dir="${basedir}/lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<!--
+		<fileset dir="${basedir}/war">
+			<include name="**/*.jar" />
+		</fileset>
+		-->
+	</path>
+
+	<!-- クラスパス文字列 -->
+	<pathconvert property="app.classpath" refid="classpath.lib" pathsep=" ">
+		<map from="${basedir}" to="." />
+	</pathconvert>
+
+	<!-- ================================= 
+		  target: build
+		 ================================= -->
+	<target name="build" description="勤怠管理ツールをビルドします">
+
+		<delete dir="${distribution.appdir}" />
+		<mkdir dir="${distribution.appdir}" />
+
+		<echo message="${app.classpath}" />
+
+		<!-- ライブラリ -->
+		<copy todir="${distribution.appdir}/lib">
+			<fileset dir="${basedir}/lib" />
+		</copy>
+
+		<!-- WAR -->
+		<copy todir="${distribution.appdir}/war">
+			<fileset dir="${basedir}/war" />
+		</copy>
+
+		<jar destfile="${distribution.appdir}/kintaikanri.jar">
+			<manifest>
+				<attribute name="Main-Class" value="net.shinkasystems.kintai.Start" />
+				<attribute name="Class-Path" value="${app.classpath}" />
+			</manifest>
+			<fileset dir="${basedir}/bin" />
+		</jar>
+	</target>
+
+	<!-- ================================= 
+          target: build_zip              
+         ================================= -->
+	<target name="build_zip" depends="build" description="zip ファイルを生成します">
+
+		<zip zipfile="${distribution}${file.separator}kintaikanri_${app.version}.zip" basedir="${distribution.appdir}" />
+	</target>
+</project>
