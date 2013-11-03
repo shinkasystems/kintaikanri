@@ -1,0 +1,15 @@
+select
+  ID,
+  APPLICANT_ID,
+  PROXY_ID,
+  FORM,
+  TERM,
+  COMMENT_APPLYCANT,
+  COMMENT_AUTHORITY,
+  STATUS,
+  CREATE_DATE,
+  UPDATE_DATE
+from
+  APPLICATION
+where
+  ID = /* id */1
