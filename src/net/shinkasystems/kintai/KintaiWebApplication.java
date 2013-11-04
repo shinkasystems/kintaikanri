@@ -38,6 +38,7 @@ public class KintaiWebApplication extends AuthenticatedWebApplication {
 		mountPage("/config", ConfigPage.class);
 		mountPage("/admin", AdminPage.class);
 		mountPage("/signin", SignInPage.class);
+		
 	}
 
 	@Override

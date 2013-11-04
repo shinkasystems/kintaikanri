@@ -1,12 +1,16 @@
 package net.shinkasystems.kintai.page;
 
+import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.page.layout.DefaultLayoutPage;
+
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 
 /**
  * 
  * @author Aogiri
  *
  */
+@AuthorizeInstantiation({KintaiRole.CONST_ADMIN, KintaiRole.CONST_USER})
 public class IndexPage extends DefaultLayoutPage {
 
 	/**

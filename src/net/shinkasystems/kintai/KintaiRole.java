@@ -14,6 +14,12 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 public enum KintaiRole {
 
 	ADMIN("管理者"), USER("一般"), EXPIRED_USER("期限切れ");
+	
+	public static final String CONST_ADMIN = "ADMIN";
+
+	public static final String CONST_USER = "USER";
+
+	public static final String CONST_EXPIRED_USER = "EXPIRED_USER";
 
 	/**
 	 * 権限の表示名称です。
@@ -29,15 +35,8 @@ public enum KintaiRole {
 	 * 
 	 * @return
 	 */
-	public static Roles createRoles() {
-
-		String[] roles = new String[KintaiRole.values().length];
-
-		for (KintaiRole role : KintaiRole.values()) {
-			roles[role.ordinal()] = role.toString();
-		}
-
-		return new Roles(roles);
+	public Roles getWicketRoles() {
+		return new Roles(this.name());
 	}
 
 	@Override

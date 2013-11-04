@@ -1,5 +1,7 @@
 package net.shinkasystems.kintai;
 
+import java.util.Date;
+
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
@@ -18,7 +20,9 @@ import org.apache.wicket.request.Request;
  */
 public class KintaiSession extends AuthenticatedWebSession {
 	
-	private final Roles roles = KintaiRole.createRoles();
+	private User user;
+	
+	private Roles roles;
 
 	public KintaiSession(Request request) {
 		super(request);
@@ -36,13 +40,29 @@ public class KintaiSession extends AuthenticatedWebSession {
 		if (user == null || user.getPassword() != hashedPassword) {
 			return false;
 		} else {
+			
+			this.user = user;
+			
+			if (new Date().after(user.getExpireDate())) {
+				roles = KintaiRole.EXPIRED_USER.getWicketRoles();
+			} else if (KintaiRole.USER.equals(user.getRole())) {
+				roles = KintaiRole.USER.getWicketRoles();
+			} else if (KintaiRole.ADMIN.equals(user.getRole())) {
+				roles = KintaiRole.ADMIN.getWicketRoles();
+			}
+
 			return true;
 		}
 	}
 
 	@Override
 	public Roles getRoles() {
-		return roles;
+		
+		if (isSignedIn()) {
+			return roles;
+		} else {
+			return null;
+		}
 	}
 
 }
