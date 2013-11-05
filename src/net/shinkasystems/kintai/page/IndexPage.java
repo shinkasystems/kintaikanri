@@ -10,7 +10,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
  * @author Aogiri
  *
  */
-@AuthorizeInstantiation({KintaiRole.CONST_ADMIN, KintaiRole.CONST_USER})
+@AuthorizeInstantiation({KintaiRole.Constatnts.ADMIN, KintaiRole.Constatnts.USER})
 public class IndexPage extends DefaultLayoutPage {
 
 	/**

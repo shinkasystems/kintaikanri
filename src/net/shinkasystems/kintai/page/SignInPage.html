@@ -2,17 +2,17 @@
 
 <h1>サインイン</h1>
 
-<form id="login-form" action="/login" method="post" class="form-horizontal">
+<form id="signin-form" action="/login" method="post" class="form-horizontal" wicket:id="signin-form">
     <div class="control-group">
         <label class="control-label" for="user-name">User Name</label>
         <div class="controls">
-            <input type="text" name="user-name" class="span4">
+            <input type="text" name="user-name" class="span4" wicket:id="user-name">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label" for="plane-password">Password</label>
         <div class="controls">
-            <input type="password" name="plane-password" class="span4">
+            <input type="password" name="plane-password" class="span4" wicket:id="plane-password">
         </div>
     </div>
     <div class="control-group">
