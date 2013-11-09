@@ -1,11 +1,11 @@
 package net.shinkasystems.kintai;
 
-import net.shinkasystems.kintai.page.AdminPage;
-import net.shinkasystems.kintai.page.ApplyPage;
 import net.shinkasystems.kintai.page.ConfigPage;
 import net.shinkasystems.kintai.page.DetailPage;
+import net.shinkasystems.kintai.page.EntryPage;
 import net.shinkasystems.kintai.page.IndexPage;
 import net.shinkasystems.kintai.page.SignInPage;
+import net.shinkasystems.kintai.page.admin.UsersPage;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
@@ -33,10 +33,10 @@ public class KintaiWebApplication extends AuthenticatedWebApplication {
 		getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 		
 		mountPage("/index", IndexPage.class);
-		mountPage("/apply", ApplyPage.class);
+		mountPage("/entry", EntryPage.class);
 		mountPage("/detail", DetailPage.class);
 		mountPage("/config", ConfigPage.class);
-		mountPage("/admin", AdminPage.class);
+		mountPage("/admin", UsersPage.class);
 		mountPage("/signin", SignInPage.class);
 		
 	}

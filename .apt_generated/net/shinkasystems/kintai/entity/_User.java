@@ -1,7 +1,7 @@
 package net.shinkasystems.kintai.entity;
 
 /** */
-@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-03T20:55:09.373+0900")
+@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-09T23:08:16.356+0900")
 public final class _User extends org.seasar.doma.jdbc.entity.AbstractEntityType<net.shinkasystems.kintai.entity.User> {
 
     static {
@@ -9,6 +9,8 @@ public final class _User extends org.seasar.doma.jdbc.entity.AbstractEntityType<
     }
 
     private static final _User __singleton = new _User();
+
+    private final org.seasar.doma.jdbc.id.BuiltinIdentityIdGenerator __idGenerator = new org.seasar.doma.jdbc.id.BuiltinIdentityIdGenerator();
 
     /** the activated */
     public final org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.lang.Boolean, java.lang.Object> $activated = new org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.lang.Boolean, java.lang.Object>(net.shinkasystems.kintai.entity.User.class, java.lang.Boolean.class, org.seasar.doma.wrapper.BooleanWrapper.class, null, null, "activated", "ACTIVATED", true, true);
@@ -23,7 +25,7 @@ public final class _User extends org.seasar.doma.jdbc.entity.AbstractEntityType<
     public final org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.sql.Date, java.lang.Object> $expireDate = new org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.sql.Date, java.lang.Object>(net.shinkasystems.kintai.entity.User.class, java.sql.Date.class, org.seasar.doma.wrapper.DateWrapper.class, null, null, "expireDate", "EXPIRE_DATE", true, true);
 
     /** the id */
-    public final org.seasar.doma.jdbc.entity.AssignedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.lang.Integer, java.lang.Object> $id = new org.seasar.doma.jdbc.entity.AssignedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.lang.Integer, java.lang.Object>(net.shinkasystems.kintai.entity.User.class, java.lang.Integer.class, org.seasar.doma.wrapper.IntegerWrapper.class, null, null, "id", "ID");
+    public final org.seasar.doma.jdbc.entity.GeneratedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.lang.Integer, java.lang.Object> $id = new org.seasar.doma.jdbc.entity.GeneratedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.lang.Integer, java.lang.Object>(net.shinkasystems.kintai.entity.User.class, java.lang.Integer.class, org.seasar.doma.wrapper.IntegerWrapper.class, null, null, "id", "ID", __idGenerator);
 
     /** the password */
     public final org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.lang.String, java.lang.Object> $password = new org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, java.lang.String, java.lang.Object>(net.shinkasystems.kintai.entity.User.class, java.lang.String.class, org.seasar.doma.wrapper.StringWrapper.class, null, null, "password", "PASSWORD", true, true);
@@ -164,7 +166,7 @@ public final class _User extends org.seasar.doma.jdbc.entity.AbstractEntityType<
 
     @Override
     public org.seasar.doma.jdbc.entity.GeneratedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.User, ?, ?> getGeneratedIdPropertyType() {
-        return null;
+        return $id;
     }
 
     @Override

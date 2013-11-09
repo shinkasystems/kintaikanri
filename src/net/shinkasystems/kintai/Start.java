@@ -1,5 +1,10 @@
 package net.shinkasystems.kintai;
 
+import net.shinkasystems.kintai.entity.ApplicationDao;
+import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
+import net.shinkasystems.kintai.entity.UserDao;
+import net.shinkasystems.kintai.entity.UserDaoImpl;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.seasar.doma.jdbc.tx.LocalTransaction;
@@ -82,9 +87,14 @@ public class Start {
 			transaction.begin();
 
 			{
-				// AccountCharacterDao dao = new AccountCharacterDaoImpl();
-				// dao.createTable();
+				UserDao dao = new UserDaoImpl();
+				dao.createTable();
 			}
+			{
+				ApplicationDao dao = new ApplicationDaoImpl();
+				dao.createTable();
+			}
+			
 			transaction.commit();
 
 		} catch (Exception e) {

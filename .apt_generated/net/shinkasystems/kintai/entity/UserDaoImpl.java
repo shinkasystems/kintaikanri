@@ -1,18 +1,18 @@
 package net.shinkasystems.kintai.entity;
 
 /** */
-@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-03T20:55:09.385+0900")
+@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-09T23:53:44.484+0900")
 public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao implements net.shinkasystems.kintai.entity.UserDao {
 
     static {
         org.seasar.doma.internal.Artifact.validateVersion("1.31.0");
     }
 
-    private static final java.lang.reflect.Method __method0 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "delete", net.shinkasystems.kintai.entity.User.class);
+    private static final java.lang.reflect.Method __method1 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "delete", net.shinkasystems.kintai.entity.User.class);
 
-    private static final java.lang.reflect.Method __method1 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "insert", net.shinkasystems.kintai.entity.User.class);
+    private static final java.lang.reflect.Method __method2 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "insert", net.shinkasystems.kintai.entity.User.class);
 
-    private static final java.lang.reflect.Method __method4 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "update", net.shinkasystems.kintai.entity.User.class);
+    private static final java.lang.reflect.Method __method6 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "update", net.shinkasystems.kintai.entity.User.class);
 
     /** */
     public UserDaoImpl() {
@@ -57,6 +57,28 @@ public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao i
     }
 
     @Override
+    public void createTable() {
+        entering("net.shinkasystems.kintai.entity.UserDaoImpl", "createTable");
+        try {
+            org.seasar.doma.internal.jdbc.query.SqlFileScriptQuery __query = new org.seasar.doma.internal.jdbc.query.SqlFileScriptQuery();
+            __query.setConfig(config);
+            __query.setScriptFilePath("META-INF/net/shinkasystems/kintai/entity/UserDao/createTable.script");
+            __query.setCallerClassName("net.shinkasystems.kintai.entity.UserDaoImpl");
+            __query.setCallerMethodName("createTable");
+            __query.setBlockDelimiter("");
+            __query.setHaltOnError(true);
+            __query.prepare();
+            org.seasar.doma.internal.jdbc.command.ScriptCommand __command = new org.seasar.doma.internal.jdbc.command.ScriptCommand(__query);
+            __command.execute();
+            __query.complete();
+            exiting("net.shinkasystems.kintai.entity.UserDaoImpl", "createTable", null);
+        } catch (java.lang.RuntimeException __e) {
+            throwing("net.shinkasystems.kintai.entity.UserDaoImpl", "createTable", __e);
+            throw __e;
+        }
+    }
+
+    @Override
     public int delete(net.shinkasystems.kintai.entity.User entity) {
         entering("net.shinkasystems.kintai.entity.UserDaoImpl", "delete", entity);
         try {
@@ -64,7 +86,7 @@ public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao i
                 throw new org.seasar.doma.DomaNullPointerException("entity");
             }
             org.seasar.doma.internal.jdbc.query.AutoDeleteQuery<net.shinkasystems.kintai.entity.User> __query = new org.seasar.doma.internal.jdbc.query.AutoDeleteQuery<net.shinkasystems.kintai.entity.User>(net.shinkasystems.kintai.entity._User.getSingletonInternal());
-            __query.setMethod(__method0);
+            __query.setMethod(__method1);
             __query.setConfig(config);
             __query.setEntity(entity);
             __query.setCallerClassName("net.shinkasystems.kintai.entity.UserDaoImpl");
@@ -92,7 +114,7 @@ public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao i
                 throw new org.seasar.doma.DomaNullPointerException("entity");
             }
             org.seasar.doma.internal.jdbc.query.AutoInsertQuery<net.shinkasystems.kintai.entity.User> __query = new org.seasar.doma.internal.jdbc.query.AutoInsertQuery<net.shinkasystems.kintai.entity.User>(net.shinkasystems.kintai.entity._User.getSingletonInternal());
-            __query.setMethod(__method1);
+            __query.setMethod(__method2);
             __query.setConfig(config);
             __query.setEntity(entity);
             __query.setCallerClassName("net.shinkasystems.kintai.entity.UserDaoImpl");
@@ -166,6 +188,35 @@ public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao i
     }
 
     @Override
+    public java.util.List<java.util.Map<java.lang.String, java.lang.Object>> selectUserData(org.seasar.doma.jdbc.SelectOptions options) {
+        entering("net.shinkasystems.kintai.entity.UserDaoImpl", "selectUserData", options);
+        try {
+            if (options == null) {
+                throw new org.seasar.doma.DomaNullPointerException("options");
+            }
+            org.seasar.doma.internal.jdbc.query.SqlFileSelectQuery __query = new org.seasar.doma.internal.jdbc.query.SqlFileSelectQuery();
+            __query.setConfig(config);
+            __query.setSqlFilePath("META-INF/net/shinkasystems/kintai/entity/UserDao/selectUserData.sql");
+            __query.setOptions(options);
+            __query.setCallerClassName("net.shinkasystems.kintai.entity.UserDaoImpl");
+            __query.setCallerMethodName("selectUserData");
+            __query.setResultEnsured(false);
+            __query.setQueryTimeout(-1);
+            __query.setMaxRows(-1);
+            __query.setFetchSize(-1);
+            __query.prepare();
+            org.seasar.doma.internal.jdbc.command.SelectCommand<java.util.List<java.util.Map<java.lang.String, java.lang.Object>>> __command = new org.seasar.doma.internal.jdbc.command.SelectCommand<java.util.List<java.util.Map<java.lang.String, java.lang.Object>>>(__query, new org.seasar.doma.internal.jdbc.command.MapResultListHandler(org.seasar.doma.MapKeyNamingType.NONE));
+            java.util.List<java.util.Map<java.lang.String, java.lang.Object>> __result = __command.execute();
+            __query.complete();
+            exiting("net.shinkasystems.kintai.entity.UserDaoImpl", "selectUserData", __result);
+            return __result;
+        } catch (java.lang.RuntimeException __e) {
+            throwing("net.shinkasystems.kintai.entity.UserDaoImpl", "selectUserData", __e);
+            throw __e;
+        }
+    }
+
+    @Override
     public int update(net.shinkasystems.kintai.entity.User entity) {
         entering("net.shinkasystems.kintai.entity.UserDaoImpl", "update", entity);
         try {
@@ -173,7 +224,7 @@ public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao i
                 throw new org.seasar.doma.DomaNullPointerException("entity");
             }
             org.seasar.doma.internal.jdbc.query.AutoUpdateQuery<net.shinkasystems.kintai.entity.User> __query = new org.seasar.doma.internal.jdbc.query.AutoUpdateQuery<net.shinkasystems.kintai.entity.User>(net.shinkasystems.kintai.entity._User.getSingletonInternal());
-            __query.setMethod(__method4);
+            __query.setMethod(__method6);
             __query.setConfig(config);
             __query.setEntity(entity);
             __query.setCallerClassName("net.shinkasystems.kintai.entity.UserDaoImpl");

@@ -11,6 +11,8 @@ import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
 import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 勤怠管理ツールの認証セッションを管理します。
@@ -19,6 +21,10 @@ import org.seasar.doma.jdbc.tx.LocalTransaction;
  * 
  */
 public class KintaiSession extends AuthenticatedWebSession {
+	
+	/** ロガー */
+	private static final Logger log = LoggerFactory
+			.getLogger(KintaiSession.class);
 
 	private User user;
 
@@ -32,14 +38,17 @@ public class KintaiSession extends AuthenticatedWebSession {
 	public boolean authenticate(String username, String password) {
 
 		String hashedPassword = DigestUtils.sha512Hex(password);
+		
+		log.info(hashedPassword);
 
+		User user= null;
 		LocalTransaction transaction = KintaiDB.getLocalTransaction();
 		try {
 			transaction.begin();
 
 			UserDao dao = new UserDaoImpl();
 
-			User user = dao.selectByUserName(username);
+			user = dao.selectByUserName(username);
 
 			transaction.commit();
 		} finally {
@@ -48,21 +57,31 @@ public class KintaiSession extends AuthenticatedWebSession {
 
 
 
-		if (user == null || user.getPassword() != hashedPassword) {
+		if (user == null) {
+			
+			log.info("ユーザー：" + username + " は存在しません。");
 			return false;
-		} else {
-
+			
+		} else if (user.getPassword().equals(hashedPassword)) {
+			
 			this.user = user;
 
 			if (new Date().after(user.getExpireDate())) {
-				roles = KintaiRole.EXPIRED_USER.getWicketRoles();
+				roles = new Roles(KintaiRole.EXPIRED_USER);
 			} else if (KintaiRole.USER.equals(user.getRole())) {
-				roles = KintaiRole.USER.getWicketRoles();
+				roles = new Roles(KintaiRole.USER);
 			} else if (KintaiRole.ADMIN.equals(user.getRole())) {
-				roles = KintaiRole.ADMIN.getWicketRoles();
+				roles = new Roles(KintaiRole.ADMIN);
+			} else {
+				roles = null;
 			}
 
 			return true;
+			
+		} else {
+
+			log.info("ユーザー：" + username + " のパスワード：" + password + " が一致しません。");
+			return false;
 		}
 	}
 

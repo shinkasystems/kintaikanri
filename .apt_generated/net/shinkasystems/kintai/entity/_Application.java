@@ -1,7 +1,7 @@
 package net.shinkasystems.kintai.entity;
 
 /** */
-@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-03T20:55:09.367+0900")
+@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-09T23:08:16.336+0900")
 public final class _Application extends org.seasar.doma.jdbc.entity.AbstractEntityType<net.shinkasystems.kintai.entity.Application> {
 
     static {
@@ -9,6 +9,8 @@ public final class _Application extends org.seasar.doma.jdbc.entity.AbstractEnti
     }
 
     private static final _Application __singleton = new _Application();
+
+    private final org.seasar.doma.jdbc.id.BuiltinIdentityIdGenerator __idGenerator = new org.seasar.doma.jdbc.id.BuiltinIdentityIdGenerator();
 
     /** the applicantId */
     public final org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.Integer, java.lang.Object> $applicantId = new org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.Integer, java.lang.Object>(net.shinkasystems.kintai.entity.Application.class, java.lang.Integer.class, org.seasar.doma.wrapper.IntegerWrapper.class, null, null, "applicantId", "APPLICANT_ID", true, true);
@@ -26,7 +28,7 @@ public final class _Application extends org.seasar.doma.jdbc.entity.AbstractEnti
     public final org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.String, java.lang.Object> $form = new org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.String, java.lang.Object>(net.shinkasystems.kintai.entity.Application.class, java.lang.String.class, org.seasar.doma.wrapper.StringWrapper.class, null, null, "form", "FORM", true, true);
 
     /** the id */
-    public final org.seasar.doma.jdbc.entity.AssignedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.Integer, java.lang.Object> $id = new org.seasar.doma.jdbc.entity.AssignedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.Integer, java.lang.Object>(net.shinkasystems.kintai.entity.Application.class, java.lang.Integer.class, org.seasar.doma.wrapper.IntegerWrapper.class, null, null, "id", "ID");
+    public final org.seasar.doma.jdbc.entity.GeneratedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.Integer, java.lang.Object> $id = new org.seasar.doma.jdbc.entity.GeneratedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.Integer, java.lang.Object>(net.shinkasystems.kintai.entity.Application.class, java.lang.Integer.class, org.seasar.doma.wrapper.IntegerWrapper.class, null, null, "id", "ID", __idGenerator);
 
     /** the proxyId */
     public final org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.Integer, java.lang.Object> $proxyId = new org.seasar.doma.jdbc.entity.BasicPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, java.lang.Integer, java.lang.Object>(net.shinkasystems.kintai.entity.Application.class, java.lang.Integer.class, org.seasar.doma.wrapper.IntegerWrapper.class, null, null, "proxyId", "PROXY_ID", true, true);
@@ -174,7 +176,7 @@ public final class _Application extends org.seasar.doma.jdbc.entity.AbstractEnti
 
     @Override
     public org.seasar.doma.jdbc.entity.GeneratedIdPropertyType<java.lang.Object, net.shinkasystems.kintai.entity.Application, ?, ?> getGeneratedIdPropertyType() {
-        return null;
+        return $id;
     }
 
     @Override
