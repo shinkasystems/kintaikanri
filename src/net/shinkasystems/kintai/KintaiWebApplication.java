@@ -5,6 +5,7 @@ import net.shinkasystems.kintai.page.DetailPage;
 import net.shinkasystems.kintai.page.EntryPage;
 import net.shinkasystems.kintai.page.IndexPage;
 import net.shinkasystems.kintai.page.SignInPage;
+import net.shinkasystems.kintai.page.admin.UserProfilePage;
 import net.shinkasystems.kintai.page.admin.UsersPage;
 
 import org.apache.wicket.Page;
@@ -37,6 +38,7 @@ public class KintaiWebApplication extends AuthenticatedWebApplication {
 		mountPage("/detail", DetailPage.class);
 		mountPage("/config", ConfigPage.class);
 		mountPage("/admin", UsersPage.class);
+		mountPage("/admin/profile", UserProfilePage.class);
 		mountPage("/signin", SignInPage.class);
 		
 	}

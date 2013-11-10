@@ -1,25 +1,32 @@
 <wicket:extend>
 
-<h1>サインイン</h1>
+<h1>ログイン</h1>
 
-<form id="signin-form" action="/login" method="post" class="form-horizontal" wicket:id="signin-form">
-    <div class="control-group">
-        <label class="control-label" for="user-name">User Name</label>
-        <div class="controls">
-            <input type="text" name="user-name" class="span4" wicket:id="user-name">
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="plane-password">Password</label>
-        <div class="controls">
-            <input type="password" name="plane-password" class="span4" wicket:id="plane-password">
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="controls">
-            <input type="submit" name="submit" value="サインイン" class="btn">
-        </div>
-    </div>
+
+<div class="alert" wicket:id="feedback">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Warning!</strong> Best check yo self, you're not looking too good.
+</div>
+
+
+<form id="signin-form" class="form-horizontal" wicket:id="signin-form">
+	<div class="control-group">
+		<label class="control-label" for="user-name">ユーザー名</label>
+		<div class="controls">
+			<input type="text" name="user-name" class="span4" wicket:id="user-name">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="plane-password">パスワード</label>
+		<div class="controls">
+			<input type="password" name="plane-password" class="span4" wicket:id="plane-password">
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<input type="submit" name="submit" value="ログイン" class="btn">
+		</div>
+	</div>
 </form>
 
 

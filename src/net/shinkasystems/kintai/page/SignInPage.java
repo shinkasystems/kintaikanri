@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -85,6 +86,8 @@ public class SignInPage extends DefaultLayoutPage {
 		/*
 		 * コンポーネントの組立
 		 */
+		add(new FeedbackPanel("feedback"));
+		
 		signInForm.add(usernameTextField);
 		signInForm.add(passwordTextField);
 		add(signInForm);

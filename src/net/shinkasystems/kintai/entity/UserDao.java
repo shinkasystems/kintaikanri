@@ -1,9 +1,9 @@
 package net.shinkasystems.kintai.entity;
 
 import java.util.List;
-import java.util.Map;
 
 import net.shinkasystems.kintai.KintaiDB;
+import net.shinkasystems.kintai.entity.sub.UserData;
 
 import org.seasar.doma.Dao;
 import org.seasar.doma.Delete;
@@ -38,13 +38,20 @@ public interface UserDao {
 	 */
 	@Select
 	User selectByUserName(String userName);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Select
+	long selectCountUser();
 
 	/**
 	 * 
 	 * @return
 	 */
 	@Select
-	List<Map<String, Object>> selectUserData(SelectOptions options);
+	List<UserData> selectUserData(SelectOptions options);
 	
 	/**
 	 * @param entity

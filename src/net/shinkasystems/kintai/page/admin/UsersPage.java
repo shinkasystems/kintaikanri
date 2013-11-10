@@ -1,18 +1,14 @@
 package net.shinkasystems.kintai.page.admin;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
-import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
-import net.shinkasystems.kintai.page.DefaultLayoutPage;
+import net.shinkasystems.kintai.entity.sub.UserData;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -32,7 +28,7 @@ import org.seasar.doma.jdbc.tx.LocalTransaction;
  * 
  */
 @AuthorizeInstantiation({ KintaiRole.ADMIN })
-public class UsersPage extends DefaultLayoutPage {
+public class UsersPage extends AdminLayoutPage {
 
 	/**
 	 * 
@@ -54,9 +50,14 @@ public class UsersPage extends DefaultLayoutPage {
 			item.add(new Label("user-name", user.getUserName()));
 			item.add(new Label("user-display-name", user.getDisplayName()));
 			item.add(new Label("authority-display-name", user.getAuthorityDisplayName()));
-			item.add(new Label("role", user.getRoleName()));
+			item.add(new Label("role", user.getRole()));
 			item.add(new Label("expire-date", KintaiConstants.DATE_FORMAT.format(user.getExpireDate())));
-			item.add(new Label("activated", user.getStatus()));
+			item.add(new Label("activated", user.getActivated() ? "有効" : "無効"));
+			
+			/*
+			 * TODO
+			 * 編集／有効化／無効化／削除のボタンを追加
+			 */
 
 		}
 	};
@@ -82,8 +83,7 @@ class UserDataProvider extends SortableDataProvider<UserData, String> {
 		
 		SelectOptions options = SelectOptions.get().offset((int) first).limit((int) count);
 		
-		List<Map<String, Object>> maps = null;
-		List<UserData> userDatas = new ArrayList<UserData>();
+		List<UserData> userDatas = null;
 		
 		LocalTransaction transaction = KintaiDB.getLocalTransaction();
 		try {
@@ -91,15 +91,11 @@ class UserDataProvider extends SortableDataProvider<UserData, String> {
 
 			final UserDao dao = new UserDaoImpl();
 
-			maps = dao.selectUserData(options);
+			userDatas = dao.selectUserData(options);
 
 			transaction.commit();
 		} finally {
 			transaction.rollback();
-		}
-		
-		for (Map<String, Object> map : maps) {
-			
 		}
 		
 		return userDatas.iterator();
@@ -112,45 +108,21 @@ class UserDataProvider extends SortableDataProvider<UserData, String> {
 
 	@Override
 	public long size() {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
-	}
-}
+		
+		long size = 0;
+		
+		LocalTransaction transaction = KintaiDB.getLocalTransaction();
+		try {
+			transaction.begin();
 
-/**
- * 
- * @author Aogiri
- * 
- */
-class UserData extends User implements Serializable {
+			final UserDao dao = new UserDaoImpl();
 
-	private String authorityDisplayName;
+			size = dao.selectCountUser();
 
-	private String roleName;
-
-	private String status;
-
-	public String getAuthorityDisplayName() {
-		return authorityDisplayName;
-	}
-
-	public void setAuthorityDisplayName(String authorityDisplayName) {
-		this.authorityDisplayName = authorityDisplayName;
-	}
-
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
+			transaction.commit();
+		} finally {
+			transaction.rollback();
+		}
+		return size;
 	}
 }

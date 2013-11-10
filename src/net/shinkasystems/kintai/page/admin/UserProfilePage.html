@@ -1,6 +1,62 @@
 <wicket:extend>
 
-<h1>管理</h1>
-
+<form id="user-profile-form" class="form-horizontal" wicket:id="user-profile-form">
+	<div class="control-group">
+		<label class="control-label" for="user-name">ユーザー名</label>
+		<div class="controls">
+			<input type="text" name="user-name" class="span4" wicket:id="user-name">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="password">パスワード</label>
+		<div class="controls">
+			<input type="password" name="password" class="span4" wicket:id="password">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="password-confirm">パスワード（確認）</label>
+		<div class="controls">
+			<input type="password" name="password-confirm" class="span4" wicket:id="password-confirm">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="display-name">表示名</label>
+		<div class="controls">
+			<input type="text" name="display-name" class="span4" wicket:id="display-name">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="authority">決裁者</label>
+		<div class="controls">
+			<select name="authority" wicket:id="authority">
+				<option value="1">進化 太郎</option>
+				<option value="2">進化 次郎</option>
+			</select>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="role">権限</label>
+		<div class="controls">
+			<select name="role" wicket:id="role">
+				<option value="admin">管理</option>
+				<option value="user">一般</option>
+			</select>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="activated">有効／無効</label>
+		<div class="controls">
+			<select name="activated" wicket:id="activated">
+				<option value="true">有効</option>
+				<option value="false">無効</option>
+			</select>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<input type="submit" name="submit" value="新規登録" class="btn">
+		</div>
+	</div>
+</form>
 
 </wicket:extend>
