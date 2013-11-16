@@ -14,3 +14,10 @@ footer {
 	text-align: center;
 }
 
+
+
+input[type="radio"], label {
+	display: inline;
+	vertical-align: middle;
+	margin: 0px;
+}

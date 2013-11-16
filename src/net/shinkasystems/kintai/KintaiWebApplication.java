@@ -17,7 +17,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 勤怠管理ツールのウェブアプリケーションクラスです。
  * 
  * @author Aogiri
- *
+ * 
  */
 public class KintaiWebApplication extends AuthenticatedWebApplication {
 
@@ -32,7 +32,7 @@ public class KintaiWebApplication extends AuthenticatedWebApplication {
 
 		getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
 		getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
-		
+
 		mountPage("/index", IndexPage.class);
 		mountPage("/entry", EntryPage.class);
 		mountPage("/detail", DetailPage.class);
@@ -40,7 +40,7 @@ public class KintaiWebApplication extends AuthenticatedWebApplication {
 		mountPage("/admin", UsersPage.class);
 		mountPage("/admin/profile", UserProfilePage.class);
 		mountPage("/signin", SignInPage.class);
-		
+
 	}
 
 	@Override

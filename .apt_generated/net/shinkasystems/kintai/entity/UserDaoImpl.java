@@ -1,7 +1,7 @@
 package net.shinkasystems.kintai.entity;
 
 /** */
-@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-10T18:18:15.388+0900")
+@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-16T23:59:44.123+0900")
 public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao implements net.shinkasystems.kintai.entity.UserDao {
 
     static {
@@ -12,7 +12,7 @@ public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao i
 
     private static final java.lang.reflect.Method __method2 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "insert", net.shinkasystems.kintai.entity.User.class);
 
-    private static final java.lang.reflect.Method __method7 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "update", net.shinkasystems.kintai.entity.User.class);
+    private static final java.lang.reflect.Method __method8 = org.seasar.doma.internal.jdbc.dao.AbstractDao.__getDeclaredMethod(net.shinkasystems.kintai.entity.UserDao.class, "update", net.shinkasystems.kintai.entity.User.class);
 
     /** */
     public UserDaoImpl() {
@@ -162,6 +162,32 @@ public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao i
     }
 
     @Override
+    public java.util.List<net.shinkasystems.kintai.entity.User> selectByPartialUserName(java.lang.String userName) {
+        entering("net.shinkasystems.kintai.entity.UserDaoImpl", "selectByPartialUserName", userName);
+        try {
+            org.seasar.doma.internal.jdbc.query.SqlFileSelectQuery __query = new org.seasar.doma.internal.jdbc.query.SqlFileSelectQuery();
+            __query.setConfig(config);
+            __query.setSqlFilePath("META-INF/net/shinkasystems/kintai/entity/UserDao/selectByPartialUserName.sql");
+            __query.addParameter("userName", java.lang.String.class, userName);
+            __query.setCallerClassName("net.shinkasystems.kintai.entity.UserDaoImpl");
+            __query.setCallerMethodName("selectByPartialUserName");
+            __query.setResultEnsured(false);
+            __query.setQueryTimeout(-1);
+            __query.setMaxRows(-1);
+            __query.setFetchSize(-1);
+            __query.prepare();
+            org.seasar.doma.internal.jdbc.command.SelectCommand<java.util.List<net.shinkasystems.kintai.entity.User>> __command = new org.seasar.doma.internal.jdbc.command.SelectCommand<java.util.List<net.shinkasystems.kintai.entity.User>>(__query, new org.seasar.doma.internal.jdbc.command.EntityResultListHandler<net.shinkasystems.kintai.entity.User>(net.shinkasystems.kintai.entity._User.getSingletonInternal()));
+            java.util.List<net.shinkasystems.kintai.entity.User> __result = __command.execute();
+            __query.complete();
+            exiting("net.shinkasystems.kintai.entity.UserDaoImpl", "selectByPartialUserName", __result);
+            return __result;
+        } catch (java.lang.RuntimeException __e) {
+            throwing("net.shinkasystems.kintai.entity.UserDaoImpl", "selectByPartialUserName", __e);
+            throw __e;
+        }
+    }
+
+    @Override
     public net.shinkasystems.kintai.entity.User selectByUserName(java.lang.String userName) {
         entering("net.shinkasystems.kintai.entity.UserDaoImpl", "selectByUserName", userName);
         try {
@@ -249,7 +275,7 @@ public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao i
                 throw new org.seasar.doma.DomaNullPointerException("entity");
             }
             org.seasar.doma.internal.jdbc.query.AutoUpdateQuery<net.shinkasystems.kintai.entity.User> __query = new org.seasar.doma.internal.jdbc.query.AutoUpdateQuery<net.shinkasystems.kintai.entity.User>(net.shinkasystems.kintai.entity._User.getSingletonInternal());
-            __query.setMethod(__method7);
+            __query.setMethod(__method8);
             __query.setConfig(config);
             __query.setEntity(entity);
             __query.setCallerClassName("net.shinkasystems.kintai.entity.UserDaoImpl");

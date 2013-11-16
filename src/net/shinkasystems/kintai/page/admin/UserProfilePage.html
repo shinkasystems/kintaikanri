@@ -28,28 +28,19 @@
 	<div class="control-group">
 		<label class="control-label" for="authority">決裁者</label>
 		<div class="controls">
-			<select name="authority" wicket:id="authority">
-				<option value="1">進化 太郎</option>
-				<option value="2">進化 次郎</option>
-			</select>
+			<input type="text" name="display-name" class="span4" wicket:id="authority">
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="role">権限</label>
 		<div class="controls">
-			<select name="role" wicket:id="role">
-				<option value="admin">管理</option>
-				<option value="user">一般</option>
-			</select>
+			<span wicket:id="role"></span>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="activated">有効／無効</label>
 		<div class="controls">
-			<select name="activated" wicket:id="activated">
-				<option value="true">有効</option>
-				<option value="false">無効</option>
-			</select>
+			<span wicket:id="activated"></span>
 		</div>
 	</div>
 	<div class="control-group">

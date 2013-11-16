@@ -30,6 +30,14 @@ public interface UserDao {
 	 */
 	@Select
 	User selectById(Integer id);
+	
+	/**
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	@Select
+	List<User> selectByPartialUserName(String userName);
 
 	/**
 	 * 

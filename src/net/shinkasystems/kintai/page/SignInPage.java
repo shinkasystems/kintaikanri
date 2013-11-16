@@ -1,13 +1,14 @@
 package net.shinkasystems.kintai.page;
 
 import net.shinkasystems.kintai.KintaiSession;
+import net.shinkasystems.kintai.panel.AlertPanel;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -22,11 +23,20 @@ public class SignInPage extends DefaultLayoutPage {
 
 	/** ロガー */
 	private static final Logger log = LoggerFactory.getLogger(SignInPage.class);
+	
+	
+	private final Panel alertPanel = new AlertPanel("alert-panel");
 
 	/**
 	 * サインイン用のフォームです。
 	 */
 	private final Form<ValueMap> signInForm = new Form<ValueMap>("signin-form") {
+
+		@Override
+		protected void onValidate() {
+			
+			alertPanel.setVisible(true);
+		}
 
 		@Override
 		protected void onSubmit() {
@@ -59,10 +69,18 @@ public class SignInPage extends DefaultLayoutPage {
 	 */
 	public SignInPage() {
 		super();
+		
+		/*
+		 * コンポーネントの生成
+		 */
+
 
 		/*
 		 * コンポーネントの編集
 		 */
+		
+		alertPanel.setVisible(false);
+		
 		usernameTextField.setRequired(true);
 		passwordTextField.setRequired(true);
 
@@ -86,7 +104,7 @@ public class SignInPage extends DefaultLayoutPage {
 		/*
 		 * コンポーネントの組立
 		 */
-		add(new FeedbackPanel("feedback"));
+		add(alertPanel);
 		
 		signInForm.add(usernameTextField);
 		signInForm.add(passwordTextField);
