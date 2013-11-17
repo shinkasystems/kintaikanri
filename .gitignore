@@ -30,6 +30,12 @@ local.properties
 
 
 #############
+## Doma
+#############
+.apt_generated/
+
+
+#############
 ## Windows detritus
 #############
 
