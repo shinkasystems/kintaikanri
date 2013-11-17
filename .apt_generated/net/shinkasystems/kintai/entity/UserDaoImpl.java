@@ -1,7 +1,7 @@
 package net.shinkasystems.kintai.entity;
 
 /** */
-@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-16T23:59:44.123+0900")
+@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-17T17:55:20.952+0900")
 public class UserDaoImpl extends org.seasar.doma.internal.jdbc.dao.AbstractDao implements net.shinkasystems.kintai.entity.UserDao {
 
     static {

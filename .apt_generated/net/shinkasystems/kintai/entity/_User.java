@@ -1,7 +1,7 @@
 package net.shinkasystems.kintai.entity;
 
 /** */
-@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-09T23:08:16.356+0900")
+@javax.annotation.Generated(value = { "Doma", "1.31.0" }, date = "2013-11-17T17:55:20.849+0900")
 public final class _User extends org.seasar.doma.jdbc.entity.AbstractEntityType<net.shinkasystems.kintai.entity.User> {
 
     static {

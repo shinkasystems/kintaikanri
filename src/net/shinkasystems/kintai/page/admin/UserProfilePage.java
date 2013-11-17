@@ -8,16 +8,14 @@ import java.util.List;
 
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
-import net.shinkasystems.kintai.component.Authority;
-import net.shinkasystems.kintai.component.AuthorityAutoCompleteTextField;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
+import net.shinkasystems.kintai.entity.sub.UserData;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -25,6 +23,7 @@ import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
+import org.seasar.doma.jdbc.SelectOptions;
 import org.seasar.doma.jdbc.tx.LocalTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,14 +61,19 @@ public class UserProfilePage extends AdminLayoutPage {
 				user.setUserName(userNameTextField.getValue());
 				user.setPassword(DigestUtils.sha512Hex(passwordTextField.getValue()));
 				user.setDisplayName(displayNameTextField.getValue());
-				user.setAuthorityId(Integer.valueOf(authorityTextField.getId()));
-				user.setActivated(Boolean.valueOf(activatedChoice.getId()));
+				
+				if (authorityDropDownChoice.getModel().getObject() != null) {
+					user.setAuthorityId(authorityDropDownChoice.getModel().getObject().getId());
+				} else {
+					user.setAuthorityId(null);
+				}
+				user.setActivated(activatedChoice.getModel().getObject().isActivated());
 				user.setExpireDate(new Date(expireCalendar.getTimeInMillis()));
-				user.setRole(KintaiRole.ADMIN);
+				user.setRole(roleChoice.getModel().getObject().getId());
 
 				dao.insert(user);
 
-				if (StringUtils.isEmpty(authorityTextField.getValue())) {
+				if (user.getAuthorityId() == null) {
 					user.setAuthorityId(user.getId());
 
 					dao.update(user);
@@ -89,32 +93,36 @@ public class UserProfilePage extends AdminLayoutPage {
 	/**
 	 * ユーザー名の入力フィールドです。
 	 */
-	private final TextField<String> userNameTextField = new TextField<String>(
-			"user-name");
+	private final TextField<String> userNameTextField = new TextField<String>("user-name", new Model<String>());
 
 	/**
 	 * パスワードの入力フィールドです。
 	 */
 	private final PasswordTextField passwordTextField = new PasswordTextField(
-			"password");
+			"password", new Model<String>());
 
 	/**
 	 * パスワード（確認）の入力フィールドです。
 	 */
 	private final PasswordTextField passwordConfirmTextField = new PasswordTextField(
-			"password-confirm");
+			"password-confirm", new Model<String>());
 
 	/**
 	 * ユーザーの表示名の入力フィールドです。
 	 */
 	private final TextField<String> displayNameTextField = new TextField<String>(
-			"display-name");
+			"display-name", new Model<String>());
+
+	/**
+	 * 決裁者のリストです。
+	 */
+	private final List<AuthorityOption> authorityOptions = new ArrayList<AuthorityOption>();
 
 	/**
 	 * 決裁者のドロップダウンです。
 	 */
-	private final AutoCompleteTextField<Authority> authorityTextField =
-			new AuthorityAutoCompleteTextField<>("authority");
+	private final DropDownChoice<AuthorityOption> authorityDropDownChoice = new DropDownChoice<>("authority",
+			new Model<AuthorityOption>(), authorityOptions, new AuthorityChoiceRenderer());
 
 	/**
 	 * 権限のリストです。
@@ -148,10 +156,26 @@ public class UserProfilePage extends AdminLayoutPage {
 		/*
 		 * コンポーネントの生成
 		 */
+		
+		LocalTransaction transaction = KintaiDB.getLocalTransaction();
+		try {
+			transaction.begin();
+
+			final UserDao dao = new UserDaoImpl();
+
+			for (UserData data : dao.selectUserData(SelectOptions.get())) {
+				authorityOptions.add(new AuthorityOption(data.getId(), data.getUserName(), data.getDisplayName()));
+			}
+
+			transaction.commit();
+		} finally {
+			transaction.rollback();
+		}
+		
 		roleOptions.add(new RoleOption(KintaiRole.ADMIN, "管理"));
 		roleOptions.add(new RoleOption(KintaiRole.USER, "一般"));
-		activatedOptions.add(new ActivatedOption("true", "有効"));
-		activatedOptions.add(new ActivatedOption("false", "無効"));
+		activatedOptions.add(new ActivatedOption(true, "有効"));
+		activatedOptions.add(new ActivatedOption(false, "無効"));
 
 		/*
 		 * コンポーネントの編集
@@ -160,7 +184,6 @@ public class UserProfilePage extends AdminLayoutPage {
 		passwordTextField.setRequired(true);
 		passwordConfirmTextField.setRequired(true);
 		displayNameTextField.setRequired(true);
-		authorityTextField.setRequired(true);
 		roleChoice.setRequired(true);
 		roleChoice.setSuffix("&nbsp;");
 		activatedChoice.setRequired(true);
@@ -173,11 +196,64 @@ public class UserProfilePage extends AdminLayoutPage {
 		userProfileForm.add(passwordTextField);
 		userProfileForm.add(passwordConfirmTextField);
 		userProfileForm.add(displayNameTextField);
-		userProfileForm.add(authorityTextField);
+		userProfileForm.add(authorityDropDownChoice);
 		userProfileForm.add(roleChoice);
 		userProfileForm.add(activatedChoice);
 		add(userProfileForm);
 	}
+}
+
+/**
+ * 
+ * @author Aogiri
+ * 
+ */
+class AuthorityChoiceRenderer implements IChoiceRenderer<AuthorityOption> {
+
+	@Override
+	public Object getDisplayValue(AuthorityOption authority) {
+		return authority.getUserName();
+	}
+
+	@Override
+	public String getIdValue(AuthorityOption authority, int index) {
+		return String.valueOf(authority.getId());
+	}
+
+}
+
+/**
+ * 
+ * @author Aogiri
+ *
+ */
+class AuthorityOption implements Serializable {
+
+	private final int id;
+
+	private final String userName;
+
+	private final String displayName;
+
+	public AuthorityOption(int id, String userName, String displayName) {
+		super();
+		this.id = id;
+		this.userName = userName;
+		this.displayName = displayName;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
 }
 
 /**
@@ -239,7 +315,7 @@ class AcitivatedChoiceRenderer implements IChoiceRenderer<ActivatedOption> {
 
 	@Override
 	public String getIdValue(ActivatedOption activatedOption, int index) {
-		return activatedOption.getId();
+		return Boolean.toString(activatedOption.isActivated());
 	}
 
 }
@@ -251,18 +327,18 @@ class AcitivatedChoiceRenderer implements IChoiceRenderer<ActivatedOption> {
  */
 class ActivatedOption implements Serializable {
 
-	private final String id;
+	private final boolean activated;
 
 	private final String display;
 
-	public ActivatedOption(String id, String display) {
+	public ActivatedOption(boolean activated, String display) {
 		super();
-		this.id = id;
+		this.activated = activated;
 		this.display = display;
 	}
 
-	public String getId() {
-		return id;
+	public boolean isActivated() {
+		return activated;
 	}
 
 	public String getDisplay() {

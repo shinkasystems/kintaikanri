@@ -14,6 +14,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.IModel;
@@ -64,6 +65,25 @@ public class UsersPage extends AdminLayoutPage {
 
 	public UsersPage() {
 		super();
+		
+		/*
+		 * コンポーネントの生成
+		 */
+		final PagingNavigator pagingNavigator = new PagingNavigator("page-navigator", userDataView);
+		
+		
+		
+		/*
+		 * コンポーネントの編集
+		 */
+		userDataView.setItemsPerPage(100);
+		
+		
+		
+		/*
+		 * コンポーネントの組立
+		 */
+		userForm.add(pagingNavigator);
 
 		userForm.add(userDataView);
 		add(userForm);
