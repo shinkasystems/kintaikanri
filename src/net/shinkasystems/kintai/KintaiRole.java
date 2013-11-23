@@ -29,7 +29,6 @@ public class KintaiRole {
 	 */
 	private KintaiRole() {
 		super();
-		// TODO 自動生成されたコンストラクター・スタブ
 	}
 	
 }

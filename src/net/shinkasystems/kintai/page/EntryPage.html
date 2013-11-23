@@ -2,11 +2,17 @@
 
 <h1>申請</h1>
 
-<form id="create-form" class="form-horizontal" action="/create" method="post">
+
+<div wicket:id="alert-panel">
+	<p>Alert Panel</p>
+</div>
+
+
+<form id="entry-form" class="form-horizontal" wicket:id="entry-form">
 	<div class="control-group">
 		<label class="control-label" for="type">種類</label>
 		<div class="controls">
-			<select name="type">
+			<select name="type" wicket:id="type">
 				<option value="">有給休暇</option>
 				<option value="">特別休暇</option>
 				<option value="">公休</option>
@@ -19,13 +25,22 @@
 	<div class="control-group">
 		<label class="control-label" for="deadline">期日</label>
 		<div class="controls">
-			<input type="text" id="deadline" name="deadline" size="10" class="datepicker span2">
+			<input type="text" id="deadline" name="deadline" size="10" class="datepicker span2" wicket:id="term">
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="body">コメント（事由等）</label>
 		<div class="controls">
-			<textarea id="body" name="body" rows="4" cols="80" class="span8"></textarea>
+			<textarea id="body" name="body" rows="4" cols="80" class="span8" wicket:id="comment"></textarea>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="applicant">申請者（代理）</label>
+		<div class="controls">
+			<select name="applicant" wicket:id="applicant">
+				<option value="">進化　太郎</option>
+				<option value="">進化　次郎</option>
+			</select>
 		</div>
 	</div>
 	<div class="control-group">
@@ -34,5 +49,12 @@
 		</div>
 	</div>
 </form>
+
+
+<script type="text/javascript">
+$(function(){
+	$('.datepicker').datepicker();
+});
+</script>
 
 </wicket:extend>
