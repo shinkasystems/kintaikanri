@@ -1,0 +1,13 @@
+select
+	ID,
+	AUTHORITY_ID,
+	USER_NAME,
+	PASSWORD,
+	DISPLAY_NAME,
+	ACTIVATED,
+	EXPIRE_DATE,
+	ROLE
+from
+	USER
+where
+	AUTHORITY_ID = /* authorityId */1

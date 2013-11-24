@@ -1,14 +1,23 @@
 package net.shinkasystems.kintai.page;
 
+import java.io.Serializable;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
+import net.shinkasystems.kintai.KintaiSession;
+import net.shinkasystems.kintai.KintaiStatus;
 import net.shinkasystems.kintai.KintaiType;
 import net.shinkasystems.kintai.entity.Application;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
+import net.shinkasystems.kintai.entity.User;
+import net.shinkasystems.kintai.entity.UserDao;
+import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.panel.AlertPanel;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -33,17 +42,17 @@ import org.slf4j.LoggerFactory;
  */
 @AuthorizeInstantiation({ KintaiRole.USER })
 public class EntryPage extends DefaultLayoutPage {
-	
+
 	/** ロガー */
 	private static final Logger log = LoggerFactory.getLogger(EntryPage.class);
 
 	/**
-	 * 
+	 * アラートパネルです。
 	 */
 	private final Panel alertPanel = new AlertPanel("alert-panel");
 
 	/**
-	 * 勤怠情報の申請を行うフォームです。
+	 * 申請を行うフォームです。
 	 */
 	private final Form<ValueMap> entryForm = new Form<ValueMap>("entry-form") {
 
@@ -55,7 +64,7 @@ public class EntryPage extends DefaultLayoutPage {
 
 		@Override
 		protected void onSubmit() {
-			
+
 			LocalTransaction transaction = KintaiDB.getLocalTransaction();
 			try {
 				transaction.begin();
@@ -64,8 +73,20 @@ public class EntryPage extends DefaultLayoutPage {
 
 				final Application application = new Application();
 
+				if (applicantDropDownChoice.getModelObject() != null) {
+					application.setApplicantId(applicantDropDownChoice.getModelObject().getId());
+					application.setProxyId(((KintaiSession) KintaiSession.get()).getUser().getId());
+				} else {
+					application.setApplicantId(((KintaiSession) KintaiSession.get()).getUser().getId());
+				}
+				application.setType(typeDropDownChoice.getModelObject().name());
+				application.setTerm(new Date(termTextField.getModelObject().getTime()));
+				application.setCommentApplycant(commentTextArea.getModelObject());
+				application.setCreateDate(new Date(new java.util.Date().getTime()));
+				application.setStatus(KintaiStatus.PENDING.name());
+
 				dao.insert(application);
-				
+
 				transaction.commit();
 
 				log.info("勤怠情報を申請しました。" + application);
@@ -73,6 +94,8 @@ public class EntryPage extends DefaultLayoutPage {
 			} finally {
 				transaction.rollback();
 			}
+			
+			setResponsePage(IndexPage.class);
 		}
 
 	};
@@ -89,17 +112,24 @@ public class EntryPage extends DefaultLayoutPage {
 	/**
 	 * 期日の入力フィールドです。
 	 */
-	private final DateTextField termTextField = new DateTextField("term", KintaiConstants.DATE_PATTERN);
+	private final DateTextField termTextField = new DateTextField("term", new Model<java.util.Date>(),
+			KintaiConstants.DATE_PATTERN);
 
 	/**
 	 * 事由等のコメントを入力するテキストエリアです。
 	 */
-	private final TextArea<String> commentTextArea = new TextArea<>("comment");
+	private final TextArea<String> commentTextArea = new TextArea<>("comment", new Model<String>());
+	
+	/**
+	 * 代理申請が可能な申請者のリストです。
+	 */
+	private final List<ApplicantOption> applicantOptions = new ArrayList<ApplicantOption>();
 
 	/**
 	 * 代理申請を行う場合の申請者を管理するドロップダウンです。
 	 */
-	private final DropDownChoice<String> applicantDropDownChoice = new DropDownChoice<>("applicant");
+	private final DropDownChoice<ApplicantOption> applicantDropDownChoice = new DropDownChoice<ApplicantOption>(
+			"applicant", new Model<ApplicantOption>(), applicantOptions, new ApplicantChoiceRenderer());
 
 	/**
 	 * コンストラクタです。
@@ -120,10 +150,11 @@ public class EntryPage extends DefaultLayoutPage {
 		 * TODO
 		 * 代理申請の活性制御
 		 */
-		if (true) {
-			applicantDropDownChoice.setEnabled(false);
-		} else {
+		applicantOptions.addAll(getApplicant(((KintaiSession) KintaiSession.get()).getUser().getId()));
+		if (applicantOptions.size() > 0) {
 			applicantDropDownChoice.setEnabled(true);
+		} else {
+			applicantDropDownChoice.setEnabled(false);
 		}
 
 		/*
@@ -138,6 +169,33 @@ public class EntryPage extends DefaultLayoutPage {
 		add(entryForm);
 	}
 
+	/**
+	 * 代理申請が可能な申請者を取得します。
+	 * ログインユーザーが決裁者となっている申請者の申請を代理することができます。
+	 * 
+	 * @param authorityId
+	 * @return
+	 */
+	private List<ApplicantOption> getApplicant(int authorityId) {
+		
+		final List<ApplicantOption> applicantOptions = new ArrayList<ApplicantOption>();
+
+		LocalTransaction transaction = KintaiDB.getLocalTransaction();
+		try {
+			transaction.begin();
+
+			final UserDao dao = new UserDaoImpl();
+			
+			for (User user : dao.selectByAuthorityID(authorityId)) {
+				applicantOptions.add(new ApplicantOption(user.getId(), user.getDisplayName()));
+			}
+
+		} finally {
+			transaction.rollback();
+		}
+		
+		return applicantOptions;
+	}
 }
 
 /**
@@ -157,4 +215,49 @@ class KintaiTypeChoiceRendere implements IChoiceRenderer<KintaiType> {
 		return type.name();
 	}
 
+}
+
+/**
+ * 
+ * @author Aogiri
+ *
+ */
+class ApplicantChoiceRenderer implements IChoiceRenderer<ApplicantOption> {
+
+	@Override
+	public Object getDisplayValue(ApplicantOption applicantOption) {
+		return applicantOption.getDisplay();
+	}
+
+	@Override
+	public String getIdValue(ApplicantOption applicantOption, int index) {
+		return String.valueOf(applicantOption.getId());
+	}
+
+}
+
+/**
+ * 
+ * @author Aogiri
+ *
+ */
+class ApplicantOption implements Serializable {
+
+	private final int id;
+	
+	private final String display;
+
+	public ApplicantOption(int id, String display) {
+		super();
+		this.id = id;
+		this.display = display;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getDisplay() {
+		return display;
+	}
 }

@@ -63,6 +63,9 @@ public class UsersPage extends AdminLayoutPage {
 		}
 	};
 
+	/**
+	 * コンストラクタです。
+	 */
 	public UsersPage() {
 		super();
 		
@@ -113,7 +116,6 @@ class UserDataProvider extends SortableDataProvider<UserData, String> {
 
 			userDatas = dao.selectUserData(options);
 
-			transaction.commit();
 		} finally {
 			transaction.rollback();
 		}

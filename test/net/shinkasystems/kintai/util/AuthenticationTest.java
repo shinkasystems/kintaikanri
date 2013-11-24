@@ -6,7 +6,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PasswordUtilityTest {
+/**
+ * 
+ * @author Aogiri
+ *
+ */
+public class AuthenticationTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -27,10 +32,9 @@ public class PasswordUtilityTest {
 		final String password1 = "password1";
 		final String password2 = "password2";
 		
-		final PasswordUtility passwordUtility1 = new PasswordUtility(userID1, password1);
-		final PasswordUtility passwordUtility2 = new PasswordUtility(userID2, password2);
+		final Authentication passwordUtility1 = new Authentication(userID1, password1);
+		final Authentication passwordUtility2 = new Authentication(userID2, password2);
 
 		assertFalse(passwordUtility1.getPasswordHash().equals(passwordUtility2.getPasswordHash()));
 	}
-
 }

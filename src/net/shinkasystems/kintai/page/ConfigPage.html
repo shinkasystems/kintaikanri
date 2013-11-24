@@ -2,4 +2,31 @@
 
 <h1>設定</h1>
 
+
+<div wicket:id="alert-panel">
+	<p>Alert Panel</p>
+</div>
+
+
+<form id="config-form" class="form-horizontal" wicket:id="config-form">
+	<div class="control-group">
+		<label class="control-label" for="password">パスワード</label>
+		<div class="controls">
+			<input type="password" name="password" class="span4" wicket:id="password">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="password-confirm">パスワード（確認）</label>
+		<div class="controls">
+			<input type="password" name="password-confirm" class="span4" wicket:id="password-confirm">
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<input type="submit" name="submit" value="保存" class="btn">
+		</div>
+	</div>
+</form>
+
+
 </wicket:extend>

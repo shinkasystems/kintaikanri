@@ -1,6 +1,7 @@
 package net.shinkasystems.kintai.entity;
 
 import java.sql.Date;
+
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
 import org.seasar.doma.GeneratedValue;
@@ -30,8 +31,8 @@ public class Application {
     Integer proxyId;
 
     /**  */
-    @Column(name = "FORM")
-    String form;
+    @Column(name = "TYPE")
+    String type;
 
     /**  */
     @Column(name = "TERM")
@@ -112,21 +113,21 @@ public class Application {
     }
 
     /** 
-     * Returns the form.
+     * Returns the type.
      * 
-     * @return the form
+     * @return the type
      */
-    public String getForm() {
-        return form;
+    public String getType() {
+        return type;
     }
 
     /** 
-     * Sets the form.
+     * Sets the type.
      * 
-     * @param form the form
+     * @param type the type
      */
-    public void setForm(String form) {
-        this.form = form;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /** 

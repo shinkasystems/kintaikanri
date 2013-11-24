@@ -1,13 +1,13 @@
 select
-	ID,
-	AUTHORITY_ID,
-	USER_NAME,
-	PASSWORD,
-	DISPLAY_NAME,
-	ACTIVATED,
-	EXPIRE_DATE,
-	ROLE
+  ID,
+  AUTHORITY_ID,
+  USER_NAME,
+  PASSWORD,
+  DISPLAY_NAME,
+  ACTIVATED,
+  EXPIRE_DATE,
+  ROLE
 from
-	USER
+  USER
 where
-	ID = /* id */1
+  ID = /* id */1

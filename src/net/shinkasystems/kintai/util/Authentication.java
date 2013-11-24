@@ -7,7 +7,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @author Aogiri
  *
  */
-public class PasswordUtility {
+public class Authentication {
 
 	/**
 	 * ユーザーIDです。
@@ -29,7 +29,7 @@ public class PasswordUtility {
 	 * @param userID
 	 * @param password
 	 */
-	public PasswordUtility(String userID, String password) {
+	public Authentication(String userID, String password) {
 		super();
 		this.userID = userID;
 		this.password = password;

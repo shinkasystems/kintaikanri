@@ -12,8 +12,8 @@ import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.entity.sub.UserData;
+import net.shinkasystems.kintai.util.Authentication;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -59,9 +59,10 @@ public class UserProfilePage extends AdminLayoutPage {
 
 				final User user = new User();
 				user.setUserName(userNameTextField.getValue());
-				user.setPassword(DigestUtils.sha512Hex(passwordTextField.getValue()));
+				user.setPassword(new Authentication(userNameTextField.getValue(), passwordTextField.getValue())
+						.getPasswordHash());
 				user.setDisplayName(displayNameTextField.getValue());
-				
+
 				if (authorityDropDownChoice.getModel().getObject() != null) {
 					user.setAuthorityId(authorityDropDownChoice.getModel().getObject().getId());
 				} else {
@@ -156,7 +157,7 @@ public class UserProfilePage extends AdminLayoutPage {
 		/*
 		 * コンポーネントの生成
 		 */
-		
+
 		LocalTransaction transaction = KintaiDB.getLocalTransaction();
 		try {
 			transaction.begin();
@@ -171,7 +172,7 @@ public class UserProfilePage extends AdminLayoutPage {
 		} finally {
 			transaction.rollback();
 		}
-		
+
 		roleOptions.add(new RoleOption(KintaiRole.ADMIN, "管理"));
 		roleOptions.add(new RoleOption(KintaiRole.USER, "一般"));
 		activatedOptions.add(new ActivatedOption(true, "有効"));

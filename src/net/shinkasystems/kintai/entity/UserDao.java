@@ -30,14 +30,14 @@ public interface UserDao {
 	 */
 	@Select
 	User selectById(Integer id);
-	
+
 	/**
 	 * 
-	 * @param userName
+	 * @param proxyId
 	 * @return
 	 */
 	@Select
-	List<User> selectByPartialUserName(String userName);
+	List<User> selectByAuthorityID(Integer authorityId);
 
 	/**
 	 * 
@@ -46,7 +46,7 @@ public interface UserDao {
 	 */
 	@Select
 	User selectByUserName(String userName);
-	
+
 	/**
 	 * 
 	 * @return
@@ -60,7 +60,7 @@ public interface UserDao {
 	 */
 	@Select
 	List<UserData> selectUserData(SelectOptions options);
-	
+
 	/**
 	 * @param entity
 	 * @return affected rows

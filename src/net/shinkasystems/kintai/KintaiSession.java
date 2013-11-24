@@ -5,8 +5,8 @@ import java.util.Date;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
+import net.shinkasystems.kintai.util.Authentication;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
@@ -37,7 +37,7 @@ public class KintaiSession extends AuthenticatedWebSession {
 	@Override
 	public boolean authenticate(String username, String password) {
 
-		String hashedPassword = DigestUtils.sha512Hex(password);
+		String hashedPassword = new Authentication(username, password).getPasswordHash();
 		
 		log.info(hashedPassword);
 
@@ -66,7 +66,7 @@ public class KintaiSession extends AuthenticatedWebSession {
 			
 			this.user = user;
 
-			if (new Date().after(user.getExpireDate())) {
+			if (user.getExpireDate() != null && new Date().after(user.getExpireDate())) {
 				roles = new Roles(KintaiRole.EXPIRED_USER);
 			} else if (KintaiRole.USER.equals(user.getRole())) {
 				roles = new Roles(KintaiRole.USER);
