@@ -16,7 +16,7 @@
 	<tr wicket:id="index-data-view">
 		<td wicket:id="id">5</td>
 		<td wicket:id="term">2013-08-18</td>
-		<td wicket:id="type"><a href="/detail">有給休暇</a></td>
+		<td><a href="/detail" wicket:id="link"><span wicket:id="type">有給休暇</span></a></td>
 		<td wicket:id="comment">私用のため</td>
 		<td wicket:id="date">2013-08-01</td>
 		<td wicket:id="applicant">進化太郎</td>
@@ -36,6 +36,39 @@
 		<li><a href="#">Next</a></li>
 	</ul>
 </div>
+
+
+<form>
+	<fieldset>
+		<legend>検索</legend>
+		<div class="row">
+			<div class="span3">
+				<label>From</label>
+				<input type="text" id="from" name="from" size="10">
+			</div>
+			<div class="span3">
+				<label>To</label>
+				<input type="text" id="to" name="to" size="10">
+			</div>
+			<div class="span3">
+				<label>申請者</label>
+				<input type="text" id="applicant" name="applicant" size="10">
+			</div>
+			<div class="span3">
+				<label>ステータス</label>
+				<select name="status">
+					<option value=""></option>
+					<option value="">申請中</option>
+					<option value="">承認</option>
+					<option value="">却下</option>
+					<option value="">取り下げ</option>
+					<option value="">差し戻し</option>
+				</select>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary pull-right">検索</button>
+	</fieldset>
+</form>
 
 
 </wicket:extend>

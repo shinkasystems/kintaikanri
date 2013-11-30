@@ -3,8 +3,11 @@ package net.shinkasystems.kintai.page;
 import java.util.Iterator;
 import java.util.List;
 
+import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
+import net.shinkasystems.kintai.KintaiStatus;
+import net.shinkasystems.kintai.KintaiType;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
 import net.shinkasystems.kintai.entity.sub.ApplicationData;
@@ -12,11 +15,14 @@ import net.shinkasystems.kintai.entity.sub.ApplicationData;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.seasar.doma.jdbc.SelectOptions;
 import org.seasar.doma.jdbc.tx.LocalTransaction;
 
@@ -37,6 +43,11 @@ import org.seasar.doma.jdbc.tx.LocalTransaction;
  */
 @AuthorizeInstantiation({ KintaiRole.ADMIN, KintaiRole.USER, KintaiRole.EXPIRED_USER })
 public class IndexPage extends DefaultLayoutPage {
+	
+	/**
+	 * 
+	 */
+	public static final String PARAMETER_ID = "id";
 
 	/**
 	 * 
@@ -48,14 +59,48 @@ public class IndexPage extends DefaultLayoutPage {
 		protected void populateItem(Item<ApplicationData> item) {
 
 			final ApplicationData applicationData = item.getModelObject();
+			
+			/*
+			 * 
+			 */
+			final Label idLabel = new Label("id", applicationData.getId());
+			final Label termLabel = new Label("term", KintaiConstants.DATE_FORMAT.format(applicationData.getTerm()));
+			final Label typeLabel = new Label("type", KintaiType.valueOf(applicationData.getType()).display);
+			final Label commentLabel = new Label("comment", applicationData.getCommentApplycant());
+			final Label dateLabel = new Label("date", KintaiConstants.DATE_FORMAT.format(applicationData.getCreateDate()));
+			final Label applicantLabel = new Label("applicant", applicationData.getApplicantDisplayName());
+			final Label statusLabel = new Label("status", KintaiStatus.valueOf(applicationData.getStatus()).display);
+			
+			final Link<String> typeLink = new StatelessLink<String>("link") {
 
-			item.add(new Label("id", applicationData.getId()));
-			item.add(new Label("term", applicationData.getTerm()));
-			item.add(new Label("type", applicationData.getType()));
-			item.add(new Label("comment", applicationData.getCommentApplycant()));
-			item.add(new Label("date", applicationData.getCreateDate()));
-			item.add(new Label("applicant", applicationData.getApplicantDisplayName()));
-			item.add(new Label("status", applicationData.getStatus()));
+				@Override
+				public void onClick() {
+					
+					final PageParameters parameters = new PageParameters();
+					
+					parameters.set(PARAMETER_ID, applicationData.getId());
+					
+					IndexPage.this.setResponsePage(DetailPage.class, parameters);
+				}
+				
+			};
+
+			/*
+			 * 
+			 */
+			typeLink.add(typeLabel);
+			
+			
+			/*
+			 * 
+			 */
+			item.add(idLabel);
+			item.add(termLabel);
+			item.add(typeLink);
+			item.add(commentLabel);
+			item.add(dateLabel);
+			item.add(applicantLabel);
+			item.add(statusLabel);
 		}
 	};
 

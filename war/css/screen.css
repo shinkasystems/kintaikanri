@@ -15,6 +15,13 @@ footer {
 }
 
 
+.head {
+	font-weight: bold;
+}
+.head:after {
+	content: ":";
+}
+
 
 input[type="radio"], label {
 	display: inline;

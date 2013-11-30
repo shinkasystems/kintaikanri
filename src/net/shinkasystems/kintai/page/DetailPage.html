@@ -2,40 +2,107 @@
 
 <h1>申請詳細</h1>
 
-<div class="row">
-	<div class="span3">
-		申請内容
-	</div>
-	<div class="span9">
-		有給休暇
-	</div>
+
+<div wicket:id="alert-panel">
+	<p>Alert Panel</p>
 </div>
 
+
 <div class="row">
-	<div class="span3">
-		期日
+	<div class="span2">
+		<span class="head pull-right">ID</span>
 	</div>
-	<div class="span9">
-		2013-08-18
+	<div class="span10">
+		<p wicket:id="id">123</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span3">
-		コメント（事由等）
+	<div class="span2">
+		<span class="head pull-right">期日</span>
 	</div>
-	<div class="span9">
-		私用のため
+	<div class="span10">
+		<p wicket:id="term">2013-11-30</p>
 	</div>
 </div>
 
-
-<div class="btn-group">
-	<button class="btn btn-success">承認</button>
-	<button class="btn btn-inverse">却下</button>
-	<button class="btn">差し戻し</button>
-	<button class="btn">取り下げ</button>
-	<button class="btn btn-danger">削除</button>
+<div class="row">
+	<div class="span2">
+		<span class="head pull-right">申請者</span>
+	</div>
+	<div class="span10">
+		<p wicket:id="applicant">進化　太郎</p>
+	</div>
 </div>
+
+<div class="row">
+	<div class="span2">
+		<span class="head pull-right">申請内容</span>
+	</div>
+	<div class="span10">
+		<p wicket:id="type">有給休暇</p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="span2">
+		<span class="head pull-right">コメント（事由等）</span>
+	</div>
+	<div class="span10">
+		<p wicket:id="comment">私用のため</p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="span2">
+		<span class="head pull-right">申請日</span>
+	</div>
+	<div class="span10">
+		<p wicket:id="created">2013-11-11</p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="span2">
+		<span class="head pull-right">ステータス</span>
+	</div>
+	<div class="span10">
+		<p><span wicket:id="status">申請中</span></p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="span2">
+		<span class="head pull-right">決裁者</span>
+	</div>
+	<div class="span10">
+		<p wicket:id="authority">進化　次郎</p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="span2">
+		<span class="head pull-right">決裁日</span>
+	</div>
+	<div class="span10">
+		<p wicket:id="updated">2013-11-20</p>
+	</div>
+</div>
+
+<form wicket:id="detail-form">
+	<input type="hidden" wicket:id="id-hidden" />
+	<input type="hidden" wicket:id="status-hidden" />
+	<div class="row">
+		<div class="span10 offset2">
+			<div class="btn-group">
+				<button class="btn btn-success" wicket:id="approve">承認</button>
+				<button class="btn btn-warning" wicket:id="reject">却下</button>
+				<button class="btn btn-inverse" wicket:id="passback">差戻し</button>
+				<button class="btn" wicket:id="withdraw">取下げ</button>
+			</div>
+		</div>
+	</div>
+</form>
+
 
 </wicket:extend>
