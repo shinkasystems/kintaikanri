@@ -116,6 +116,8 @@ public class DetailPage extends DefaultLayoutPage {
 			@Override
 			public void onSubmit() {
 				updateStatus(id, KintaiStatus.APPROVED);
+
+				log.info("承認しました");
 			}
 		};
 		final Button rejectButton = new Button("reject") {
@@ -123,6 +125,8 @@ public class DetailPage extends DefaultLayoutPage {
 			@Override
 			public void onSubmit() {
 				updateStatus(id, KintaiStatus.REJECTED);
+
+				log.info("却下しました");
 			}
 		};
 		final Button passbackButton = new Button("passback") {
@@ -130,6 +134,8 @@ public class DetailPage extends DefaultLayoutPage {
 			@Override
 			public void onSubmit() {
 				updateStatus(id, KintaiStatus.PASSBACK);
+
+				log.info("差戻しました");
 			}
 		};
 		final Button withdrawButton = new Button("withdraw") {
@@ -137,6 +143,8 @@ public class DetailPage extends DefaultLayoutPage {
 			@Override
 			public void onSubmit() {
 				updateStatus(id, KintaiStatus.WITHDRAWN);
+
+				log.info("取下げました");
 			}
 		};
 
@@ -251,7 +259,7 @@ public class DetailPage extends DefaultLayoutPage {
 			transaction.begin();
 
 			final ApplicationDao dao = new ApplicationDaoImpl();
-			
+
 			final Application application = dao.selectById(id);
 
 			application.setStatus(status.name());

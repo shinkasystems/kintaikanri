@@ -8,6 +8,8 @@ import java.util.List;
 
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
+import net.shinkasystems.kintai.component.UserChoiceRenderer;
+import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
@@ -117,13 +119,13 @@ public class UserProfilePage extends AdminLayoutPage {
 	/**
 	 * 決裁者のリストです。
 	 */
-	private final List<AuthorityOption> authorityOptions = new ArrayList<AuthorityOption>();
+	private final List<UserOption> authorityOptions = new ArrayList<UserOption>();
 
 	/**
 	 * 決裁者のドロップダウンです。
 	 */
-	private final DropDownChoice<AuthorityOption> authorityDropDownChoice = new DropDownChoice<>("authority",
-			new Model<AuthorityOption>(), authorityOptions, new AuthorityChoiceRenderer());
+	private final DropDownChoice<UserOption> authorityDropDownChoice = new DropDownChoice<>("authority",
+			new Model<UserOption>(), authorityOptions, new UserChoiceRenderer());
 
 	/**
 	 * 権限のリストです。
@@ -165,7 +167,7 @@ public class UserProfilePage extends AdminLayoutPage {
 			final UserDao dao = new UserDaoImpl();
 
 			for (UserData data : dao.selectUserData(SelectOptions.get())) {
-				authorityOptions.add(new AuthorityOption(data.getId(), data.getUserName(), data.getDisplayName()));
+				authorityOptions.add(new UserOption(data.getId(), data.getDisplayName()));
 			}
 
 			transaction.commit();
@@ -202,59 +204,6 @@ public class UserProfilePage extends AdminLayoutPage {
 		userProfileForm.add(activatedChoice);
 		add(userProfileForm);
 	}
-}
-
-/**
- * 
- * @author Aogiri
- * 
- */
-class AuthorityChoiceRenderer implements IChoiceRenderer<AuthorityOption> {
-
-	@Override
-	public Object getDisplayValue(AuthorityOption authority) {
-		return authority.getUserName();
-	}
-
-	@Override
-	public String getIdValue(AuthorityOption authority, int index) {
-		return String.valueOf(authority.getId());
-	}
-
-}
-
-/**
- * 
- * @author Aogiri
- *
- */
-class AuthorityOption implements Serializable {
-
-	private final int id;
-
-	private final String userName;
-
-	private final String displayName;
-
-	public AuthorityOption(int id, String userName, String displayName) {
-		super();
-		this.id = id;
-		this.userName = userName;
-		this.displayName = displayName;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
 }
 
 /**

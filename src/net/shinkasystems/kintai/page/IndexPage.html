@@ -6,7 +6,7 @@
 <table class="table">
 	<tr>
 		<th>#</th>
-		<th>期日</th>
+		<th wicket:id="orderByTerm">期日</th>
 		<th>申請内容</th>
 		<th>コメント</th>
 		<th>申請日</th>
@@ -38,25 +38,29 @@
 </div>
 
 
-<form>
+<form wicket:id="search-form">
 	<fieldset>
 		<legend>検索</legend>
 		<div class="row">
 			<div class="span3">
 				<label>From</label>
-				<input type="text" id="from" name="from" size="10">
+				<input type="text" id="from" name="from" wicket:id="from">
 			</div>
 			<div class="span3">
 				<label>To</label>
-				<input type="text" id="to" name="to" size="10">
+				<input type="text" id="to" name="to" wicket:id="to">
 			</div>
 			<div class="span3">
 				<label>申請者</label>
-				<input type="text" id="applicant" name="applicant" size="10">
+				<select name="applicant" wicket:id="applicant">
+					<option value=""></option>
+					<option value="">進化　太郎</option>
+					<option value="">進化　次郎</option>
+				</select>
 			</div>
 			<div class="span3">
 				<label>ステータス</label>
-				<select name="status">
+				<select name="status" wicket:id="status">
 					<option value=""></option>
 					<option value="">申請中</option>
 					<option value="">承認</option>

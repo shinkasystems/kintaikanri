@@ -1,6 +1,5 @@
 package net.shinkasystems.kintai.page;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +11,8 @@ import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.KintaiStatus;
 import net.shinkasystems.kintai.KintaiType;
+import net.shinkasystems.kintai.component.UserChoiceRenderer;
+import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.entity.Application;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
@@ -123,13 +124,13 @@ public class EntryPage extends DefaultLayoutPage {
 	/**
 	 * 代理申請が可能な申請者のリストです。
 	 */
-	private final List<ApplicantOption> applicantOptions = new ArrayList<ApplicantOption>();
+	private final List<UserOption> applicantOptions = new ArrayList<UserOption>();
 
 	/**
 	 * 代理申請を行う場合の申請者を管理するドロップダウンです。
 	 */
-	private final DropDownChoice<ApplicantOption> applicantDropDownChoice = new DropDownChoice<ApplicantOption>(
-			"applicant", new Model<ApplicantOption>(), applicantOptions, new ApplicantChoiceRenderer());
+	private final DropDownChoice<UserOption> applicantDropDownChoice = new DropDownChoice<UserOption>(
+			"applicant", new Model<UserOption>(), applicantOptions, new UserChoiceRenderer());
 
 	/**
 	 * コンストラクタです。
@@ -176,9 +177,9 @@ public class EntryPage extends DefaultLayoutPage {
 	 * @param authorityId
 	 * @return
 	 */
-	private List<ApplicantOption> getApplicant(int authorityId) {
+	private List<UserOption> getApplicant(int authorityId) {
 		
-		final List<ApplicantOption> applicantOptions = new ArrayList<ApplicantOption>();
+		final List<UserOption> applicantOptions = new ArrayList<UserOption>();
 
 		LocalTransaction transaction = KintaiDB.getLocalTransaction();
 		try {
@@ -187,7 +188,7 @@ public class EntryPage extends DefaultLayoutPage {
 			final UserDao dao = new UserDaoImpl();
 			
 			for (User user : dao.selectByAuthorityID(authorityId)) {
-				applicantOptions.add(new ApplicantOption(user.getId(), user.getDisplayName()));
+				applicantOptions.add(new UserOption(user.getId(), user.getDisplayName()));
 			}
 
 		} finally {
@@ -215,49 +216,4 @@ class KintaiTypeChoiceRendere implements IChoiceRenderer<KintaiType> {
 		return type.name();
 	}
 
-}
-
-/**
- * 
- * @author Aogiri
- *
- */
-class ApplicantChoiceRenderer implements IChoiceRenderer<ApplicantOption> {
-
-	@Override
-	public Object getDisplayValue(ApplicantOption applicantOption) {
-		return applicantOption.getDisplay();
-	}
-
-	@Override
-	public String getIdValue(ApplicantOption applicantOption, int index) {
-		return String.valueOf(applicantOption.getId());
-	}
-
-}
-
-/**
- * 
- * @author Aogiri
- *
- */
-class ApplicantOption implements Serializable {
-
-	private final int id;
-	
-	private final String display;
-
-	public ApplicantOption(int id, String display) {
-		super();
-		this.id = id;
-		this.display = display;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getDisplay() {
-		return display;
-	}
 }

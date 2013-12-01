@@ -24,7 +24,9 @@ public class SignInPage extends DefaultLayoutPage {
 	/** ロガー */
 	private static final Logger log = LoggerFactory.getLogger(SignInPage.class);
 	
-	
+	/**
+	 * アラートパネルです。
+	 */
 	private final Panel alertPanel = new AlertPanel("alert-panel");
 
 	/**
@@ -69,6 +71,14 @@ public class SignInPage extends DefaultLayoutPage {
 	 */
 	public SignInPage() {
 		super();
+		
+		KintaiSession session = (KintaiSession) KintaiSession.get();
+		if (session.isSignedIn()) {
+			
+			log.info("ユーザーがログアウトしました。ユーザー名:" + session.getUser().getUserName());
+			
+			session.invalidate();
+		}
 		
 		/*
 		 * コンポーネントの生成

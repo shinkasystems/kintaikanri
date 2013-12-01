@@ -1,5 +1,6 @@
 package net.shinkasystems.kintai.entity;
 
+import java.sql.Date;
 import java.util.List;
 
 import net.shinkasystems.kintai.KintaiDB;
@@ -37,7 +38,7 @@ public interface ApplicationDao {
 	 * @return
 	 */
 	@Select
-	List<ApplicationData> selectApplicationData(SelectOptions options);
+	List<ApplicationData> selectApplicationData(SelectOptions options, Date from, Date to, Integer applicantID, String status, String orderBy);
 	
 	@Select
 	int selectCountApplication();

@@ -30,7 +30,7 @@ public class Start {
 		try {
 			initAppDataDir();
 			initDB();
-			startServer();
+			startApplicationServer();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -43,7 +43,7 @@ public class Start {
 	 * 
 	 * @throws Exception
 	 */
-	private static void startServer() throws Exception {
+	private static void startApplicationServer() throws Exception {
 
 		Server server = new Server(KintaiConstants.SERVER_PORT);
 
@@ -94,7 +94,7 @@ public class Start {
 				ApplicationDao dao = new ApplicationDaoImpl();
 				dao.createTable();
 			}
-			
+
 			transaction.commit();
 
 		} catch (Exception e) {

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
-import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -65,7 +64,10 @@ public enum KintaiMail {
 	/** ロガー */
 	private static final Logger log = LoggerFactory.getLogger(KintaiMail.class);
 
-	private static final String PROPERTIES_FILE_PATH = "META-INF/properties/smtp.properties";
+	/**
+	 * メール設定を管理するプロパティファイルです。
+	 */
+	public static final String PROPERTIES_FILE_PATH = "META-INF/properties/smtp.properties";
 
 	/**
 	 * 
@@ -113,20 +115,13 @@ public enum KintaiMail {
 				argument.getForm(),
 				argument.getComment());
 
-		final Properties properties = new Properties();
-		try {
-			properties.load(this.getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_PATH));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		final Session session = Session.getInstance(properties, new Authenticator() {
+		final Session session = Session.getInstance(KintaiMailPropery.PROPERTIES, new Authenticator() {
 
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(
-						properties.getProperty("mail.smtp.user"),
-						properties.getProperty("mail.smtp.password"));
+						KintaiMailPropery.USER.getValue(),
+						KintaiMailPropery.PASSWORD.getValue());
 			}
 		});
 
@@ -137,7 +132,7 @@ public enum KintaiMail {
 			message.setRecipients(Message.RecipientType.CC,
 					new InternetAddress[] { new InternetAddress(argument.getSenderMailAddress()) });
 			message.setReplyTo(new InternetAddress[] { new InternetAddress(argument.getSenderMailAddress()) });
-			message.setFrom(new InternetAddress(properties.getProperty("mail.smtp.user")));
+			message.setFrom(new InternetAddress(KintaiMailPropery.USER.getValue()));
 			message.setSubject(subject);
 			message.setSentDate(new Date());
 			message.setText(text);
