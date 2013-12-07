@@ -40,8 +40,20 @@ public interface ApplicationDao {
 	@Select
 	List<ApplicationData> selectApplicationData(SelectOptions options, Date from, Date to, Integer applicantID, String status, String orderBy);
 	
+	/**
+	 * 
+	 * @return
+	 */
 	@Select
 	int selectCountApplication();
+	
+	/**
+	 * 
+	 * @param userID
+	 * @return
+	 */
+	@Select
+	boolean selectHistoryExists(Integer userID);
 
 	/**
 	 * @param entity

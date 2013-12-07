@@ -13,13 +13,14 @@ import net.shinkasystems.kintai.entity.sub.UserData;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.seasar.doma.jdbc.SelectOptions;
 import org.seasar.doma.jdbc.tx.LocalTransaction;
 
@@ -30,11 +31,11 @@ import org.seasar.doma.jdbc.tx.LocalTransaction;
  */
 @AuthorizeInstantiation({ KintaiRole.ADMIN })
 public class UsersPage extends AdminLayoutPage {
-
+	
 	/**
 	 * 
 	 */
-	private final Form<ValueMap> userForm = new Form<ValueMap>("users-form");
+	public static final String PARAMETER_ID = "id";
 
 	/**
 	 * 
@@ -46,14 +47,37 @@ public class UsersPage extends AdminLayoutPage {
 		protected void populateItem(Item<UserData> item) {
 
 			final UserData user = item.getModelObject();
+			
+			final Label userIDLabel = new Label("user-id", user.getId());
+			final Label userNameLabel = new Label("user-name", user.getUserName());
+			final Label userDisplayNameLabel = new Label("user-display-name", user.getDisplayName());
+			final Label userAuthorityDisplayNameLabel = new Label("authority-display-name", user.getAuthorityDisplayName());
+			final Label userRoleLabel = new Label("role", user.getRole());
+			final Label userExpiredLabel = new Label("expire-date", KintaiConstants.DATE_FORMAT.format(user.getExpireDate()));
+			final Label userActivatedLabel = new Label("activated", user.getActivated() ? "有効" : "無効");
+			
+			final Link<String> userLink = new StatelessLink<String>("link") {
 
-			item.add(new Label("user-id", user.getId()));
-			item.add(new Label("user-name", user.getUserName()));
-			item.add(new Label("user-display-name", user.getDisplayName()));
-			item.add(new Label("authority-display-name", user.getAuthorityDisplayName()));
-			item.add(new Label("role", user.getRole()));
-			item.add(new Label("expire-date", KintaiConstants.DATE_FORMAT.format(user.getExpireDate())));
-			item.add(new Label("activated", user.getActivated() ? "有効" : "無効"));
+				@Override
+				public void onClick() {
+
+					final PageParameters parameters = new PageParameters();
+
+					parameters.set(PARAMETER_ID, user.getId());
+
+					UsersPage.this.setResponsePage(UserEditPage.class, parameters);
+				}
+
+			};
+			userLink.add(userNameLabel);
+			
+			item.add(userIDLabel);
+			item.add(userLink);
+			item.add(userDisplayNameLabel);
+			item.add(userAuthorityDisplayNameLabel);
+			item.add(userRoleLabel);
+			item.add(userExpiredLabel);
+			item.add(userActivatedLabel);
 			
 			/*
 			 * TODO
@@ -86,10 +110,8 @@ public class UsersPage extends AdminLayoutPage {
 		/*
 		 * コンポーネントの組立
 		 */
-		userForm.add(pagingNavigator);
-
-		userForm.add(userDataView);
-		add(userForm);
+		add(userDataView);
+		add(pagingNavigator);
 	}
 
 }

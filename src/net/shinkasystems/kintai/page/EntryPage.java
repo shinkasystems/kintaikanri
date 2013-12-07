@@ -13,12 +13,12 @@ import net.shinkasystems.kintai.KintaiStatus;
 import net.shinkasystems.kintai.KintaiType;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
+import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.entity.Application;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
-import net.shinkasystems.kintai.entity.User;
-import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
+import net.shinkasystems.kintai.mail.KintaiMail;
+import net.shinkasystems.kintai.mail.KintaiMailArgument;
 import net.shinkasystems.kintai.panel.AlertPanel;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * @author Aogiri
  * 
  */
-@AuthorizeInstantiation({ KintaiRole.USER })
+@AuthorizeInstantiation({ KintaiRole.ADMIN, KintaiRole.USER })
 public class EntryPage extends DefaultLayoutPage {
 
 	/** ロガー */
@@ -96,6 +96,17 @@ public class EntryPage extends DefaultLayoutPage {
 				transaction.rollback();
 			}
 			
+			final KintaiMailArgument argument = new KintaiMailArgument();
+			argument.setReceiverName("決裁者名");
+			argument.setReceiverMailAddress("unit-test-authority@localhost");
+			argument.setSenderName("申請者名");
+			argument.setSenderMailAddress("unit-test-applicant@localhost");
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(new Date(new java.util.Date().getTime())));
+			argument.setForm("有給休暇");
+			argument.setComment("私用のため");
+
+			KintaiMail.ENTRY.send(argument);
+			
 			setResponsePage(IndexPage.class);
 		}
 
@@ -120,7 +131,7 @@ public class EntryPage extends DefaultLayoutPage {
 	 * 事由等のコメントを入力するテキストエリアです。
 	 */
 	private final TextArea<String> commentTextArea = new TextArea<>("comment", new Model<String>());
-	
+
 	/**
 	 * 代理申請が可能な申請者のリストです。
 	 */
@@ -151,7 +162,8 @@ public class EntryPage extends DefaultLayoutPage {
 		 * TODO
 		 * 代理申請の活性制御
 		 */
-		applicantOptions.addAll(getApplicant(((KintaiSession) KintaiSession.get()).getUser().getId()));
+		applicantOptions.addAll(UserOptionUtility.getUserOptions(
+				((KintaiSession) KintaiSession.get()).getUser().getId()));
 		if (applicantOptions.size() > 0) {
 			applicantDropDownChoice.setEnabled(true);
 		} else {
@@ -170,33 +182,6 @@ public class EntryPage extends DefaultLayoutPage {
 		add(entryForm);
 	}
 
-	/**
-	 * 代理申請が可能な申請者を取得します。
-	 * ログインユーザーが決裁者となっている申請者の申請を代理することができます。
-	 * 
-	 * @param authorityId
-	 * @return
-	 */
-	private List<UserOption> getApplicant(int authorityId) {
-		
-		final List<UserOption> applicantOptions = new ArrayList<UserOption>();
-
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
-
-			final UserDao dao = new UserDaoImpl();
-			
-			for (User user : dao.selectByAuthorityID(authorityId)) {
-				applicantOptions.add(new UserOption(user.getId(), user.getDisplayName()));
-			}
-
-		} finally {
-			transaction.rollback();
-		}
-		
-		return applicantOptions;
-	}
 }
 
 /**

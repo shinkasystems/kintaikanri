@@ -1,6 +1,5 @@
 package net.shinkasystems.kintai.page;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
@@ -13,12 +12,10 @@ import net.shinkasystems.kintai.KintaiStatus;
 import net.shinkasystems.kintai.KintaiType;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
+import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
-import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.entity.sub.ApplicationData;
-import net.shinkasystems.kintai.entity.sub.UserData;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -186,7 +183,7 @@ public class IndexPage extends DefaultLayoutPage {
 	 * 申請者の選択コンポーネントです。
 	 */
 	private final DropDownChoice<UserOption> userDropDownChoice = new DropDownChoice<UserOption>(
-			"applicant", new Model<UserOption>(), getUserOptions(), new UserChoiceRenderer());
+			"applicant", new Model<UserOption>(), UserOptionUtility.getUserOptions(), new UserChoiceRenderer());
 
 	/**
 	 * ステータスの選択コンポーネントです。
@@ -233,34 +230,6 @@ public class IndexPage extends DefaultLayoutPage {
 		form.add(statusDropDownChoice);
 
 		add(form);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	private static List<UserOption> getUserOptions() {
-		
-		List<UserOption> userOptions = new ArrayList<UserOption>();
-		List<UserData> userDatas = null;
-		
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
-
-			final UserDao dao = new UserDaoImpl();
-
-			userDatas = dao.selectUserData(SelectOptions.get());
-
-		} finally {
-			transaction.rollback();
-		}
-		
-		for (UserData userData: userDatas) {
-			userOptions.add(new UserOption(userData.getId(), userData.getDisplayName()));
-		}
-		
-		return userOptions;
 	}
 }
 

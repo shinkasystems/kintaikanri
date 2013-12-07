@@ -19,13 +19,13 @@ public class UserData extends User implements Serializable {
 	/**
 	 * 決裁者の表示名です。
 	 */
-	 @Column(name = "AUTHORITY_DISPLAY_NAME")
+	@Column(name = "AUTHORITY_DISPLAY_NAME")
 	private String authorityDisplayName;
 
-	 /**
-	  * 
-	  * @return
-	  */
+	/**
+	 * 
+	 * @return
+	 */
 	public String getAuthorityDisplayName() {
 		return authorityDisplayName;
 	}

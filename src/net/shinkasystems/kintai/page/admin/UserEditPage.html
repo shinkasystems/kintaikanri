@@ -1,10 +1,29 @@
 <wicket:extend>
 
+
+<div wicket:id="alert-panel">
+	<p>Alert Panel</p>
+</div>
+
+
+<ul class="nav nav-tabs">
+	<li><a href="/admin">ユーザー一覧</a></li>
+	<li><a href="/admin/user/registration">ユーザー登録</a></li>
+	<li class="active"><a>ユーザー編集</a></li>
+</ul>
+
+
 <form id="user-profile-form" class="form-horizontal" wicket:id="user-profile-form">
+	<div class="control-group">
+		<label class="control-label" for="user-name">ユーザーID</label>
+		<div class="controls">
+			<input type="text" name="user-id" class="span2" wicket:id="user-id">
+		</div>
+	</div>
 	<div class="control-group">
 		<label class="control-label" for="user-name">ユーザー名</label>
 		<div class="controls">
-			<input type="text" name="user-name" class="span4" wicket:id="user-name">
+			<input type="text" name="user-name" class="span2" wicket:id="user-name">
 		</div>
 	</div>
 	<div class="control-group">
@@ -41,16 +60,16 @@
 		</div>
 	</div>
 	<div class="control-group">
-		<label class="control-label" for="activated">有効／無効</label>
 		<div class="controls">
-			<span wicket:id="activated"></span>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="controls">
-			<input type="submit" name="submit" value="新規登録" class="btn">
+			<div class="btn-group">
+				<button class="btn" wicket:id="update-button">更新</button>
+				<button class="btn" wicket:id="activate-button">有効化</button>
+				<button class="btn btn-inverse" wicket:id="invalidate-button">無効化</button>
+				<button class="btn btn-danger" wicket:id="delete-button">削除</button>
+			</div>
 		</div>
 	</div>
 </form>
+
 
 </wicket:extend>

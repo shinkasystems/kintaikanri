@@ -8,12 +8,16 @@ import java.util.List;
 
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
+import net.shinkasystems.kintai.component.PasswordConfirmValidator;
+import net.shinkasystems.kintai.component.RoleChoiceRenderer;
+import net.shinkasystems.kintai.component.RoleOption;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
+import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
-import net.shinkasystems.kintai.entity.sub.UserData;
+import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.util.Authentication;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -23,9 +27,9 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
-import org.seasar.doma.jdbc.SelectOptions;
 import org.seasar.doma.jdbc.tx.LocalTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,15 +41,31 @@ import org.slf4j.LoggerFactory;
  * 
  */
 @AuthorizeInstantiation({ KintaiRole.ADMIN })
-public class UserProfilePage extends AdminLayoutPage {
+public class UserRegistrationPage extends AdminLayoutPage {
 
 	/** ロガー */
-	private static final Logger log = LoggerFactory.getLogger(UserProfilePage.class);
+	private static final Logger log = LoggerFactory.getLogger(UserRegistrationPage.class);
+
+	/**
+	 * アラートパネルです。
+	 */
+	private final Panel alertPanel = new AlertPanel("alert-panel");
 
 	/**
 	 * ユーザーを登録／編集するフォームです。
 	 */
 	private final Form<ValueMap> userProfileForm = new Form<ValueMap>("user-profile-form") {
+
+		@Override
+		protected void onError() {
+			alertPanel.setVisible(true);
+		}
+
+		@Override
+		protected void onValidate() {
+			// TODO 自動生成されたメソッド・スタブ
+			super.onValidate();
+		}
 
 		@Override
 		protected void onSubmit() {
@@ -153,27 +173,13 @@ public class UserProfilePage extends AdminLayoutPage {
 	/**
 	 * コンストラクタです。
 	 */
-	public UserProfilePage() {
+	public UserRegistrationPage() {
 		super();
 
 		/*
 		 * コンポーネントの生成
 		 */
-
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
-
-			final UserDao dao = new UserDaoImpl();
-
-			for (UserData data : dao.selectUserData(SelectOptions.get())) {
-				authorityOptions.add(new UserOption(data.getId(), data.getDisplayName()));
-			}
-
-			transaction.commit();
-		} finally {
-			transaction.rollback();
-		}
+		authorityOptions.addAll(UserOptionUtility.getUserOptions());
 
 		roleOptions.add(new RoleOption(KintaiRole.ADMIN, "管理"));
 		roleOptions.add(new RoleOption(KintaiRole.USER, "一般"));
@@ -183,6 +189,8 @@ public class UserProfilePage extends AdminLayoutPage {
 		/*
 		 * コンポーネントの編集
 		 */
+		alertPanel.setVisible(false);
+		
 		userNameTextField.setRequired(true);
 		passwordTextField.setRequired(true);
 		passwordConfirmTextField.setRequired(true);
@@ -191,10 +199,14 @@ public class UserProfilePage extends AdminLayoutPage {
 		roleChoice.setSuffix("&nbsp;");
 		activatedChoice.setRequired(true);
 		activatedChoice.setSuffix("&nbsp;");
+		
+		userProfileForm.add(new PasswordConfirmValidator(passwordTextField, passwordConfirmTextField));
 
 		/*
 		 * コンポーネントの組立
 		 */
+		add(alertPanel);
+		
 		userProfileForm.add(userNameTextField);
 		userProfileForm.add(passwordTextField);
 		userProfileForm.add(passwordConfirmTextField);
@@ -203,51 +215,6 @@ public class UserProfilePage extends AdminLayoutPage {
 		userProfileForm.add(roleChoice);
 		userProfileForm.add(activatedChoice);
 		add(userProfileForm);
-	}
-}
-
-/**
- * 
- * @author Aogiri
- * 
- */
-class RoleChoiceRenderer implements IChoiceRenderer<RoleOption> {
-
-	@Override
-	public Object getDisplayValue(RoleOption roleOption) {
-		return roleOption.getDisplay();
-	}
-
-	@Override
-	public String getIdValue(RoleOption roleOption, int index) {
-		return roleOption.getId();
-	}
-
-}
-
-/**
- * 
- * @author Aogiri
- * 
- */
-class RoleOption implements Serializable {
-
-	private final String id;
-
-	private final String display;
-
-	public RoleOption(String id, String display) {
-		super();
-		this.id = id;
-		this.display = display;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getDisplay() {
-		return display;
 	}
 }
 

@@ -1,8 +1,14 @@
 <wicket:extend>
 
-<form wicket:id="users-form" class="table">
 
-<table>
+<ul class="nav nav-tabs">
+	<li class="active"><a href="/admin">ユーザー一覧</a></li>
+	<li><a href="/admin/user/registration">ユーザー登録</a></li>
+</ul>
+
+
+
+<table class="table">
 	<thead>
 		<tr>
 			<th>#</th>
@@ -17,7 +23,7 @@
 	<tbody>
 		<tr wicket:id="user-data-view">
 			<td wicket:id="user-id">#</td>
-			<td wicket:id="user-name">ユーザー名</td>
+			<td><a wicket:id="link"><span wicket:id="user-name">ユーザー名</span></a></td>
 			<td wicket:id="user-display-name">申請者名</td>
 			<td wicket:id="authority-display-name">決裁者名</td>
 			<td wicket:id="role">権限</td>
@@ -40,6 +46,5 @@
 
 <span wicket:id="page-navigator"></span>
 
-</form>
 
 </wicket:extend>
