@@ -14,6 +14,8 @@ import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
+import net.shinkasystems.kintai.mail.KintaiMail;
+import net.shinkasystems.kintai.mail.KintaiMailArgument;
 import net.shinkasystems.kintai.panel.AlertPanel;
 
 import org.apache.wicket.AttributeModifier;
@@ -91,6 +93,8 @@ public class DetailPage extends DefaultLayoutPage {
 		String updated = null;
 		if (application.getUpdateDate() != null) {
 			updated = KintaiConstants.DATE_FORMAT.format(application.getUpdateDate());
+		} else {
+			updated = "決裁されていません";
 		}
 
 		/*
@@ -118,6 +122,20 @@ public class DetailPage extends DefaultLayoutPage {
 				updateStatus(id, KintaiStatus.APPROVED);
 
 				log.info("承認しました");
+				
+				/*
+				 * メール送信処理
+				 */
+				final KintaiMailArgument argument = new KintaiMailArgument();
+				argument.setReceiverName(applicant.getDisplayName());
+				argument.setReceiverMailAddress(applicant.getEmailAddress());
+				argument.setSenderName(authority.getDisplayName());
+				argument.setSenderMailAddress(authority.getEmailAddress());
+				argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
+				argument.setForm(KintaiType.valueOf(application.getType()).display);
+				argument.setComment(application.getCommentApplycant());
+
+				KintaiMail.APPROVAL.send(argument);
 			}
 		};
 		final Button rejectButton = new Button("reject") {
@@ -127,6 +145,20 @@ public class DetailPage extends DefaultLayoutPage {
 				updateStatus(id, KintaiStatus.REJECTED);
 
 				log.info("却下しました");
+
+				/*
+				 * メール送信処理
+				 */
+				final KintaiMailArgument argument = new KintaiMailArgument();
+				argument.setReceiverName(applicant.getDisplayName());
+				argument.setReceiverMailAddress(applicant.getEmailAddress());
+				argument.setSenderName(authority.getDisplayName());
+				argument.setSenderMailAddress(authority.getEmailAddress());
+				argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
+				argument.setForm(KintaiType.valueOf(application.getType()).display);
+				argument.setComment(application.getCommentApplycant());
+
+				KintaiMail.REJECTION.send(argument);
 			}
 		};
 		final Button passbackButton = new Button("passback") {
@@ -136,6 +168,20 @@ public class DetailPage extends DefaultLayoutPage {
 				updateStatus(id, KintaiStatus.PASSBACK);
 
 				log.info("差戻しました");
+				
+				/*
+				 * メール送信処理
+				 */
+				final KintaiMailArgument argument = new KintaiMailArgument();
+				argument.setReceiverName(applicant.getDisplayName());
+				argument.setReceiverMailAddress(applicant.getEmailAddress());
+				argument.setSenderName(authority.getDisplayName());
+				argument.setSenderMailAddress(authority.getEmailAddress());
+				argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
+				argument.setForm(KintaiType.valueOf(application.getType()).display);
+				argument.setComment(application.getCommentApplycant());
+
+				KintaiMail.PASSBACK.send(argument);
 			}
 		};
 		final Button withdrawButton = new Button("withdraw") {
@@ -145,6 +191,20 @@ public class DetailPage extends DefaultLayoutPage {
 				updateStatus(id, KintaiStatus.WITHDRAWN);
 
 				log.info("取下げました");
+				
+				/*
+				 * メール送信処理
+				 */
+				final KintaiMailArgument argument = new KintaiMailArgument();
+				argument.setReceiverName(authority.getDisplayName());
+				argument.setReceiverMailAddress(authority.getEmailAddress());
+				argument.setSenderName(applicant.getDisplayName());
+				argument.setSenderMailAddress(applicant.getEmailAddress());
+				argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
+				argument.setForm(KintaiType.valueOf(application.getType()).display);
+				argument.setComment(application.getCommentApplycant());
+
+				KintaiMail.WITHDRAWAL.send(argument);
 			}
 		};
 
@@ -166,8 +226,6 @@ public class DetailPage extends DefaultLayoutPage {
 		} else if (status == KintaiStatus.PASSBACK) {
 			statusLabel.add(new AttributeModifier("class", "label label-inverse"));
 		}
-
-		updatedLabel.setDefaultModelObject("まだ決裁されていません");
 
 		if (loginUser.getId() == authority.getId()
 				&& (status == KintaiStatus.PENDING || status == KintaiStatus.PASSBACK)) {

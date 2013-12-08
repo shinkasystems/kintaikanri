@@ -17,6 +17,9 @@ import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.entity.Application;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
+import net.shinkasystems.kintai.entity.User;
+import net.shinkasystems.kintai.entity.UserDao;
+import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.mail.KintaiMail;
 import net.shinkasystems.kintai.mail.KintaiMailArgument;
 import net.shinkasystems.kintai.panel.AlertPanel;
@@ -66,13 +69,16 @@ public class EntryPage extends DefaultLayoutPage {
 		@Override
 		protected void onSubmit() {
 
-			LocalTransaction transaction = KintaiDB.getLocalTransaction();
+			/*
+			 * 申請処理
+			 */
+			final Application application = new Application();
+			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
 			try {
 				transaction.begin();
 
 				final ApplicationDao dao = new ApplicationDaoImpl();
 
-				final Application application = new Application();
 
 				if (applicantDropDownChoice.getModelObject() != null) {
 					application.setApplicantId(applicantDropDownChoice.getModelObject().getId());
@@ -96,14 +102,20 @@ public class EntryPage extends DefaultLayoutPage {
 				transaction.rollback();
 			}
 			
+			/*
+			 * メール送信処理
+			 */
+			final User sender = getUser(application.getApplicantId());
+			final User receiver = getUser(sender.getAuthorityId());
+			
 			final KintaiMailArgument argument = new KintaiMailArgument();
-			argument.setReceiverName("決裁者名");
-			argument.setReceiverMailAddress("unit-test-authority@localhost");
-			argument.setSenderName("申請者名");
-			argument.setSenderMailAddress("unit-test-applicant@localhost");
-			argument.setTerm(KintaiConstants.DATE_FORMAT.format(new Date(new java.util.Date().getTime())));
-			argument.setForm("有給休暇");
-			argument.setComment("私用のため");
+			argument.setReceiverName(receiver.getDisplayName());
+			argument.setReceiverMailAddress(receiver.getEmailAddress());
+			argument.setSenderName(sender.getDisplayName());
+			argument.setSenderMailAddress(sender.getEmailAddress());
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(termTextField.getModelObject().getTime()));
+			argument.setForm(typeDropDownChoice.getModelObject().display);
+			argument.setComment(commentTextArea.getModelObject());
 
 			KintaiMail.ENTRY.send(argument);
 			
@@ -158,10 +170,6 @@ public class EntryPage extends DefaultLayoutPage {
 		termTextField.add(new DatePicker());
 		commentTextArea.setRequired(true);
 
-		/*
-		 * TODO
-		 * 代理申請の活性制御
-		 */
 		applicantOptions.addAll(UserOptionUtility.getUserOptions(
 				((KintaiSession) KintaiSession.get()).getUser().getId()));
 		if (applicantOptions.size() > 0) {
@@ -182,6 +190,26 @@ public class EntryPage extends DefaultLayoutPage {
 		add(entryForm);
 	}
 
+	/**
+	 * 指定IDのユーザーを取得します。
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private static User getUser(int id) {
+
+		LocalTransaction transaction = KintaiDB.getLocalTransaction();
+		try {
+			transaction.begin();
+
+			final UserDao dao = new UserDaoImpl();
+
+			return dao.selectById(id);
+
+		} finally {
+			transaction.rollback();
+		}
+	}
 }
 
 /**

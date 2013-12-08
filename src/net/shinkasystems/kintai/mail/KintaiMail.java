@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.MessageFormat;
 import java.util.Date;
 
 import javax.mail.Authenticator;
@@ -107,7 +108,7 @@ public enum KintaiMail {
 			}
 		}
 
-		final String text = String.format(
+		final String text = MessageFormat.format(
 				builder.toString(),
 				argument.getReceiverName(),
 				argument.getSenderName(),
@@ -141,7 +142,7 @@ public enum KintaiMail {
 
 		} catch (MessagingException e) {
 
-			log.error("メール送信中に例外が発生しました。");
+			log.error("メール送信中に例外が発生しました。" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
