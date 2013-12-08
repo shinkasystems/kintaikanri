@@ -68,7 +68,7 @@ public class UserOptionUtility {
 
 			final UserDao dao = new UserDaoImpl();
 			
-			for (User user : dao.selectByAuthorityID(authorityId)) {
+			for (User user : dao.selectByAuthorityId(authorityId)) {
 				applicantOptions.add(new UserOption(user.getId(), user.getDisplayName()));
 			}
 

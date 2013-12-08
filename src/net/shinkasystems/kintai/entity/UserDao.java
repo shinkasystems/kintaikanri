@@ -34,11 +34,11 @@ public interface UserDao {
 
 	/**
 	 * 
-	 * @param proxyId
+	 * @param authorityId
 	 * @return
 	 */
 	@Select
-	List<User> selectByAuthorityID(Integer authorityId);
+	List<User> selectByAuthorityId(Integer authorityId);
 
 	/**
 	 * 
