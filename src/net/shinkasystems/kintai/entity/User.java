@@ -38,6 +38,10 @@ public class User {
     String displayName;
 
     /**  */
+    @Column(name = "EMAIL_ADDRESS")
+    String emailAddress;
+
+    /**  */
     @Column(name = "ACTIVATED")
     Boolean activated;
 
@@ -137,6 +141,24 @@ public class User {
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    /** 
+     * Returns the emailAddress.
+     * 
+     * @return the emailAddress
+     */
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    /** 
+     * Sets the emailAddress.
+     * 
+     * @param emailAddress the emailAddress
+     */
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     /** 

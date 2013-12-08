@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * ユーザーの編集を行います。
  * 
  * @author Aogiri
  *
@@ -92,6 +93,11 @@ public class UserEditPage extends AdminLayoutPage {
 			"display-name", new Model<String>());
 
 	/**
+	 * メールアドレスの入力フィールドです。
+	 */
+	private final TextField<String> emailAddressTextField = new TextField<>("email-address", new Model<String>());
+
+	/**
 	 * 決裁者のリストです。
 	 */
 	private final List<UserOption> authorityOptions = new ArrayList<UserOption>();
@@ -137,6 +143,10 @@ public class UserEditPage extends AdminLayoutPage {
 				if (displayNameTextField.getModelObject() != null
 						&& displayNameTextField.getModelObject().isEmpty() == false) {
 					user.setDisplayName(displayNameTextField.getModelObject());
+				}
+				if (emailAddressTextField.getModelObject() != null
+						&& emailAddressTextField.getModelObject().isEmpty() == false) {
+					user.setEmailAddress(emailAddressTextField.getModelObject());
 				}
 				if (authorityDropDownChoice.getModelObject() != null) {
 					user.setAuthorityId(authorityDropDownChoice.getModelObject().getId());
@@ -258,7 +268,7 @@ public class UserEditPage extends AdminLayoutPage {
 		 * ログインユーザー情報の取得
 		 */
 		final User loginUser = ((KintaiSession) KintaiSession.get()).getUser();
-		
+
 		/*
 		 * 申請者情報の取得
 		 */
@@ -302,6 +312,7 @@ public class UserEditPage extends AdminLayoutPage {
 		passwordTextField.setRequired(false);
 		passwordConfirmTextField.setRequired(false);
 		displayNameTextField.setDefaultModelObject(user.getDisplayName());
+		emailAddressTextField.setDefaultModelObject(user.getEmailAddress());
 		authorityDropDownChoice.setDefaultModelObject(currentAuthority);
 		roleChoice.setDefaultModelObject(currentRole);
 		roleChoice.setSuffix("&nbsp;");
@@ -321,6 +332,7 @@ public class UserEditPage extends AdminLayoutPage {
 		userProfileForm.add(passwordTextField);
 		userProfileForm.add(passwordConfirmTextField);
 		userProfileForm.add(displayNameTextField);
+		userProfileForm.add(emailAddressTextField);
 		userProfileForm.add(authorityDropDownChoice);
 		userProfileForm.add(roleChoice);
 		userProfileForm.add(updateButton);

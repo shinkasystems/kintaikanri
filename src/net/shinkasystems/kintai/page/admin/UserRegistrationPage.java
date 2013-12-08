@@ -35,7 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ユーザーの登録／編集を行います。
+ * ユーザーの登録を行います。
  * 
  * @author Aogiri
  * 
@@ -84,6 +84,7 @@ public class UserRegistrationPage extends AdminLayoutPage {
 				user.setPassword(new Authentication(userNameTextField.getValue(), passwordTextField.getValue())
 						.getPasswordHash());
 				user.setDisplayName(displayNameTextField.getValue());
+				user.setEmailAddress(emailAddressTextField.getValue());
 
 				if (authorityDropDownChoice.getModel().getObject() != null) {
 					user.setAuthorityId(authorityDropDownChoice.getModel().getObject().getId());
@@ -136,6 +137,11 @@ public class UserRegistrationPage extends AdminLayoutPage {
 	private final TextField<String> displayNameTextField = new TextField<String>(
 			"display-name", new Model<String>());
 
+	/**
+	 * メールアドレスの入力フィールドです。
+	 */
+	private final TextField<String> emailAddressTextField = new TextField<>("email-address", new Model<String>());
+	
 	/**
 	 * 決裁者のリストです。
 	 */
@@ -195,6 +201,7 @@ public class UserRegistrationPage extends AdminLayoutPage {
 		passwordTextField.setRequired(true);
 		passwordConfirmTextField.setRequired(true);
 		displayNameTextField.setRequired(true);
+		emailAddressTextField.setRequired(true);
 		roleChoice.setRequired(true);
 		roleChoice.setSuffix("&nbsp;");
 		activatedChoice.setRequired(true);
@@ -211,6 +218,7 @@ public class UserRegistrationPage extends AdminLayoutPage {
 		userProfileForm.add(passwordTextField);
 		userProfileForm.add(passwordConfirmTextField);
 		userProfileForm.add(displayNameTextField);
+		userProfileForm.add(emailAddressTextField);
 		userProfileForm.add(authorityDropDownChoice);
 		userProfileForm.add(roleChoice);
 		userProfileForm.add(activatedChoice);
