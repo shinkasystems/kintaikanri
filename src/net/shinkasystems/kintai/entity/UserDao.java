@@ -14,6 +14,7 @@ import org.seasar.doma.Update;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
+ * 
  */
 @Dao(config = KintaiDB.class)
 public interface UserDao {

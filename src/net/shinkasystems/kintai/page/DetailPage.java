@@ -66,6 +66,220 @@ public class DetailPage extends DefaultLayoutPage {
 	};
 
 	/**
+	 * 
+	 */
+	private final HiddenField<Integer> idField = new HiddenField<Integer>("id-hidden", new Model<Integer>());
+
+	/**
+	 * 
+	 */
+	private final HiddenField<KintaiStatus> statusField = new HiddenField<>("status-hidden", new Model<KintaiStatus>());
+
+	/**
+	 * 承認ボタンです。
+	 */
+	private final Button approveButton = new Button("approve") {
+
+		@Override
+		public void onSubmit() {
+
+			final Integer applicationID = idField.getModelObject();
+
+			Application application;
+
+			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
+			try {
+				transaction.begin();
+
+				final ApplicationDao dao = new ApplicationDaoImpl();
+
+				application = dao.selectById(applicationID);
+
+				application.setStatus(KintaiStatus.APPROVED.name());
+				application.setUpdateDate(new Date(new java.util.Date().getTime()));
+				dao.update(application);
+
+				transaction.commit();
+
+			} finally {
+				transaction.rollback();
+			}
+
+			log.info("承認しました");
+
+			/*
+			 * メール送信処理
+			 */
+			final User applicant = getUser(application.getApplicantId());
+			final User authority = getUser(applicant.getAuthorityId());
+
+			final KintaiMailArgument argument = new KintaiMailArgument();
+			argument.setReceiverName(applicant.getDisplayName());
+			argument.setReceiverMailAddress(applicant.getEmailAddress());
+			argument.setSenderName(authority.getDisplayName());
+			argument.setSenderMailAddress(authority.getEmailAddress());
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
+			argument.setForm(KintaiType.valueOf(application.getType()).display);
+			argument.setComment(application.getCommentApplycant());
+
+			KintaiMail.APPROVAL.send(argument);
+		}
+	};
+
+	/**
+	 * 却下ボタンです。
+	 */
+	private final Button rejectButton = new Button("reject") {
+
+		@Override
+		public void onSubmit() {
+
+			final Integer applicationID = idField.getModelObject();
+
+			Application application;
+
+			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
+			try {
+				transaction.begin();
+
+				final ApplicationDao dao = new ApplicationDaoImpl();
+
+				application = dao.selectById(applicationID);
+
+				application.setStatus(KintaiStatus.REJECTED.name());
+				application.setUpdateDate(new Date(new java.util.Date().getTime()));
+				dao.update(application);
+
+				transaction.commit();
+
+			} finally {
+				transaction.rollback();
+			}
+
+			log.info("却下しました");
+
+			/*
+			 * メール送信処理
+			 */
+			final User applicant = getUser(application.getApplicantId());
+			final User authority = getUser(applicant.getAuthorityId());
+
+			final KintaiMailArgument argument = new KintaiMailArgument();
+			argument.setReceiverName(applicant.getDisplayName());
+			argument.setReceiverMailAddress(applicant.getEmailAddress());
+			argument.setSenderName(authority.getDisplayName());
+			argument.setSenderMailAddress(authority.getEmailAddress());
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
+			argument.setForm(KintaiType.valueOf(application.getType()).display);
+			argument.setComment(application.getCommentApplycant());
+
+			KintaiMail.REJECTION.send(argument);
+		}
+	};
+
+	/**
+	 * 差戻しボタンです。
+	 */
+	private final Button passbackButton = new Button("passback") {
+
+		@Override
+		public void onSubmit() {
+
+			final int applicationID = idField.getModelObject();
+
+			Application application;
+
+			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
+			try {
+				transaction.begin();
+
+				final ApplicationDao dao = new ApplicationDaoImpl();
+
+				application = dao.selectById(applicationID);
+
+				application.setStatus(KintaiStatus.PASSBACK.name());
+				application.setUpdateDate(new Date(new java.util.Date().getTime()));
+				dao.update(application);
+
+				transaction.commit();
+
+			} finally {
+				transaction.rollback();
+			}
+
+			log.info("差戻しました");
+
+			/*
+			 * メール送信処理
+			 */
+			final User applicant = getUser(application.getApplicantId());
+			final User authority = getUser(applicant.getAuthorityId());
+
+			final KintaiMailArgument argument = new KintaiMailArgument();
+			argument.setReceiverName(applicant.getDisplayName());
+			argument.setReceiverMailAddress(applicant.getEmailAddress());
+			argument.setSenderName(authority.getDisplayName());
+			argument.setSenderMailAddress(authority.getEmailAddress());
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
+			argument.setForm(KintaiType.valueOf(application.getType()).display);
+			argument.setComment(application.getCommentApplycant());
+
+			KintaiMail.PASSBACK.send(argument);
+		}
+	};
+
+	/**
+	 * 取下げボタンです。
+	 */
+	private final Button withdrawButton = new Button("withdraw") {
+
+		@Override
+		public void onSubmit() {
+
+			final Integer applicationID = idField.getModelObject();
+
+			Application application;
+
+			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
+			try {
+				transaction.begin();
+
+				final ApplicationDao dao = new ApplicationDaoImpl();
+
+				application = dao.selectById(applicationID);
+
+				application.setStatus(KintaiStatus.WITHDRAWN.name());
+				application.setUpdateDate(new Date(new java.util.Date().getTime()));
+				dao.update(application);
+
+				transaction.commit();
+
+			} finally {
+				transaction.rollback();
+			}
+
+			log.info("取下げました");
+
+			/*
+			 * メール送信処理
+			 */
+			final User applicant = getUser(application.getApplicantId());
+			final User authority = getUser(applicant.getAuthorityId());
+
+			final KintaiMailArgument argument = new KintaiMailArgument();
+			argument.setReceiverName(authority.getDisplayName());
+			argument.setReceiverMailAddress(authority.getEmailAddress());
+			argument.setSenderName(applicant.getDisplayName());
+			argument.setSenderMailAddress(applicant.getEmailAddress());
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
+			argument.setForm(KintaiType.valueOf(application.getType()).display);
+			argument.setComment(application.getCommentApplycant());
+
+			KintaiMail.WITHDRAWAL.send(argument);
+		}
+	};
+
+	/**
 	 * コンストラクタです。
 	 */
 	public DetailPage() {
@@ -110,104 +324,6 @@ public class DetailPage extends DefaultLayoutPage {
 		final Label authorityLabel = new Label("authority", authority.getDisplayName());
 		final Label updatedLabel = new Label("updated", updated);
 
-		final HiddenField<Integer> idField = new HiddenField<Integer>("id-hidden", new Model<Integer>(
-				application.getId()));
-		final HiddenField<KintaiStatus> statusField = new HiddenField<>("status-hidden",
-				new Model<KintaiStatus>(status));
-
-		final Button approveButton = new Button("approve") {
-
-			@Override
-			public void onSubmit() {
-				updateStatus(id, KintaiStatus.APPROVED);
-
-				log.info("承認しました");
-				
-				/*
-				 * メール送信処理
-				 */
-				final KintaiMailArgument argument = new KintaiMailArgument();
-				argument.setReceiverName(applicant.getDisplayName());
-				argument.setReceiverMailAddress(applicant.getEmailAddress());
-				argument.setSenderName(authority.getDisplayName());
-				argument.setSenderMailAddress(authority.getEmailAddress());
-				argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-				argument.setForm(KintaiType.valueOf(application.getType()).display);
-				argument.setComment(application.getCommentApplycant());
-
-				KintaiMail.APPROVAL.send(argument);
-			}
-		};
-		final Button rejectButton = new Button("reject") {
-
-			@Override
-			public void onSubmit() {
-				updateStatus(id, KintaiStatus.REJECTED);
-
-				log.info("却下しました");
-
-				/*
-				 * メール送信処理
-				 */
-				final KintaiMailArgument argument = new KintaiMailArgument();
-				argument.setReceiverName(applicant.getDisplayName());
-				argument.setReceiverMailAddress(applicant.getEmailAddress());
-				argument.setSenderName(authority.getDisplayName());
-				argument.setSenderMailAddress(authority.getEmailAddress());
-				argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-				argument.setForm(KintaiType.valueOf(application.getType()).display);
-				argument.setComment(application.getCommentApplycant());
-
-				KintaiMail.REJECTION.send(argument);
-			}
-		};
-		final Button passbackButton = new Button("passback") {
-
-			@Override
-			public void onSubmit() {
-				updateStatus(id, KintaiStatus.PASSBACK);
-
-				log.info("差戻しました");
-				
-				/*
-				 * メール送信処理
-				 */
-				final KintaiMailArgument argument = new KintaiMailArgument();
-				argument.setReceiverName(applicant.getDisplayName());
-				argument.setReceiverMailAddress(applicant.getEmailAddress());
-				argument.setSenderName(authority.getDisplayName());
-				argument.setSenderMailAddress(authority.getEmailAddress());
-				argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-				argument.setForm(KintaiType.valueOf(application.getType()).display);
-				argument.setComment(application.getCommentApplycant());
-
-				KintaiMail.PASSBACK.send(argument);
-			}
-		};
-		final Button withdrawButton = new Button("withdraw") {
-
-			@Override
-			public void onSubmit() {
-				updateStatus(id, KintaiStatus.WITHDRAWN);
-
-				log.info("取下げました");
-				
-				/*
-				 * メール送信処理
-				 */
-				final KintaiMailArgument argument = new KintaiMailArgument();
-				argument.setReceiverName(authority.getDisplayName());
-				argument.setReceiverMailAddress(authority.getEmailAddress());
-				argument.setSenderName(applicant.getDisplayName());
-				argument.setSenderMailAddress(applicant.getEmailAddress());
-				argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-				argument.setForm(KintaiType.valueOf(application.getType()).display);
-				argument.setComment(application.getCommentApplycant());
-
-				KintaiMail.WITHDRAWAL.send(argument);
-			}
-		};
-
 		/*
 		 * コンポーネントの編集
 		 */
@@ -226,6 +342,10 @@ public class DetailPage extends DefaultLayoutPage {
 		} else if (status == KintaiStatus.PASSBACK) {
 			statusLabel.add(new AttributeModifier("class", "label label-inverse"));
 		}
+
+		idField.setType(Integer.class);
+		idField.setModelObject(id);
+		statusField.setModelObject(status);
 
 		if (loginUser.getId() == authority.getId()
 				&& (status == KintaiStatus.PENDING || status == KintaiStatus.PASSBACK)) {
@@ -299,32 +419,6 @@ public class DetailPage extends DefaultLayoutPage {
 			final UserDao dao = new UserDaoImpl();
 
 			return dao.selectById(id);
-
-		} finally {
-			transaction.rollback();
-		}
-	}
-
-	/**
-	 * 申請情報のステータスを更新します。
-	 * 
-	 * @param status
-	 */
-	private static void updateStatus(int id, KintaiStatus status) {
-
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
-
-			final ApplicationDao dao = new ApplicationDaoImpl();
-
-			final Application application = dao.selectById(id);
-
-			application.setStatus(status.name());
-			application.setUpdateDate(new Date(new java.util.Date().getTime()));
-			dao.update(application);
-
-			transaction.commit();
 
 		} finally {
 			transaction.rollback();

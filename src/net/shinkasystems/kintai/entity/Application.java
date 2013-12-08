@@ -1,6 +1,7 @@
 package net.shinkasystems.kintai.entity;
 
 import java.sql.Date;
+
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
 import org.seasar.doma.GeneratedValue;

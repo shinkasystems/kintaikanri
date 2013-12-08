@@ -15,6 +15,7 @@ import org.seasar.doma.Update;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
+ * 
  */
 @Dao(config = KintaiDB.class)
 public interface ApplicationDao {
@@ -26,6 +27,7 @@ public interface ApplicationDao {
 	void createTable();
 
 	/**
+	 * 
 	 * @param id
 	 * @return the Application entity
 	 */
