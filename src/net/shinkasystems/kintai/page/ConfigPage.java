@@ -1,5 +1,8 @@
 package net.shinkasystems.kintai.page;
 
+import java.sql.Date;
+import java.util.Calendar;
+
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
@@ -45,7 +48,10 @@ public class ConfigPage extends DefaultLayoutPage {
 		protected void onSubmit() {
 
 			alertPanel.setVisible(false);
-			
+
+			Calendar expireCalendar = Calendar.getInstance();
+			expireCalendar.add(Calendar.MONTH, 3);
+
 			final int userID = ((KintaiSession) KintaiSession.get()).getUser().getId();
 			final String password = passwordTextField.getInput();
 
@@ -56,8 +62,9 @@ public class ConfigPage extends DefaultLayoutPage {
 				final UserDao dao = new UserDaoImpl();
 
 				final User user = dao.selectById(userID);
-				
+
 				user.setPassword(new Authentication(String.valueOf(userID), password).getPasswordHash());
+				user.setExpireDate(new Date(expireCalendar.getTimeInMillis()));
 
 				dao.update(user);
 
