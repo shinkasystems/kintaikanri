@@ -3,6 +3,7 @@ package net.shinkasystems.kintai;
 import net.shinkasystems.kintai.page.ConfigPage;
 import net.shinkasystems.kintai.page.DetailPage;
 import net.shinkasystems.kintai.page.EntryPage;
+import net.shinkasystems.kintai.page.UnauthorizedPage;
 import net.shinkasystems.kintai.page.IndexPage;
 import net.shinkasystems.kintai.page.SignInPage;
 import net.shinkasystems.kintai.page.admin.UserEditPage;
@@ -10,6 +11,7 @@ import net.shinkasystems.kintai.page.admin.UserRegistrationPage;
 import net.shinkasystems.kintai.page.admin.UsersPage;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
@@ -53,6 +55,11 @@ public class KintaiWebApplication extends AuthenticatedWebApplication {
 	@Override
 	protected Class<? extends WebPage> getSignInPageClass() {
 		return SignInPage.class;
+	}
+
+	@Override
+	protected void onUnauthorizedPage(Page page) {
+		throw new RestartResponseAtInterceptPageException(UnauthorizedPage.class);
 	}
 
 	@Override
