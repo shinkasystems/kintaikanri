@@ -53,7 +53,7 @@ public class ConfigPage extends DefaultLayoutPage {
 			expireCalendar.add(Calendar.MONTH, 3);
 
 			final int userID = ((KintaiSession) KintaiSession.get()).getUser().getId();
-			final String password = passwordTextField.getInput();
+			final String password = passwordTextField.getModelObject();
 
 			LocalTransaction transaction = KintaiDB.getLocalTransaction();
 			try {
@@ -63,7 +63,7 @@ public class ConfigPage extends DefaultLayoutPage {
 
 				final User user = dao.selectById(userID);
 
-				user.setPassword(new Authentication(String.valueOf(userID), password).getPasswordHash());
+				user.setPassword(new Authentication(user.getUserName(), password).getPasswordHash());
 				user.setExpireDate(new Date(expireCalendar.getTimeInMillis()));
 
 				dao.update(user);
