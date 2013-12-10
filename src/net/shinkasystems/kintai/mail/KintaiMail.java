@@ -56,6 +56,8 @@ public enum KintaiMail {
 	 * 差し戻しメールです。
 	 */
 	PASSBACK("【勤怠管理ツール】勤怠の差し戻し");
+	
+	private static final String EMAIL_CHARSET = "UTF-8";
 
 	/**
 	 * 勤怠通知メールの件名です。
@@ -87,7 +89,8 @@ public enum KintaiMail {
 		StringBuilder builder = new StringBuilder();
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(this.toString() + ".txt")));
+			reader = new BufferedReader(new InputStreamReader(
+					getClass().getResourceAsStream(this.toString() + ".txt"), EMAIL_CHARSET));
 
 			int c;
 			while ((c = reader.read()) != -1) {
@@ -127,16 +130,17 @@ public enum KintaiMail {
 		});
 
 		try {
-			final Message message = new MimeMessage(session);
+			final MimeMessage message = new MimeMessage(session);
+			message.setHeader("Content-Transfer-Encoding", "7bit");
 			message.setRecipients(Message.RecipientType.TO,
 					new InternetAddress[] { new InternetAddress(argument.getReceiverMailAddress()) });
 			message.setRecipients(Message.RecipientType.CC,
 					new InternetAddress[] { new InternetAddress(argument.getSenderMailAddress()) });
 			message.setReplyTo(new InternetAddress[] { new InternetAddress(argument.getSenderMailAddress()) });
 			message.setFrom(new InternetAddress(KintaiMailPropery.USER.getValue()));
-			message.setSubject(subject);
+			message.setSubject(subject, EMAIL_CHARSET);
 			message.setSentDate(new Date());
-			message.setText(text);
+			message.setContent(text, "text/plain;charset=" + EMAIL_CHARSET);
 
 			Transport.send(message);
 
