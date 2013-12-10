@@ -84,6 +84,10 @@ public class IndexPage extends DefaultLayoutPage {
 
 			final ApplicationData applicationData = item.getModelObject();
 
+			if (applicationData.getCommentApplycant().length() > 20) {
+				applicationData.setCommentApplycant(applicationData.getCommentApplycant().substring(0, 20) + "...");
+			}
+			
 			/*
 			 * コンポーネントの生成
 			 */

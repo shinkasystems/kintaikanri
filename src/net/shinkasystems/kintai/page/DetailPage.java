@@ -21,6 +21,7 @@ import net.shinkasystems.kintai.panel.AlertPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -318,7 +319,7 @@ public class DetailPage extends DefaultLayoutPage {
 		final Label termLabel = new Label("term", KintaiConstants.DATE_FORMAT.format(application.getTerm()));
 		final Label applicantLabel = new Label("applicant", applicant.getDisplayName());
 		final Label typeLabel = new Label("type", type.display);
-		final Label commentLabel = new Label("comment", application.getCommentApplycant());
+		final MultiLineLabel commentLabel = new MultiLineLabel("comment", application.getCommentApplycant());
 		final Label createdLabel = new Label("created", KintaiConstants.DATE_FORMAT.format(application.getCreateDate()));
 		final Label statusLabel = new Label("status", status.display);
 		final Label authorityLabel = new Label("authority", authority.getDisplayName());
