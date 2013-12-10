@@ -9,6 +9,7 @@ import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.entity.sub.UserData;
+import net.shinkasystems.kintai.panel.PaginationPanel;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -41,7 +42,7 @@ public class UsersPage extends AdminLayoutPage {
 	 * 
 	 */
 	private final DataView<UserData> userDataView = new DataView<UserData>(
-			"user-data-view", new UserDataProvider(), 100) {
+			"user-data-view", new UserDataProvider(), 20) {
 
 		@Override
 		protected void populateItem(Item<UserData> item) {
@@ -78,12 +79,6 @@ public class UsersPage extends AdminLayoutPage {
 			item.add(userRoleLabel);
 			item.add(userExpiredLabel);
 			item.add(userActivatedLabel);
-			
-			/*
-			 * TODO
-			 * 編集／有効化／無効化／削除のボタンを追加
-			 */
-
 		}
 	};
 
@@ -96,14 +91,14 @@ public class UsersPage extends AdminLayoutPage {
 		/*
 		 * コンポーネントの生成
 		 */
-		final PagingNavigator pagingNavigator = new PagingNavigator("page-navigator", userDataView);
+		final PagingNavigator pagingNavigator = new PaginationPanel("page-navigator", userDataView);
 		
 		
 		
 		/*
 		 * コンポーネントの編集
 		 */
-		userDataView.setItemsPerPage(100);
+		userDataView.setItemsPerPage(20);
 		
 		
 		

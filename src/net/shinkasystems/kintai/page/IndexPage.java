@@ -16,6 +16,7 @@ import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
 import net.shinkasystems.kintai.entity.sub.ApplicationData;
+import net.shinkasystems.kintai.panel.PaginationPanel;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -209,7 +210,7 @@ public class IndexPage extends DefaultLayoutPage {
 			}
 
 		};
-		final PagingNavigator pagingNavigator = new PagingNavigator("page-navigator", applicationDataView);
+		final PagingNavigator pagingNavigator = new PaginationPanel("page-navigator", applicationDataView);
 
 		/*
 		 * コンポーネントの編集
