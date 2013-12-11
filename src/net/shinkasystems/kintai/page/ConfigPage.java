@@ -7,6 +7,7 @@ import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
+import net.shinkasystems.kintai.component.PasswordDuplicateValidator;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.UserDaoImpl;
@@ -19,6 +20,8 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.validation.validator.PatternValidator;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.seasar.doma.jdbc.tx.LocalTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +110,9 @@ public class ConfigPage extends DefaultLayoutPage {
 		alertPanel.setVisible(false);
 
 		passwordTextField.setRequired(true);
+		passwordTextField.add(StringValidator.minimumLength(8));
+		passwordTextField.add(new PatternValidator("^[\\u0020-\\u007E]+$"));
+		passwordTextField.add(new PasswordDuplicateValidator(((KintaiSession) KintaiSession.get()).getUser().getId()));
 		confirmTextField.setRequired(true);
 
 		configForm.add(new PasswordConfirmValidator(passwordTextField, confirmTextField));
