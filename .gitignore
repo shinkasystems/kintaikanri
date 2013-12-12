@@ -7,6 +7,7 @@
 .metadata
 bin/
 tmp/
+*.log
 *.tmp
 *.bak
 *.swp
@@ -51,4 +52,3 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
-
