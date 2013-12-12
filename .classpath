@@ -29,13 +29,14 @@
 	<classpathentry kind="lib" path="lib/wicket/wicket-util-6.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j/jcl-over-slf4j-1.7.5.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j/slf4j-api-1.7.5.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j/slf4j-jdk14-1.7.5.jar"/>
 	<classpathentry kind="lib" path="lib/wicket/wicket-auth-roles-6.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec/commons-codec-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/javamail/activation.jar"/>
 	<classpathentry kind="lib" path="lib/javamail/mail.jar"/>
 	<classpathentry kind="lib" path="lib/subethasmtp/subethasmtp-3.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/logback/logback-classic-1.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/logback/logback-core-1.0.13.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
