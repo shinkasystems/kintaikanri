@@ -62,7 +62,7 @@ public class KintaiSession extends AuthenticatedWebSession {
 			log.info("ユーザー：" + username + " は存在しません。");
 			return false;
 			
-		} else if (user.getPassword().equals(hashedPassword)) {
+		} else if (user.getPassword().equals(hashedPassword) && user.getActivated()) {
 			
 			this.user = user;
 
