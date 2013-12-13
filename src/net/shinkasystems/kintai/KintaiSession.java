@@ -4,8 +4,8 @@ import java.util.Date;
 
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.util.Authentication;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -46,7 +46,7 @@ public class KintaiSession extends AuthenticatedWebSession {
 		try {
 			transaction.begin();
 
-			UserDao dao = new UserDaoImpl();
+			UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			user = dao.selectByUserName(username);
 

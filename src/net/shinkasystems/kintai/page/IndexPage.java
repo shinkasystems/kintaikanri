@@ -14,9 +14,9 @@ import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.entity.ApplicationDao;
-import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
 import net.shinkasystems.kintai.entity.sub.ApplicationData;
 import net.shinkasystems.kintai.panel.PaginationPanel;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -283,7 +283,7 @@ class ApplicationDataProvider extends SortableDataProvider<ApplicationData, Stri
 		try {
 			transaction.begin();
 
-			final ApplicationDao dao = new ApplicationDaoImpl();
+			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 			applicationDatas = dao.selectApplicationData(
 					options,
@@ -314,7 +314,7 @@ class ApplicationDataProvider extends SortableDataProvider<ApplicationData, Stri
 		try {
 			transaction.begin();
 
-			final ApplicationDao dao = new ApplicationDaoImpl();
+			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 			size = dao.selectCountApplication();
 

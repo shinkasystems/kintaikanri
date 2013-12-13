@@ -8,15 +8,15 @@ import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.KintaiStatus;
 import net.shinkasystems.kintai.KintaiType;
+import net.shinkasystems.kintai.component.ConfirmSubmitButton;
 import net.shinkasystems.kintai.entity.Application;
 import net.shinkasystems.kintai.entity.ApplicationDao;
-import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.mail.KintaiMail;
 import net.shinkasystems.kintai.mail.KintaiMailArgument;
 import net.shinkasystems.kintai.panel.AlertPanel;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -79,7 +79,7 @@ public class DetailPage extends DefaultLayoutPage {
 	/**
 	 * 承認ボタンです。
 	 */
-	private final Button approveButton = new Button("approve") {
+	private final Button approveButton = new ConfirmSubmitButton("approve", getString("confirm-approve-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -92,7 +92,7 @@ public class DetailPage extends DefaultLayoutPage {
 			try {
 				transaction.begin();
 
-				final ApplicationDao dao = new ApplicationDaoImpl();
+				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 				application = dao.selectById(applicationID);
 
@@ -130,7 +130,7 @@ public class DetailPage extends DefaultLayoutPage {
 	/**
 	 * 却下ボタンです。
 	 */
-	private final Button rejectButton = new Button("reject") {
+	private final Button rejectButton = new ConfirmSubmitButton("reject", getString("confirm-reject-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -143,7 +143,7 @@ public class DetailPage extends DefaultLayoutPage {
 			try {
 				transaction.begin();
 
-				final ApplicationDao dao = new ApplicationDaoImpl();
+				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 				application = dao.selectById(applicationID);
 
@@ -181,7 +181,7 @@ public class DetailPage extends DefaultLayoutPage {
 	/**
 	 * 差戻しボタンです。
 	 */
-	private final Button passbackButton = new Button("passback") {
+	private final Button passbackButton = new ConfirmSubmitButton("passback", getString("confirm-withdraw-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -194,7 +194,7 @@ public class DetailPage extends DefaultLayoutPage {
 			try {
 				transaction.begin();
 
-				final ApplicationDao dao = new ApplicationDaoImpl();
+				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 				application = dao.selectById(applicationID);
 
@@ -232,7 +232,7 @@ public class DetailPage extends DefaultLayoutPage {
 	/**
 	 * 取下げボタンです。
 	 */
-	private final Button withdrawButton = new Button("withdraw") {
+	private final Button withdrawButton = new ConfirmSubmitButton("withdraw", getString("confirm-passback-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -245,7 +245,7 @@ public class DetailPage extends DefaultLayoutPage {
 			try {
 				transaction.begin();
 
-				final ApplicationDao dao = new ApplicationDaoImpl();
+				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 				application = dao.selectById(applicationID);
 
@@ -396,7 +396,7 @@ public class DetailPage extends DefaultLayoutPage {
 		try {
 			transaction.begin();
 
-			final ApplicationDao dao = new ApplicationDaoImpl();
+			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 			return dao.selectById(id);
 
@@ -417,7 +417,7 @@ public class DetailPage extends DefaultLayoutPage {
 		try {
 			transaction.begin();
 
-			final UserDao dao = new UserDaoImpl();
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			return dao.selectById(id);
 
@@ -462,7 +462,7 @@ class StatusValidator extends AbstractFormValidator {
 		try {
 			transaction.begin();
 
-			final ApplicationDao dao = new ApplicationDaoImpl();
+			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 			current = dao.selectById(id);
 

@@ -10,9 +10,9 @@ import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.PasswordDuplicateValidator;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.util.Authentication;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.Form;
@@ -62,7 +62,7 @@ public class ConfigPage extends DefaultLayoutPage {
 			try {
 				transaction.begin();
 
-				final UserDao dao = new UserDaoImpl();
+				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 				final User user = dao.selectById(userID);
 

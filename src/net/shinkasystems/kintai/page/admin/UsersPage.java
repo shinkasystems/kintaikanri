@@ -7,9 +7,9 @@ import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.entity.sub.UserData;
 import net.shinkasystems.kintai.panel.PaginationPanel;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -129,7 +129,7 @@ class UserDataProvider extends SortableDataProvider<UserData, String> {
 		try {
 			transaction.begin();
 
-			final UserDao dao = new UserDaoImpl();
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			userDatas = dao.selectUserData(options);
 
@@ -154,7 +154,7 @@ class UserDataProvider extends SortableDataProvider<UserData, String> {
 		try {
 			transaction.begin();
 
-			final UserDao dao = new UserDaoImpl();
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			size = dao.selectCountUser();
 

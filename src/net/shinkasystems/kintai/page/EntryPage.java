@@ -16,13 +16,12 @@ import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.entity.Application;
 import net.shinkasystems.kintai.entity.ApplicationDao;
-import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.mail.KintaiMail;
 import net.shinkasystems.kintai.mail.KintaiMailArgument;
 import net.shinkasystems.kintai.panel.AlertPanel;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -77,7 +76,7 @@ public class EntryPage extends DefaultLayoutPage {
 			try {
 				transaction.begin();
 
-				final ApplicationDao dao = new ApplicationDaoImpl();
+				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 
 				if (applicantDropDownChoice.getModelObject() != null) {
@@ -202,7 +201,7 @@ public class EntryPage extends DefaultLayoutPage {
 		try {
 			transaction.begin();
 
-			final UserDao dao = new UserDaoImpl();
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			return dao.selectById(id);
 

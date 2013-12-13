@@ -13,12 +13,11 @@ import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.entity.ApplicationDao;
-import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.util.Authentication;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.Button;
@@ -131,7 +130,7 @@ public class UserEditPage extends AdminLayoutPage {
 			try {
 				transaction.begin();
 
-				final UserDao dao = new UserDaoImpl();
+				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 				final User user = dao.selectById(userIdTextField.getModelObject());
 
@@ -180,7 +179,7 @@ public class UserEditPage extends AdminLayoutPage {
 			try {
 				transaction.begin();
 
-				final UserDao dao = new UserDaoImpl();
+				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 				final User user = dao.selectById(userIdTextField.getModelObject());
 
@@ -211,7 +210,7 @@ public class UserEditPage extends AdminLayoutPage {
 			try {
 				transaction.begin();
 
-				final UserDao dao = new UserDaoImpl();
+				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 				final User user = dao.selectById(userIdTextField.getModelObject());
 
@@ -242,7 +241,7 @@ public class UserEditPage extends AdminLayoutPage {
 			try {
 				transaction.begin();
 
-				final UserDao dao = new UserDaoImpl();
+				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 				final User user = dao.selectById(userIdTextField.getModelObject());
 
@@ -357,7 +356,7 @@ public class UserEditPage extends AdminLayoutPage {
 		try {
 			transaction.begin();
 
-			final UserDao dao = new UserDaoImpl();
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			return dao.selectById(id);
 
@@ -372,7 +371,7 @@ public class UserEditPage extends AdminLayoutPage {
 		try {
 			transaction.begin();
 
-			final ApplicationDao dao = new ApplicationDaoImpl();
+			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 			return dao.selectHistoryExists(id);
 
