@@ -205,7 +205,7 @@ public class IndexPage extends DefaultLayoutPage {
 		/*
 		 * コンポーネントの生成
 		 */
-		final OrderByBorder<String> termOrderByBorder = new OrderByBorder<String>("orderByTerm", "term",
+		final OrderByBorder<String> termOrderByBorder = new OrderByBorder<String>("orderByTerm", "TERM",
 				applicationDataProvider) {
 
 			@Override
@@ -268,14 +268,15 @@ class ApplicationDataProvider extends SortableDataProvider<ApplicationData, Stri
 		this.applicantId = applicantId;
 		this.status = status;
 
-		setSort("term", SortOrder.ASCENDING);
+		setSort("TERM", SortOrder.ASCENDING);
+		
 	}
 
 	@Override
 	public Iterator<? extends ApplicationData> iterator(long first, long count) {
 
 		SelectOptions options = SelectOptions.get().offset((int) first).limit((int) count);
-		String orderBy = "order by " + getSort().getProperty() + (getSort().isAscending() ? " ASC" : " DESC");
+		String orderBy = "order by " + getSort().getProperty() + (getSort().isAscending() ? " ASC" : " DESC" + ", ID");
 
 		List<ApplicationData> applicationDatas = null;
 
