@@ -44,4 +44,8 @@ public enum KintaiStatus {
 	private KintaiStatus(String display) {
 		this.display = display;
 	}
+	
+	public String toString() {
+		return display;
+	}
 }

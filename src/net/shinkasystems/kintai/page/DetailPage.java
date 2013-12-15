@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai.page;
 
-import java.sql.Date;
+import java.util.Date;
 
 import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiDB;
@@ -16,10 +16,12 @@ import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.mail.KintaiMail;
 import net.shinkasystems.kintai.mail.KintaiMailArgument;
 import net.shinkasystems.kintai.panel.AlertPanel;
+import net.shinkasystems.kintai.panel.InfomationPanel;
 import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Button;
@@ -28,6 +30,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -54,6 +57,11 @@ public class DetailPage extends DefaultLayoutPage {
 	private final Panel alertPanel = new AlertPanel("alert-panel");
 
 	/**
+	 * 情報パネルです。
+	 */
+	private final InfomationPanel infomationPanel = new InfomationPanel("infomation-panel");
+
+	/**
 	 * 詳細画面のフォームです。
 	 */
 	private final Form<ValueMap> form = new Form<ValueMap>("detail-form") {
@@ -66,15 +74,45 @@ public class DetailPage extends DefaultLayoutPage {
 
 	};
 
-	/**
-	 * 
-	 */
-	private final HiddenField<Integer> idField = new HiddenField<Integer>("id-hidden", new Model<Integer>());
+	private final IModel<Integer> idModel = new Model<Integer>();
 
-	/**
-	 * 
-	 */
-	private final HiddenField<KintaiStatus> statusField = new HiddenField<>("status-hidden", new Model<KintaiStatus>());
+	private final HiddenField<Integer> idField = new HiddenField<Integer>("id-hidden", idModel);
+
+	private final IModel<KintaiStatus> statusModel = new Model<KintaiStatus>();
+
+	private final HiddenField<KintaiStatus> statusField = new HiddenField<>("status-hidden", statusModel);
+
+	private final Label idLabel = new Label("id", idModel);
+
+	private final IModel<Date> termModel = new Model<Date>();
+
+	private final Label termLabel = DateLabel.forDatePattern("term", termModel, KintaiConstants.DATE_PATTERN);
+
+	private final IModel<String> applicantModel = new Model<String>();
+
+	private final Label applicantLabel = new Label("applicant", applicantModel);
+
+	private final IModel<KintaiType> typeModel = new Model<KintaiType>();
+
+	private final Label typeLabel = new Label("type", typeModel);
+
+	private final IModel<String> commentModel = new Model<String>();
+
+	private final MultiLineLabel commentLabel = new MultiLineLabel("comment", commentModel);
+
+	private final IModel<Date> createdModel = new Model<Date>();
+
+	private final Label createdLabel = DateLabel.forDatePattern("created", createdModel, KintaiConstants.DATE_PATTERN);
+
+	private final Label statusLabel = new Label("status", statusModel);
+
+	private final IModel<String> authorityModel = new Model<String>();
+
+	private final Label authorityLabel = new Label("authority", authorityModel);
+
+	private final IModel<Date> updatedModel = new Model<Date>();
+
+	private final Label updatedLabel = DateLabel.forDatePattern("updated", updatedModel, KintaiConstants.DATE_PATTERN);
 
 	/**
 	 * 承認ボタンです。
@@ -97,7 +135,7 @@ public class DetailPage extends DefaultLayoutPage {
 				application = dao.selectById(applicationID);
 
 				application.setStatus(KintaiStatus.APPROVED.name());
-				application.setUpdateDate(new Date(new java.util.Date().getTime()));
+				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
 				dao.update(application);
 
 				transaction.commit();
@@ -124,6 +162,14 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setComment(application.getCommentApplycant());
 
 			KintaiMail.APPROVAL.send(argument);
+
+			/*
+			 * ページ情報の更新
+			 */
+			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
+			
+			infomationPanel.setMessage(getString("approve-message"));
+			infomationPanel.setVisible(true);
 		}
 	};
 
@@ -148,7 +194,7 @@ public class DetailPage extends DefaultLayoutPage {
 				application = dao.selectById(applicationID);
 
 				application.setStatus(KintaiStatus.REJECTED.name());
-				application.setUpdateDate(new Date(new java.util.Date().getTime()));
+				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
 				dao.update(application);
 
 				transaction.commit();
@@ -175,13 +221,22 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setComment(application.getCommentApplycant());
 
 			KintaiMail.REJECTION.send(argument);
+
+			/*
+			 * ページ情報の更新
+			 */
+			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
+			
+			infomationPanel.setMessage(getString("reject-message"));
+			infomationPanel.setVisible(true);
+
 		}
 	};
 
 	/**
 	 * 差戻しボタンです。
 	 */
-	private final Button passbackButton = new ConfirmSubmitButton("passback", getString("confirm-withdraw-message")) {
+	private final Button passbackButton = new ConfirmSubmitButton("passback", getString("confirm-passback-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -199,7 +254,7 @@ public class DetailPage extends DefaultLayoutPage {
 				application = dao.selectById(applicationID);
 
 				application.setStatus(KintaiStatus.PASSBACK.name());
-				application.setUpdateDate(new Date(new java.util.Date().getTime()));
+				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
 				dao.update(application);
 
 				transaction.commit();
@@ -226,13 +281,21 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setComment(application.getCommentApplycant());
 
 			KintaiMail.PASSBACK.send(argument);
+
+			/*
+			 * ページ情報の更新
+			 */
+			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
+			
+			infomationPanel.setMessage(getString("passback-message"));
+			infomationPanel.setVisible(true);
 		}
 	};
 
 	/**
 	 * 取下げボタンです。
 	 */
-	private final Button withdrawButton = new ConfirmSubmitButton("withdraw", getString("confirm-passback-message")) {
+	private final Button withdrawButton = new ConfirmSubmitButton("withdraw", getString("confirm-withdraw-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -250,7 +313,7 @@ public class DetailPage extends DefaultLayoutPage {
 				application = dao.selectById(applicationID);
 
 				application.setStatus(KintaiStatus.WITHDRAWN.name());
-				application.setUpdateDate(new Date(new java.util.Date().getTime()));
+				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
 				dao.update(application);
 
 				transaction.commit();
@@ -277,6 +340,14 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setComment(application.getCommentApplycant());
 
 			KintaiMail.WITHDRAWAL.send(argument);
+
+			/*
+			 * ページ情報の更新
+			 */
+			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
+			
+			infomationPanel.setMessage(getString("withdraw-message"));
+			infomationPanel.setVisible(true);
 		}
 	};
 
@@ -302,68 +373,24 @@ public class DetailPage extends DefaultLayoutPage {
 		final User applicant = getUser(application.getApplicantId());
 		final User authority = getUser(applicant.getAuthorityId());
 
-		final KintaiType type = KintaiType.valueOf(application.getType());
-		final KintaiStatus status = KintaiStatus.valueOf(application.getStatus());
-
-		String updated = null;
-		if (application.getUpdateDate() != null) {
-			updated = KintaiConstants.DATE_FORMAT.format(application.getUpdateDate());
-		} else {
-			updated = "決裁されていません";
-		}
-
-		/*
-		 * コンポーネントの生成
-		 */
-		final Label idLabel = new Label("id", application.getId());
-		final Label termLabel = new Label("term", KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-		final Label applicantLabel = new Label("applicant", applicant.getDisplayName());
-		final Label typeLabel = new Label("type", type.display);
-		final MultiLineLabel commentLabel = new MultiLineLabel("comment", application.getCommentApplycant());
-		final Label createdLabel = new Label("created", KintaiConstants.DATE_FORMAT.format(application.getCreateDate()));
-		final Label statusLabel = new Label("status", status.display);
-		final Label authorityLabel = new Label("authority", authority.getDisplayName());
-		final Label updatedLabel = new Label("updated", updated);
-
 		/*
 		 * コンポーネントの編集
 		 */
 		alertPanel.setVisible(false);
-
-		form.add(new StatusValidator(idField, statusField));
-
-		if (status == KintaiStatus.PENDING) {
-			statusLabel.add(new AttributeModifier("class", "label label-info"));
-		} else if (status == KintaiStatus.APPROVED) {
-			statusLabel.add(new AttributeModifier("class", "label label-success"));
-		} else if (status == KintaiStatus.REJECTED) {
-			statusLabel.add(new AttributeModifier("class", "label label-important"));
-		} else if (status == KintaiStatus.WITHDRAWN) {
-			statusLabel.add(new AttributeModifier("class", "label label-inverse"));
-		} else if (status == KintaiStatus.PASSBACK) {
-			statusLabel.add(new AttributeModifier("class", "label label-inverse"));
-		}
+		infomationPanel.setVisible(false);
 
 		idField.setType(Integer.class);
-		idField.setModelObject(id);
-		statusField.setModelObject(status);
+		idModel.setObject(id);
 
-		if (loginUser.getId() == authority.getId()
-				&& (status == KintaiStatus.PENDING || status == KintaiStatus.PASSBACK)) {
-			approveButton.setVisible(true);
-			approveButton.setVisible(true);
-		} else {
-			approveButton.setVisible(false);
-			rejectButton.setVisible(false);
-		}
-		withdrawButton.setVisible(loginUser.getId() == applicant.getId() && status == KintaiStatus.PENDING);
-		passbackButton.setVisible(loginUser.getId() == authority.getId()
-				&& (status == KintaiStatus.APPROVED || status == KintaiStatus.REJECTED));
+		form.add(new StatusValidator(idField, statusField));
+		
+		updatePage(application, applicant, authority, loginUser);
 
 		/*
 		 * コンポーネントの組立
 		 */
 		add(alertPanel);
+		add(infomationPanel);
 		add(idLabel);
 		add(termLabel);
 		add(applicantLabel);
@@ -382,6 +409,54 @@ public class DetailPage extends DefaultLayoutPage {
 		form.add(passbackButton);
 
 		add(form);
+	}
+
+	/**
+	 * ページの表示情報を更新します。
+	 * 
+	 * @param application
+	 * @param applicant
+	 * @param authority
+	 * @param loginUser
+	 */
+	private void updatePage(Application application, User applicant, User authority, User loginUser) {
+
+		final KintaiType type = KintaiType.valueOf(application.getType());
+		final KintaiStatus status = KintaiStatus.valueOf(application.getStatus());
+
+		idModel.setObject(application.getId());
+		statusModel.setObject(status);
+		termModel.setObject(application.getTerm());
+		applicantModel.setObject(applicant.getDisplayName());
+		typeModel.setObject(type);
+		commentModel.setObject(application.getCommentApplycant());
+		createdModel.setObject(application.getCreateDate());
+		authorityModel.setObject(authority.getDisplayName());
+		updatedModel.setObject(application.getUpdateDate());
+
+		if (status == KintaiStatus.PENDING) {
+			statusLabel.add(new AttributeModifier("class", "label label-info"));
+		} else if (status == KintaiStatus.APPROVED) {
+			statusLabel.add(new AttributeModifier("class", "label label-success"));
+		} else if (status == KintaiStatus.REJECTED) {
+			statusLabel.add(new AttributeModifier("class", "label label-important"));
+		} else if (status == KintaiStatus.WITHDRAWN) {
+			statusLabel.add(new AttributeModifier("class", "label label-inverse"));
+		} else if (status == KintaiStatus.PASSBACK) {
+			statusLabel.add(new AttributeModifier("class", "label label-inverse"));
+		}
+
+		if (loginUser.getId() == authority.getId()
+				&& (status == KintaiStatus.PENDING || status == KintaiStatus.PASSBACK)) {
+			approveButton.setVisible(true);
+			rejectButton.setVisible(true);
+		} else {
+			approveButton.setVisible(false);
+			rejectButton.setVisible(false);
+		}
+		withdrawButton.setVisible(loginUser.getId() == applicant.getId() && status == KintaiStatus.PENDING);
+		passbackButton.setVisible(loginUser.getId() == authority.getId()
+				&& (status == KintaiStatus.APPROVED || status == KintaiStatus.REJECTED));
 	}
 
 	/**
