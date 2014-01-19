@@ -68,11 +68,6 @@ public enum KintaiMail {
 	private static final Logger log = LoggerFactory.getLogger(KintaiMail.class);
 
 	/**
-	 * メール設定を管理するプロパティファイルです。
-	 */
-	public static final String PROPERTIES_FILE_PATH = "META-INF/properties/smtp.properties";
-
-	/**
 	 * 
 	 * @param subject
 	 */
