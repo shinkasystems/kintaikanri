@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.HiddenField;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -82,6 +83,11 @@ public class DetailPage extends DefaultLayoutPage {
 
 	private final HiddenField<KintaiStatus> statusField = new HiddenField<>("status-hidden", statusModel);
 
+	private final IModel<String> commentAuthorityModel = new Model<String>();
+
+	private final TextArea<String> commentAuthorityTextArea =
+			new TextArea<>("comment-authority-textarea", commentAuthorityModel);
+
 	private final Label idLabel = new Label("id", idModel);
 
 	private final IModel<Date> termModel = new Model<Date>();
@@ -110,6 +116,8 @@ public class DetailPage extends DefaultLayoutPage {
 
 	private final Label authorityLabel = new Label("authority", authorityModel);
 
+	private final MultiLineLabel commentAuthorityLabel = new MultiLineLabel("comment-authority", commentAuthorityModel);
+
 	private final IModel<Date> updatedModel = new Model<Date>();
 
 	private final Label updatedLabel = DateLabel.forDatePattern("updated", updatedModel, KintaiConstants.DATE_PATTERN);
@@ -136,6 +144,7 @@ public class DetailPage extends DefaultLayoutPage {
 
 				application.setStatus(KintaiStatus.APPROVED.name());
 				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
+				application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
 				dao.update(application);
 
 				transaction.commit();
@@ -159,7 +168,7 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setSenderMailAddress(authority.getEmailAddress());
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
 			argument.setForm(KintaiType.valueOf(application.getType()).display);
-			argument.setComment(application.getCommentApplycant());
+			argument.setComment(application.getCommentAuthority());
 
 			KintaiMail.APPROVAL.send(argument);
 
@@ -167,7 +176,7 @@ public class DetailPage extends DefaultLayoutPage {
 			 * ページ情報の更新
 			 */
 			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
-			
+
 			infomationPanel.setMessage(getString("approve-message"));
 			infomationPanel.setVisible(true);
 		}
@@ -195,6 +204,7 @@ public class DetailPage extends DefaultLayoutPage {
 
 				application.setStatus(KintaiStatus.REJECTED.name());
 				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
+				application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
 				dao.update(application);
 
 				transaction.commit();
@@ -218,7 +228,7 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setSenderMailAddress(authority.getEmailAddress());
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
 			argument.setForm(KintaiType.valueOf(application.getType()).display);
-			argument.setComment(application.getCommentApplycant());
+			argument.setComment(application.getCommentAuthority());
 
 			KintaiMail.REJECTION.send(argument);
 
@@ -226,7 +236,7 @@ public class DetailPage extends DefaultLayoutPage {
 			 * ページ情報の更新
 			 */
 			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
-			
+
 			infomationPanel.setMessage(getString("reject-message"));
 			infomationPanel.setVisible(true);
 
@@ -286,7 +296,7 @@ public class DetailPage extends DefaultLayoutPage {
 			 * ページ情報の更新
 			 */
 			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
-			
+
 			infomationPanel.setMessage(getString("passback-message"));
 			infomationPanel.setVisible(true);
 		}
@@ -345,7 +355,7 @@ public class DetailPage extends DefaultLayoutPage {
 			 * ページ情報の更新
 			 */
 			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
-			
+
 			infomationPanel.setMessage(getString("withdraw-message"));
 			infomationPanel.setVisible(true);
 		}
@@ -383,7 +393,7 @@ public class DetailPage extends DefaultLayoutPage {
 		idModel.setObject(id);
 
 		form.add(new StatusValidator(idField, statusField));
-		
+
 		updatePage(application, applicant, authority, loginUser);
 
 		/*
@@ -400,9 +410,11 @@ public class DetailPage extends DefaultLayoutPage {
 		add(statusLabel);
 		add(authorityLabel);
 		add(updatedLabel);
+		add(commentAuthorityLabel);
 
 		form.add(idField);
 		form.add(statusField);
+		form.add(commentAuthorityTextArea);
 		form.add(approveButton);
 		form.add(rejectButton);
 		form.add(withdrawButton);
@@ -433,6 +445,7 @@ public class DetailPage extends DefaultLayoutPage {
 		createdModel.setObject(application.getCreateDate());
 		authorityModel.setObject(authority.getDisplayName());
 		updatedModel.setObject(application.getUpdateDate());
+		commentAuthorityModel.setObject(application.getCommentAuthority());
 
 		if (status == KintaiStatus.PENDING) {
 			statusLabel.add(new AttributeModifier("class", "label label-info"));
@@ -450,9 +463,11 @@ public class DetailPage extends DefaultLayoutPage {
 				&& (status == KintaiStatus.PENDING || status == KintaiStatus.PASSBACK)) {
 			approveButton.setVisible(true);
 			rejectButton.setVisible(true);
+			commentAuthorityTextArea.setEnabled(true);
 		} else {
 			approveButton.setVisible(false);
 			rejectButton.setVisible(false);
+			commentAuthorityTextArea.setEnabled(false);
 		}
 		withdrawButton.setVisible(loginUser.getId() == applicant.getId() && status == KintaiStatus.PENDING);
 		passbackButton.setVisible(loginUser.getId() == authority.getId()
