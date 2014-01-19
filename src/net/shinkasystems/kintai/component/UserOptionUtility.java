@@ -19,9 +19,11 @@ import org.seasar.doma.jdbc.tx.LocalTransaction;
  */
 public class UserOptionUtility {
 
+	/**
+	 * インスタンスの生成は制限されています。
+	 */
 	private UserOptionUtility() {
 		super();
-		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 	/**
@@ -52,8 +54,8 @@ public class UserOptionUtility {
 	}
 
 	/**
-	 * 代理申請が可能な申請者を取得します。
-	 * ログインユーザーが決裁者となっている申請者の申請を代理することができます。
+	 * 指定のユーザーが決裁者となっているユーザーのリストを返します。
+	 * 自分自身が決裁者である場合は、ユーザーのリストに自分自身は含みません。
 	 * 
 	 * @param authorityId
 	 * @return
@@ -69,7 +71,9 @@ public class UserOptionUtility {
 			final UserDao dao = new UserDaoImpl();
 			
 			for (User user : dao.selectByAuthorityId(authorityId)) {
-				applicantOptions.add(new UserOption(user.getId(), user.getDisplayName()));
+				if (user.getId() != authorityId) {
+					applicantOptions.add(new UserOption(user.getId(), user.getDisplayName()));
+				}
 			}
 
 		} finally {
