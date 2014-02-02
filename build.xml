@@ -18,7 +18,7 @@
 	<property name="distribution" location="${basedir}${file.separator}..${file.separator}..${file.separator}distribution" />
 
 	<!-- ビルド先 + アプリケーションディレクトリ -->
-	<property name="distribution.appdir" location="${distribution}${file.separator}kintaikanri" />
+	<property name="distribution.appdir" location="${distribution}${file.separator}kintai_app" />
 
 	<!-- クラスパス -->
 	<path id="classpath.lib">
