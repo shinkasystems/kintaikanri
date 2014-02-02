@@ -53,11 +53,13 @@
 			<fileset dir="${basedir}/war" />
 		</copy>
 
+		<!--
 		<javac destdir="bin" includeantruntime="false" source="${source}" target="${target}" fork="true">
 			<src path=".apt_generated" />
 			<src path="src" />
 			<classpath refid="classpath.lib" />
 		</javac>
+		-->
 
 		<jar destfile="${distribution.appdir}/kintaikanri.jar">
 			<manifest>
