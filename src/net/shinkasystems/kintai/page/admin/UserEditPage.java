@@ -6,6 +6,7 @@ import java.util.List;
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
+import net.shinkasystems.kintai.component.ConfirmSubmitButton;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.RoleChoiceRenderer;
 import net.shinkasystems.kintai.component.RoleOption;
@@ -16,6 +17,7 @@ import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.panel.AlertPanel;
+import net.shinkasystems.kintai.panel.InfomationPanel;
 import net.shinkasystems.kintai.util.Authentication;
 import net.shinkasystems.kintai.util.DaoFactory;
 
@@ -51,6 +53,11 @@ public class UserEditPage extends AdminLayoutPage {
 	 * アラートパネルです。
 	 */
 	private final Panel alertPanel = new AlertPanel("alert-panel");
+
+	/**
+	 * 情報パネルです。
+	 */
+	private final InfomationPanel infomationPanel = new InfomationPanel("infomation-panel");
 
 	/**
 	 * ユーザーを登録／編集するフォームです。
@@ -121,7 +128,7 @@ public class UserEditPage extends AdminLayoutPage {
 	/**
 	 * 更新ボタンです。
 	 */
-	private final Button updateButton = new Button("update-button") {
+	private final Button updateButton = new ConfirmSubmitButton("update-button", getString("confirm-update-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -160,6 +167,9 @@ public class UserEditPage extends AdminLayoutPage {
 
 				log.info("ユーザーを編集しました。");
 
+				infomationPanel.setMessage(getString("update-message"));
+				infomationPanel.setVisible(true);
+
 			} finally {
 				transaction.rollback();
 			}
@@ -170,7 +180,8 @@ public class UserEditPage extends AdminLayoutPage {
 	/**
 	 * 有効化ボタンです。
 	 */
-	private final Button activateButton = new Button("activate-button") {
+	private final Button activateButton = new ConfirmSubmitButton("activate-button",
+			getString("confirm-activate-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -191,6 +202,9 @@ public class UserEditPage extends AdminLayoutPage {
 
 				log.info("ユーザーを有効化しました。");
 
+				infomationPanel.setMessage(getString("activate-message"));
+				infomationPanel.setVisible(true);
+
 			} finally {
 				transaction.rollback();
 			}
@@ -201,7 +215,8 @@ public class UserEditPage extends AdminLayoutPage {
 	/**
 	 * 無効化ボタンです。
 	 */
-	private final Button invalidateButton = new Button("invalidate-button") {
+	private final Button invalidateButton = new ConfirmSubmitButton("invalidate-button",
+			getString("confirm-invalidate-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -222,6 +237,9 @@ public class UserEditPage extends AdminLayoutPage {
 
 				log.info("ユーザーを無効化しました。");
 
+				infomationPanel.setMessage(getString("invalidate-message"));
+				infomationPanel.setVisible(true);
+
 			} finally {
 				transaction.rollback();
 			}
@@ -232,7 +250,7 @@ public class UserEditPage extends AdminLayoutPage {
 	/**
 	 * 削除ボタンです。
 	 */
-	private final Button deleteButton = new Button("delete-button") {
+	private final Button deleteButton = new ConfirmSubmitButton("delete-button", getString("confirm-delete-message")) {
 
 		@Override
 		public void onSubmit() {
@@ -250,6 +268,9 @@ public class UserEditPage extends AdminLayoutPage {
 				transaction.commit();
 
 				log.info("ユーザーを削除しました。");
+
+				infomationPanel.setMessage(getString("delete-message"));
+				infomationPanel.setVisible(true);
 
 			} finally {
 				transaction.rollback();
@@ -303,6 +324,7 @@ public class UserEditPage extends AdminLayoutPage {
 		 * コンポーネントの編集
 		 */
 		alertPanel.setVisible(false);
+		infomationPanel.setVisible(false);
 
 		userIdTextField.setDefaultModelObject(user.getId());
 		userIdTextField.setEnabled(false);
@@ -325,6 +347,7 @@ public class UserEditPage extends AdminLayoutPage {
 		 * コンポーネントの組立
 		 */
 		add(alertPanel);
+		add(infomationPanel);
 
 		userProfileForm.add(userIdTextField);
 		userProfileForm.add(userNameTextField);

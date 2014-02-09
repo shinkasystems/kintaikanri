@@ -107,6 +107,8 @@ public class UserRegistrationPage extends AdminLayoutPage {
 
 				log.info("ユーザーを新規登録しました。" + user);
 
+				setResponsePage(UsersPage.class);
+
 			} finally {
 				transaction.rollback();
 			}
@@ -141,7 +143,7 @@ public class UserRegistrationPage extends AdminLayoutPage {
 	 * メールアドレスの入力フィールドです。
 	 */
 	private final TextField<String> emailAddressTextField = new TextField<>("email-address", new Model<String>());
-	
+
 	/**
 	 * 決裁者のリストです。
 	 */
@@ -196,7 +198,7 @@ public class UserRegistrationPage extends AdminLayoutPage {
 		 * コンポーネントの編集
 		 */
 		alertPanel.setVisible(false);
-		
+
 		userNameTextField.setRequired(true);
 		passwordTextField.setRequired(true);
 		passwordConfirmTextField.setRequired(true);
@@ -206,14 +208,14 @@ public class UserRegistrationPage extends AdminLayoutPage {
 		roleChoice.setSuffix("&nbsp;");
 		activatedChoice.setRequired(true);
 		activatedChoice.setSuffix("&nbsp;");
-		
+
 		userProfileForm.add(new PasswordConfirmValidator(passwordTextField, passwordConfirmTextField));
 
 		/*
 		 * コンポーネントの組立
 		 */
 		add(alertPanel);
-		
+
 		userProfileForm.add(userNameTextField);
 		userProfileForm.add(passwordTextField);
 		userProfileForm.add(passwordConfirmTextField);
