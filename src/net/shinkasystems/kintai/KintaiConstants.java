@@ -15,7 +15,7 @@ public class KintaiConstants {
 	/**
 	 * アプリケーションのポートです。
 	 */
-	public static final int SERVER_PORT = 80;
+	public static final int SERVER_PORT = 8080;
 
 	/**
 	 * アプリケーションのユーザーデータを管理するディレクトリです。
