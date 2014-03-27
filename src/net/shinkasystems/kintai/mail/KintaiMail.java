@@ -50,12 +50,7 @@ public enum KintaiMail {
 	/**
 	 * 取り下げメールです。
 	 */
-	WITHDRAWAL("【勤怠管理ツール】勤怠の取り下げ"),
-
-	/**
-	 * 差し戻しメールです。
-	 */
-	PASSBACK("【勤怠管理ツール】勤怠の差し戻し");
+	WITHDRAWAL("【勤怠管理ツール】勤怠の取り下げ");
 	
 	private static final String EMAIL_CHARSET = "UTF-8";
 
