@@ -23,7 +23,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.seasar.doma.jdbc.SelectOptions;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 
 /**
  * 
@@ -32,7 +32,7 @@ import org.seasar.doma.jdbc.tx.LocalTransaction;
  */
 @AuthorizeInstantiation({ KintaiRole.ADMIN })
 public class UsersPage extends AdminLayoutPage {
-	
+
 	/**
 	 * 
 	 */
@@ -48,15 +48,17 @@ public class UsersPage extends AdminLayoutPage {
 		protected void populateItem(Item<UserData> item) {
 
 			final UserData user = item.getModelObject();
-			
+
 			final Label userIDLabel = new Label("user-id", user.getId());
 			final Label userNameLabel = new Label("user-name", user.getUserName());
 			final Label userDisplayNameLabel = new Label("user-display-name", user.getDisplayName());
-			final Label userAuthorityDisplayNameLabel = new Label("authority-display-name", user.getAuthorityDisplayName());
+			final Label userAuthorityDisplayNameLabel = new Label("authority-display-name",
+					user.getAuthorityDisplayName());
 			final Label userRoleLabel = new Label("role", user.getRole());
-			final Label userExpiredLabel = new Label("expire-date", KintaiConstants.DATE_FORMAT.format(user.getExpireDate()));
+			final Label userExpiredLabel = new Label("expire-date", KintaiConstants.DATE_FORMAT.format(user
+					.getExpireDate()));
 			final Label userActivatedLabel = new Label("activated", user.getActivated() ? "有効" : "無効");
-			
+
 			final Link<String> userLink = new StatelessLink<String>("link") {
 
 				@Override
@@ -71,7 +73,7 @@ public class UsersPage extends AdminLayoutPage {
 
 			};
 			userLink.add(userNameLabel);
-			
+
 			item.add(userIDLabel);
 			item.add(userLink);
 			item.add(userDisplayNameLabel);
@@ -87,21 +89,17 @@ public class UsersPage extends AdminLayoutPage {
 	 */
 	public UsersPage() {
 		super();
-		
+
 		/*
 		 * コンポーネントの生成
 		 */
 		final PagingNavigator pagingNavigator = new PaginationPanel("page-navigator", userDataView);
-		
-		
-		
+
 		/*
 		 * コンポーネントの編集
 		 */
 		userDataView.setItemsPerPage(20);
-		
-		
-		
+
 		/*
 		 * コンポーネントの組立
 		 */
@@ -120,23 +118,19 @@ class UserDataProvider extends SortableDataProvider<UserData, String> {
 
 	@Override
 	public Iterator<UserData> iterator(long first, long count) {
-		
+
 		SelectOptions options = SelectOptions.get().offset((int) first).limit((int) count);
-		
-		List<UserData> userDatas = null;
-		
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
+
+		List<UserData> userDatas = transactionManager.required(() -> {
 
 			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
-			userDatas = dao.selectUserData(options);
+			return dao.selectUserData(options);
+		});
 
-		} finally {
-			transaction.rollback();
-		}
-		
 		return userDatas.iterator();
 	}
 
@@ -147,21 +141,16 @@ class UserDataProvider extends SortableDataProvider<UserData, String> {
 
 	@Override
 	public long size() {
-		
-		long size = 0;
-		
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
+
+		return transactionManager.required(() -> {
 
 			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
-			size = dao.selectCountUser();
+			return dao.selectCountUser();
+		});
 
-			transaction.commit();
-		} finally {
-			transaction.rollback();
-		}
-		return size;
 	}
 }

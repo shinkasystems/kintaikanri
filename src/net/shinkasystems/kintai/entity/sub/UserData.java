@@ -3,6 +3,7 @@ package net.shinkasystems.kintai.entity.sub;
 import java.io.Serializable;
 
 import net.shinkasystems.kintai.entity.User;
+import net.shinkasystems.kintai.entity.UserListener;
 
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
@@ -13,7 +14,7 @@ import org.seasar.doma.Entity;
  * @author Aogiri
  *
  */
-@Entity
+@Entity(listener = UserListener.class)
 public class UserData extends User implements Serializable {
 
 	/**
@@ -37,4 +38,5 @@ public class UserData extends User implements Serializable {
 	public void setAuthorityDisplayName(String authorityDisplayName) {
 		this.authorityDisplayName = authorityDisplayName;
 	}
+
 }

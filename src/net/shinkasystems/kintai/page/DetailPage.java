@@ -36,7 +36,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.value.ValueMap;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,28 +132,24 @@ public class DetailPage extends DefaultLayoutPage {
 
 			final Integer applicationID = idField.getModelObject();
 
-			Application application;
+			TransactionManager transactionManager = KintaiDB.singleton()
+					.getTransactionManager();
 
-			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			Application application = transactionManager.required(() -> {
 
 				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-				application = dao.selectById(applicationID);
+				Application updateApplication = dao.selectById(applicationID);
 
-				application.setStatus(KintaiStatus.APPROVED.name());
-				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
-				application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
-				dao.update(application);
+				updateApplication.setStatus(KintaiStatus.APPROVED.name());
+				updateApplication.setUpdateDate(new java.sql.Date(new Date().getTime()));
+				updateApplication.setCommentAuthority(commentAuthorityTextArea.getModelObject());
+				dao.update(updateApplication);
 
-				transaction.commit();
+				log.info("承認しました");
 
-			} finally {
-				transaction.rollback();
-			}
-
-			log.info("承認しました");
+				return updateApplication;
+			});
 
 			/*
 			 * メール送信処理
@@ -192,26 +188,24 @@ public class DetailPage extends DefaultLayoutPage {
 
 			final Integer applicationID = idField.getModelObject();
 
-			Application application;
+			;
 
-			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			TransactionManager transactionManager = KintaiDB.singleton()
+					.getTransactionManager();
+
+			Application application = transactionManager.required(() -> {
 
 				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-				application = dao.selectById(applicationID);
+				Application updateApplication = dao.selectById(applicationID);
 
-				application.setStatus(KintaiStatus.REJECTED.name());
-				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
-				application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
-				dao.update(application);
+				updateApplication.setStatus(KintaiStatus.REJECTED.name());
+				updateApplication.setUpdateDate(new java.sql.Date(new Date().getTime()));
+				updateApplication.setCommentAuthority(commentAuthorityTextArea.getModelObject());
+				dao.update(updateApplication);
 
-				transaction.commit();
-
-			} finally {
-				transaction.rollback();
-			}
+				return updateApplication;
+			});
 
 			log.info("却下しました");
 
@@ -253,25 +247,20 @@ public class DetailPage extends DefaultLayoutPage {
 
 			final Integer applicationID = idField.getModelObject();
 
-			Application application;
+			TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
-			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			Application application = transactionManager.required(() -> {
 
 				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-				application = dao.selectById(applicationID);
+				Application updateApplication = dao.selectById(applicationID);
 
-				application.setStatus(KintaiStatus.WITHDRAWN.name());
-				application.setUpdateDate(new java.sql.Date(new Date().getTime()));
-				dao.update(application);
+				updateApplication.setStatus(KintaiStatus.WITHDRAWN.name());
+				updateApplication.setUpdateDate(new java.sql.Date(new Date().getTime()));
+				dao.update(updateApplication);
 
-				transaction.commit();
-
-			} finally {
-				transaction.rollback();
-			}
+				return updateApplication;
+			});
 
 			log.info("取下げました");
 
@@ -413,17 +402,15 @@ public class DetailPage extends DefaultLayoutPage {
 	 */
 	private static Application getApplication(int id) {
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
+
+		return transactionManager.required(() -> {
 
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 			return dao.selectById(id);
-
-		} finally {
-			transaction.rollback();
-		}
+		});
 	}
 
 	/**
@@ -434,17 +421,16 @@ public class DetailPage extends DefaultLayoutPage {
 	 */
 	private static User getUser(int id) {
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
+
+		return transactionManager.required(() -> {
 
 			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			return dao.selectById(id);
+		});
 
-		} finally {
-			transaction.rollback();
-		}
 	}
 }
 
@@ -477,19 +463,15 @@ class StatusValidator extends AbstractFormValidator {
 		final int id = idComponent.getModelObject();
 		final KintaiStatus status = statusComponent.getModelObject();
 
-		Application current;
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		Application current = transactionManager.required(() -> {
 
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-			current = dao.selectById(id);
-
-		} finally {
-			transaction.rollback();
-		}
+			return dao.selectById(id);
+		});
 
 		if (status != KintaiStatus.valueOf(current.getStatus())) {
 			error(null);

@@ -33,7 +33,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.value.ValueMap;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,9 +133,10 @@ public class UserEditPage extends AdminLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			TransactionManager transactionManager = KintaiDB.singleton()
+					.getTransactionManager();
+
+			transactionManager.required(() -> {
 
 				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
@@ -163,16 +164,11 @@ public class UserEditPage extends AdminLayoutPage {
 
 				dao.update(user);
 
-				transaction.commit();
-
 				log.info("ユーザーを編集しました。");
+			});
 
-				infomationPanel.setMessage(getString("update-message"));
-				infomationPanel.setVisible(true);
-
-			} finally {
-				transaction.rollback();
-			}
+			infomationPanel.setMessage(getString("update-message"));
+			infomationPanel.setVisible(true);
 		}
 
 	};
@@ -186,9 +182,10 @@ public class UserEditPage extends AdminLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			TransactionManager transactionManager = KintaiDB.singleton()
+					.getTransactionManager();
+
+			transactionManager.required(() -> {
 
 				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
@@ -198,16 +195,11 @@ public class UserEditPage extends AdminLayoutPage {
 
 				dao.update(user);
 
-				transaction.commit();
-
 				log.info("ユーザーを有効化しました。");
+			});
 
-				infomationPanel.setMessage(getString("activate-message"));
-				infomationPanel.setVisible(true);
-
-			} finally {
-				transaction.rollback();
-			}
+			infomationPanel.setMessage(getString("activate-message"));
+			infomationPanel.setVisible(true);
 		}
 
 	};
@@ -221,9 +213,10 @@ public class UserEditPage extends AdminLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			TransactionManager transactionManager = KintaiDB.singleton()
+					.getTransactionManager();
+
+			transactionManager.required(() -> {
 
 				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
@@ -233,16 +226,12 @@ public class UserEditPage extends AdminLayoutPage {
 
 				dao.update(user);
 
-				transaction.commit();
-
 				log.info("ユーザーを無効化しました。");
+			});
 
-				infomationPanel.setMessage(getString("invalidate-message"));
-				infomationPanel.setVisible(true);
+			infomationPanel.setMessage(getString("invalidate-message"));
+			infomationPanel.setVisible(true);
 
-			} finally {
-				transaction.rollback();
-			}
 		}
 
 	};
@@ -255,9 +244,10 @@ public class UserEditPage extends AdminLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			TransactionManager transactionManager = KintaiDB.singleton()
+					.getTransactionManager();
+
+			transactionManager.required(() -> {
 
 				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
@@ -265,16 +255,12 @@ public class UserEditPage extends AdminLayoutPage {
 
 				dao.delete(user);
 
-				transaction.commit();
-
 				log.info("ユーザーを削除しました。");
 
-				infomationPanel.setMessage(getString("delete-message"));
-				infomationPanel.setVisible(true);
+			});
 
-			} finally {
-				transaction.rollback();
-			}
+			infomationPanel.setMessage(getString("delete-message"));
+			infomationPanel.setVisible(true);
 		}
 
 	};
@@ -375,31 +361,28 @@ public class UserEditPage extends AdminLayoutPage {
 	 */
 	private static User getUser(int id) {
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
 
+		return transactionManager.required(() -> {
+			
 			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			return dao.selectById(id);
+		});
 
-		} finally {
-			transaction.rollback();
-		}
 	}
 
 	private static boolean isHistoryExists(int id) {
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
 
+		return transactionManager.required(() -> {
+			
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 			return dao.selectHistoryExists(id);
-
-		} finally {
-			transaction.rollback();
-		}
+		});
 	}
 }

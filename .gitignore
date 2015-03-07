@@ -14,8 +14,10 @@ tmp/
 *~.nib
 local.properties
 .classpath
-.settings/
+.factorypath
 .loadpath
+.settings/
+.gradle/
 
 # External tool builders
 .externalToolBuilders/

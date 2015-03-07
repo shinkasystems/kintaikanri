@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,10 +73,10 @@ public class UserRegistrationPage extends AdminLayoutPage {
 			Calendar expireCalendar = Calendar.getInstance();
 			expireCalendar.add(Calendar.MONTH, 3);
 
-			LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			TransactionManager transactionManager = KintaiDB.singleton()
+					.getTransactionManager();
 
+			transactionManager.required(() -> {
 				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 				final User user = new User();
@@ -103,15 +103,12 @@ public class UserRegistrationPage extends AdminLayoutPage {
 					dao.update(user);
 				}
 
-				transaction.commit();
-
 				log.info("ユーザーを新規登録しました。" + user);
 
 				setResponsePage(UsersPage.class);
 
-			} finally {
-				transaction.rollback();
-			}
+			});
+
 		}
 
 	};

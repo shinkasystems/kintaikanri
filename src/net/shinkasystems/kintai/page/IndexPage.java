@@ -38,7 +38,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
 import org.seasar.doma.jdbc.SelectOptions;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +87,7 @@ public class IndexPage extends DefaultLayoutPage {
 			if (applicationData.getCommentApplycant().length() > 20) {
 				applicationData.setCommentApplycant(applicationData.getCommentApplycant().substring(0, 20) + "...");
 			}
-			
+
 			/*
 			 * コンポーネントの生成
 			 */
@@ -269,7 +269,7 @@ class ApplicationDataProvider extends SortableDataProvider<ApplicationData, Stri
 		this.status = status;
 
 		setSort("TERM", SortOrder.ASCENDING);
-		
+
 	}
 
 	@Override
@@ -278,25 +278,21 @@ class ApplicationDataProvider extends SortableDataProvider<ApplicationData, Stri
 		SelectOptions options = SelectOptions.get().offset((int) first).limit((int) count);
 		String orderBy = "order by " + getSort().getProperty() + (getSort().isAscending() ? " ASC" : " DESC" + ", ID");
 
-		List<ApplicationData> applicationDatas = null;
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		List<ApplicationData> applicationDatas = transactionManager.required(() -> {
 
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-			applicationDatas = dao.selectApplicationData(
+			return dao.selectApplicationData(
 					options,
 					from,
 					to,
 					applicantId,
 					status != null ? status.name() : null,
 					orderBy);
-
-		} finally {
-			transaction.rollback();
-		}
+		});
 
 		return applicationDatas.iterator();
 	}
@@ -309,20 +305,15 @@ class ApplicationDataProvider extends SortableDataProvider<ApplicationData, Stri
 	@Override
 	public long size() {
 
-		long size = 0;
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
-
+		return transactionManager.required(() -> {
+			
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-			size = dao.selectCountApplication();
-
-		} finally {
-			transaction.rollback();
-		}
-		return size;
+			return dao.selectCountApplication();
+		});
 	}
 
 	public java.sql.Date getFrom() {

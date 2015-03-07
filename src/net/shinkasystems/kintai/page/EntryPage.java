@@ -33,7 +33,7 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,12 +72,12 @@ public class EntryPage extends DefaultLayoutPage {
 			 * 申請処理
 			 */
 			final Application application = new Application();
-			final LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+
+			TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
+
+			transactionManager.required(() -> {
 
 				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
-
 
 				if (applicantDropDownChoice.getModelObject() != null) {
 					application.setApplicantId(applicantDropDownChoice.getModelObject().getId());
@@ -93,20 +93,15 @@ public class EntryPage extends DefaultLayoutPage {
 
 				dao.insert(application);
 
-				transaction.commit();
-
 				log.info("勤怠情報を申請しました。" + application);
+			});
 
-			} finally {
-				transaction.rollback();
-			}
-			
 			/*
 			 * メール送信処理
 			 */
 			final User sender = getUser(application.getApplicantId());
 			final User receiver = getUser(sender.getAuthorityId());
-			
+
 			final KintaiMailArgument argument = new KintaiMailArgument();
 			argument.setReceiverName(receiver.getDisplayName());
 			argument.setReceiverMailAddress(receiver.getEmailAddress());
@@ -117,7 +112,7 @@ public class EntryPage extends DefaultLayoutPage {
 			argument.setComment(commentTextArea.getModelObject());
 
 			KintaiMail.ENTRY.send(argument);
-			
+
 			setResponsePage(IndexPage.class);
 		}
 
@@ -197,17 +192,15 @@ public class EntryPage extends DefaultLayoutPage {
 	 */
 	private static User getUser(int id) {
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
+
+		return transactionManager.required(() -> {
 
 			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
 			return dao.selectById(id);
-
-		} finally {
-			transaction.rollback();
-		}
+		});
 	}
 }
 

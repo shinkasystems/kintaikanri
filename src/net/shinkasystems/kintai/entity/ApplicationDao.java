@@ -33,22 +33,23 @@ public interface ApplicationDao {
 	 */
 	@Select
 	Application selectById(Integer id);
-	
+
 	/**
 	 * 
 	 * @param options
 	 * @return
 	 */
 	@Select
-	List<ApplicationData> selectApplicationData(SelectOptions options, Date from, Date to, Integer applicantID, String status, String orderBy);
-	
+	List<ApplicationData> selectApplicationData(SelectOptions options, Date from, Date to, Integer applicantID,
+			String status, String orderBy);
+
 	/**
 	 * 
 	 * @return
 	 */
 	@Select
-	int selectCountApplication();
-	
+	long selectCountApplication();
+
 	/**
 	 * 
 	 * @param userID

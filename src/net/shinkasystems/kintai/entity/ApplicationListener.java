@@ -13,27 +13,27 @@ import org.seasar.doma.jdbc.entity.PreUpdateContext;
  */
 public class ApplicationListener implements EntityListener<Application> {
 
-    @Override
-    public void preInsert(Application entity, PreInsertContext context) {
-    }
+	@Override
+	public void preInsert(Application entity, PreInsertContext context) {
+	}
 
-    @Override
-    public void preUpdate(Application entity, PreUpdateContext context) {
-    }
+	@Override
+	public void preUpdate(Application entity, PreUpdateContext context) {
+	}
 
-    @Override
-    public void preDelete(Application entity, PreDeleteContext context) {
-    }
+	@Override
+	public void preDelete(Application entity, PreDeleteContext context) {
+	}
 
-    @Override
-    public void postInsert(Application entity, PostInsertContext context) {
-    }
+	@Override
+	public void postInsert(Application entity, PostInsertContext context) {
+	}
 
-    @Override
-    public void postUpdate(Application entity, PostUpdateContext context) {
-    }
+	@Override
+	public void postUpdate(Application entity, PostUpdateContext context) {
+	}
 
-    @Override
-    public void postDelete(Application entity, PostDeleteContext context) {
-    }
+	@Override
+	public void postDelete(Application entity, PostDeleteContext context) {
+	}
 }

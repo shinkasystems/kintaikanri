@@ -6,11 +6,11 @@ import java.util.List;
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
 import net.shinkasystems.kintai.entity.sub.UserData;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.seasar.doma.jdbc.SelectOptions;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 
 /**
  * 
@@ -31,25 +31,20 @@ public class UserOptionUtility {
 	 * @return
 	 */
 	public static List<UserOption> getUserOptions() {
-		
+
 		List<UserOption> userOptions = new ArrayList<UserOption>();
-		
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
 
-			final UserDao dao = new UserDaoImpl();
+		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
-			for (UserData userData: dao.selectUserData(SelectOptions.get())) {
+		transactionManager.required(() -> {
+
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
+
+			for (UserData userData : dao.selectUserData(SelectOptions.get())) {
 				userOptions.add(new UserOption(userData.getId(), userData.getDisplayName()));
 			}
+		});
 
-		} finally {
-			transaction.rollback();
-		}
-		
-
-		
 		return userOptions;
 	}
 
@@ -61,25 +56,22 @@ public class UserOptionUtility {
 	 * @return
 	 */
 	public static List<UserOption> getUserOptions(int authorityId) {
-		
+
 		final List<UserOption> applicantOptions = new ArrayList<UserOption>();
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
-			final UserDao dao = new UserDaoImpl();
-			
+		transactionManager.required(() -> {
+
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
+
 			for (User user : dao.selectByAuthorityId(authorityId)) {
 				if (user.getId() != authorityId) {
 					applicantOptions.add(new UserOption(user.getId(), user.getDisplayName()));
 				}
 			}
+		});
 
-		} finally {
-			transaction.rollback();
-		}
-		
 		return applicantOptions;
 	}
 }

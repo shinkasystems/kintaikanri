@@ -1,13 +1,12 @@
 package net.shinkasystems.kintai;
 
 import net.shinkasystems.kintai.entity.ApplicationDao;
-import net.shinkasystems.kintai.entity.ApplicationDaoImpl;
 import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.entity.UserDaoImpl;
+import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,27 +80,20 @@ public class Start {
 			log.info("データベースファイルが存在しません。データベースを新規作成します。");
 		}
 
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
 
-		try {
-			transaction.begin();
-
+		transactionManager.required(() -> {
+			
 			{
-				UserDao dao = new UserDaoImpl();
+				UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 				dao.createTable();
 			}
 			{
-				ApplicationDao dao = new ApplicationDaoImpl();
+				ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 				dao.createTable();
 			}
 
-			transaction.commit();
-
-		} catch (Exception e) {
-			transaction.rollback();
-
-			log.error(e.getMessage());
-			e.printStackTrace();
-		}
+		});
 	}
 }

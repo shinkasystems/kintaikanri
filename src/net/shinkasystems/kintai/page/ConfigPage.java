@@ -22,7 +22,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +57,11 @@ public class ConfigPage extends DefaultLayoutPage {
 
 			final int userID = ((KintaiSession) KintaiSession.get()).getUser().getId();
 			final String password = passwordTextField.getModelObject();
+			
+			TransactionManager transactionManager = KintaiDB.singleton()
+					.getTransactionManager();
 
-			LocalTransaction transaction = KintaiDB.getLocalTransaction();
-			try {
-				transaction.begin();
+			transactionManager.required(() -> {
 
 				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
@@ -70,14 +71,10 @@ public class ConfigPage extends DefaultLayoutPage {
 				user.setExpireDate(new Date(expireCalendar.getTimeInMillis()));
 
 				dao.update(user);
-
-				transaction.commit();
-
+				
 				log.info("ユーザー設定を変更しました。" + user);
 
-			} finally {
-				transaction.rollback();
-			}
+			});
 		}
 
 		@Override

@@ -10,7 +10,7 @@ import net.shinkasystems.kintai.util.DaoFactory;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
-import org.seasar.doma.jdbc.tx.LocalTransaction;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class KintaiSession extends AuthenticatedWebSession {
-	
+
 	/** ロガー */
 	private static final Logger log = LoggerFactory
 			.getLogger(KintaiSession.class);
@@ -37,36 +37,33 @@ public class KintaiSession extends AuthenticatedWebSession {
 	@Override
 	public boolean authenticate(String username, String password) {
 
-		String hashedPassword = new Authentication(username, password).getPasswordHash();
-		
+		String hashedPassword = new Authentication(username, password)
+				.getPasswordHash();
+
 		log.info(hashedPassword);
 
-		User user= null;
-		LocalTransaction transaction = KintaiDB.getLocalTransaction();
-		try {
-			transaction.begin();
+		TransactionManager transactionManager = KintaiDB.singleton()
+				.getTransactionManager();
+
+		User user = transactionManager.required(() -> {
 
 			UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
 
-			user = dao.selectByUserName(username);
-
-			transaction.commit();
-		} finally {
-			transaction.rollback();
-		}
-
-
+			return dao.selectByUserName(username);
+		});
 
 		if (user == null) {
-			
+
 			log.info("ユーザー：" + username + " は存在しません。");
 			return false;
-			
-		} else if (user.getPassword().equals(hashedPassword) && user.getActivated()) {
-			
+
+		} else if (user.getPassword().equals(hashedPassword)
+				&& user.getActivated()) {
+
 			this.user = user;
 
-			if (user.getExpireDate() != null && new Date().after(user.getExpireDate())) {
+			if (user.getExpireDate() != null
+					&& new Date().after(user.getExpireDate())) {
 				roles = new Roles(KintaiRole.EXPIRED_USER);
 			} else if (KintaiRole.USER.equals(user.getRole())) {
 				roles = new Roles(KintaiRole.USER);
@@ -77,7 +74,7 @@ public class KintaiSession extends AuthenticatedWebSession {
 			}
 
 			return true;
-			
+
 		} else {
 
 			log.info("ユーザー：" + username + " のパスワード：" + password + " が一致しません。");
