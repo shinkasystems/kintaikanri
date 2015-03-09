@@ -1,19 +1,20 @@
 package net.shinkasystems.kintai;
 
 import net.shinkasystems.kintai.page.ConfigPage;
-import net.shinkasystems.kintai.page.DetailPage;
-import net.shinkasystems.kintai.page.EntryPage;
-import net.shinkasystems.kintai.page.UnauthorizedPage;
-import net.shinkasystems.kintai.page.IndexPage;
 import net.shinkasystems.kintai.page.SignInPage;
+import net.shinkasystems.kintai.page.UnauthorizedPage;
 import net.shinkasystems.kintai.page.admin.UserEditPage;
 import net.shinkasystems.kintai.page.admin.UserRegistrationPage;
 import net.shinkasystems.kintai.page.admin.UsersPage;
+import net.shinkasystems.kintai.page.kintai.DetailPage;
+import net.shinkasystems.kintai.page.kintai.EntryPage;
+import net.shinkasystems.kintai.page.kintai.IndexPage;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.guice.GuiceComponentInjector;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
@@ -45,6 +46,7 @@ public class KintaiWebApplication extends AuthenticatedWebApplication {
 		mountPage("/admin/user/edit", UserEditPage.class);
 		mountPage("/signin", SignInPage.class);
 
+		getComponentInstantiationListeners().add(new GuiceComponentInjector(this));
 	}
 
 	@Override

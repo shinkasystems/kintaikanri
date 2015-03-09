@@ -37,13 +37,11 @@ public class KintaiSession extends AuthenticatedWebSession {
 	@Override
 	public boolean authenticate(String username, String password) {
 
-		String hashedPassword = new Authentication(username, password)
-				.getPasswordHash();
+		String hashedPassword = new Authentication(username, password).getPasswordHash();
 
 		log.info(hashedPassword);
 
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
+		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
 		User user = transactionManager.required(() -> {
 
@@ -77,7 +75,7 @@ public class KintaiSession extends AuthenticatedWebSession {
 
 		} else {
 
-			log.info("ユーザー：" + username + " のパスワード：" + password + " が一致しません。");
+			log.trace("ユーザー：" + username + " のパスワード：" + password + " が一致しません。");
 			return false;
 		}
 	}

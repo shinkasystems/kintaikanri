@@ -1,23 +1,22 @@
-package net.shinkasystems.kintai.page;
+package net.shinkasystems.kintai.page.kintai;
 
 import java.util.Date;
 
 import net.shinkasystems.kintai.KintaiConstants;
-import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.KintaiStatus;
 import net.shinkasystems.kintai.KintaiType;
 import net.shinkasystems.kintai.component.ConfirmSubmitButton;
+import net.shinkasystems.kintai.component.StatusValidator;
 import net.shinkasystems.kintai.entity.Application;
-import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.User;
-import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.mail.KintaiMail;
 import net.shinkasystems.kintai.mail.KintaiMailArgument;
+import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.panel.InfomationPanel;
-import net.shinkasystems.kintai.util.DaoFactory;
+import net.shinkasystems.kintai.service.kintai.DetailService;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -26,19 +25,18 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.value.ValueMap;
-import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
 
 /**
  * 申請情報の詳細画面です。
@@ -131,31 +129,17 @@ public class DetailPage extends DefaultLayoutPage {
 		public void onSubmit() {
 
 			final Integer applicationID = idField.getModelObject();
+			final Application application = detailService.getApplication(applicationID);
 
-			TransactionManager transactionManager = KintaiDB.singleton()
-					.getTransactionManager();
+			application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
 
-			Application application = transactionManager.required(() -> {
-
-				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
-
-				Application updateApplication = dao.selectById(applicationID);
-
-				updateApplication.setStatus(KintaiStatus.APPROVED.name());
-				updateApplication.setUpdateDate(new java.sql.Date(new Date().getTime()));
-				updateApplication.setCommentAuthority(commentAuthorityTextArea.getModelObject());
-				dao.update(updateApplication);
-
-				log.info("承認しました");
-
-				return updateApplication;
-			});
+			detailService.approve(application);
 
 			/*
 			 * メール送信処理
 			 */
-			final User applicant = getUser(application.getApplicantId());
-			final User authority = getUser(applicant.getAuthorityId());
+			final User applicant = detailService.getUser(application.getApplicantId());
+			final User authority = detailService.getUser(applicant.getAuthorityId());
 
 			final KintaiMailArgument argument = new KintaiMailArgument();
 			argument.setReceiverName(applicant.getDisplayName());
@@ -187,33 +171,17 @@ public class DetailPage extends DefaultLayoutPage {
 		public void onSubmit() {
 
 			final Integer applicationID = idField.getModelObject();
+			final Application application = detailService.getApplication(applicationID);
 
-			;
+			application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
 
-			TransactionManager transactionManager = KintaiDB.singleton()
-					.getTransactionManager();
-
-			Application application = transactionManager.required(() -> {
-
-				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
-
-				Application updateApplication = dao.selectById(applicationID);
-
-				updateApplication.setStatus(KintaiStatus.REJECTED.name());
-				updateApplication.setUpdateDate(new java.sql.Date(new Date().getTime()));
-				updateApplication.setCommentAuthority(commentAuthorityTextArea.getModelObject());
-				dao.update(updateApplication);
-
-				return updateApplication;
-			});
-
-			log.info("却下しました");
+			detailService.reject(application);
 
 			/*
 			 * メール送信処理
 			 */
-			final User applicant = getUser(application.getApplicantId());
-			final User authority = getUser(applicant.getAuthorityId());
+			final User applicant = detailService.getUser(application.getApplicantId());
+			final User authority = detailService.getUser(applicant.getAuthorityId());
 
 			final KintaiMailArgument argument = new KintaiMailArgument();
 			argument.setReceiverName(applicant.getDisplayName());
@@ -246,29 +214,17 @@ public class DetailPage extends DefaultLayoutPage {
 		public void onSubmit() {
 
 			final Integer applicationID = idField.getModelObject();
+			final Application application = detailService.getApplication(applicationID);
 
-			TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
+			application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
 
-			Application application = transactionManager.required(() -> {
-
-				final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
-
-				Application updateApplication = dao.selectById(applicationID);
-
-				updateApplication.setStatus(KintaiStatus.WITHDRAWN.name());
-				updateApplication.setUpdateDate(new java.sql.Date(new Date().getTime()));
-				dao.update(updateApplication);
-
-				return updateApplication;
-			});
-
-			log.info("取下げました");
+			detailService.withdraw(application);
 
 			/*
 			 * メール送信処理
 			 */
-			final User applicant = getUser(application.getApplicantId());
-			final User authority = getUser(applicant.getAuthorityId());
+			final User applicant = detailService.getUser(application.getApplicantId());
+			final User authority = detailService.getUser(applicant.getAuthorityId());
 
 			final KintaiMailArgument argument = new KintaiMailArgument();
 			argument.setReceiverName(authority.getDisplayName());
@@ -291,6 +247,9 @@ public class DetailPage extends DefaultLayoutPage {
 		}
 	};
 
+	@Inject
+	private DetailService detailService;
+
 	/**
 	 * コンストラクタです。
 	 */
@@ -309,9 +268,9 @@ public class DetailPage extends DefaultLayoutPage {
 
 		final int id = parameters.getParameterValue(IndexPage.PARAMETER_ID).toInt();
 
-		final Application application = getApplication(id);
-		final User applicant = getUser(application.getApplicantId());
-		final User authority = getUser(applicant.getAuthorityId());
+		final Application application = detailService.getApplication(id);
+		final User applicant = detailService.getUser(application.getApplicantId());
+		final User authority = detailService.getUser(applicant.getAuthorityId());
 
 		/*
 		 * コンポーネントの編集
@@ -322,7 +281,7 @@ public class DetailPage extends DefaultLayoutPage {
 		idField.setType(Integer.class);
 		idModel.setObject(id);
 
-		form.add(new StatusValidator(idField, statusField));
+		form.add(new StatusValidator(idField, statusField, detailService));
 
 		updatePage(application, applicant, authority, loginUser);
 
@@ -394,87 +353,4 @@ public class DetailPage extends DefaultLayoutPage {
 		withdrawButton.setVisible(loginUser.getId() == applicant.getId() && status == KintaiStatus.PENDING);
 	}
 
-	/**
-	 * 指定IDの申請情報を取得します。
-	 * 
-	 * @param id
-	 * @return
-	 */
-	private static Application getApplication(int id) {
-
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
-
-		return transactionManager.required(() -> {
-
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
-
-			return dao.selectById(id);
-		});
-	}
-
-	/**
-	 * 指定IDのユーザーを取得します。
-	 * 
-	 * @param id
-	 * @return
-	 */
-	private static User getUser(int id) {
-
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
-
-		return transactionManager.required(() -> {
-
-			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-			return dao.selectById(id);
-		});
-
-	}
-}
-
-/**
- * 申請情報のステータスが表示時から変更されていないかチェックします。
- * 
- * @author Aogiri
- *
- */
-class StatusValidator extends AbstractFormValidator {
-
-	private final FormComponent<Integer> idComponent;
-
-	private final FormComponent<KintaiStatus> statusComponent;
-
-	public StatusValidator(FormComponent<Integer> idComponent, FormComponent<KintaiStatus> statusComponent) {
-		super();
-		this.idComponent = idComponent;
-		this.statusComponent = statusComponent;
-	}
-
-	@Override
-	public FormComponent<?>[] getDependentFormComponents() {
-		return new FormComponent<?>[] { idComponent, statusComponent };
-	}
-
-	@Override
-	public void validate(Form<?> form) {
-
-		final int id = idComponent.getModelObject();
-		final KintaiStatus status = statusComponent.getModelObject();
-
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
-
-		Application current = transactionManager.required(() -> {
-
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
-
-			return dao.selectById(id);
-		});
-
-		if (status != KintaiStatus.valueOf(current.getStatus())) {
-			error(null);
-		}
-	}
 }

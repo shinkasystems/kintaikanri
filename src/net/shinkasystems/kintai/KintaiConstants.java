@@ -32,7 +32,7 @@ public class KintaiConstants {
 	 * アプリケーションのデータベースファイル（拡張子つき）です。
 	 */
 	public static final File APP_DB_FILE_WITH_EXTENSION = new File(
-			APP_DB_FILE.getAbsolutePath() + ".h2.db");
+			APP_DB_FILE.getAbsolutePath() + ".mv.db");
 
 	/**
 	 * 標準的な日付のパターンです。

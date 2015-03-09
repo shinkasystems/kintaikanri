@@ -1,18 +1,11 @@
 package net.shinkasystems.kintai.page;
 
-import java.sql.Date;
-import java.util.Calendar;
-
-import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.PasswordDuplicateValidator;
-import net.shinkasystems.kintai.entity.User;
-import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.panel.AlertPanel;
-import net.shinkasystems.kintai.util.Authentication;
-import net.shinkasystems.kintai.util.DaoFactory;
+import net.shinkasystems.kintai.service.ConfigService;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.Form;
@@ -22,11 +15,13 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
-import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 /**
+ * ユーザーの各種設定ページです。
  * 
  * @author Aogiri
  *
@@ -52,29 +47,10 @@ public class ConfigPage extends DefaultLayoutPage {
 
 			alertPanel.setVisible(false);
 
-			Calendar expireCalendar = Calendar.getInstance();
-			expireCalendar.add(Calendar.MONTH, 3);
-
-			final int userID = ((KintaiSession) KintaiSession.get()).getUser().getId();
+			final int userId = ((KintaiSession) KintaiSession.get()).getUser().getId();
 			final String password = passwordTextField.getModelObject();
-			
-			TransactionManager transactionManager = KintaiDB.singleton()
-					.getTransactionManager();
 
-			transactionManager.required(() -> {
-
-				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-				final User user = dao.selectById(userID);
-
-				user.setPassword(new Authentication(user.getUserName(), password).getPasswordHash());
-				user.setExpireDate(new Date(expireCalendar.getTimeInMillis()));
-
-				dao.update(user);
-				
-				log.info("ユーザー設定を変更しました。" + user);
-
-			});
+			configService.changePassword(userId, password);
 		}
 
 		@Override
@@ -94,6 +70,12 @@ public class ConfigPage extends DefaultLayoutPage {
 	 * 確認用パスワードの入力フィールドです。
 	 */
 	private final PasswordTextField confirmTextField = new PasswordTextField("password-confirm", new Model<String>());
+
+	/**
+	 * 設定ページのサービスです。
+	 */
+	@Inject
+	private ConfigService configService;
 
 	/**
 	 * コンストラクタです。

@@ -31,6 +31,7 @@ dependencies {
 	compile 'org.apache.wicket:wicket-auth-roles:6.18.0'
 	compile 'org.apache.wicket:wicket-datetime:6.18.0'
 	compile 'org.apache.wicket:wicket-extensions:6.18.0'
+	compile 'org.apache.wicket:wicket-guice:6.18.0'
 	
 	compile 'com.h2database:h2:1.4.185'
 	compile 'org.seasar.doma:doma:2.1.0'

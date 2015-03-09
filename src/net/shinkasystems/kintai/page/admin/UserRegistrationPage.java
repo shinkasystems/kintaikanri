@@ -1,38 +1,33 @@
 package net.shinkasystems.kintai.page.admin;
 
-import java.io.Serializable;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
+import net.shinkasystems.kintai.component.ActivatedChoiceRenderer;
+import net.shinkasystems.kintai.component.ActivatedOption;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.RoleChoiceRenderer;
 import net.shinkasystems.kintai.component.RoleOption;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
-import net.shinkasystems.kintai.entity.User;
-import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.panel.AlertPanel;
-import net.shinkasystems.kintai.util.Authentication;
-import net.shinkasystems.kintai.util.DaoFactory;
+import net.shinkasystems.kintai.service.admin.UserRegistrationService;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.value.ValueMap;
-import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
 
 /**
  * ユーザーの登録を行います。
@@ -69,45 +64,22 @@ public class UserRegistrationPage extends AdminLayoutPage {
 
 		@Override
 		protected void onSubmit() {
+			
+			int authorityId = 0;
+			if (authorityDropDownChoice.getModel().getObject() != null) {
+				authorityId = authorityDropDownChoice.getModel().getObject().getId();
+			}
 
-			Calendar expireCalendar = Calendar.getInstance();
-			expireCalendar.add(Calendar.MONTH, 3);
+			userRegistrationService.registUser(
+					userNameTextField.getValue(),
+					passwordTextField.getValue(),
+					displayNameTextField.getValue(),
+					emailAddressTextField.getValue(),
+					authorityId,
+					activatedChoice.getModel().getObject().isActivated(),
+					roleChoice.getModel().getObject().getId());
 
-			TransactionManager transactionManager = KintaiDB.singleton()
-					.getTransactionManager();
-
-			transactionManager.required(() -> {
-				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-				final User user = new User();
-				user.setUserName(userNameTextField.getValue());
-				user.setPassword(new Authentication(userNameTextField.getValue(), passwordTextField.getValue())
-						.getPasswordHash());
-				user.setDisplayName(displayNameTextField.getValue());
-				user.setEmailAddress(emailAddressTextField.getValue());
-
-				if (authorityDropDownChoice.getModel().getObject() != null) {
-					user.setAuthorityId(authorityDropDownChoice.getModel().getObject().getId());
-				} else {
-					user.setAuthorityId(null);
-				}
-				user.setActivated(activatedChoice.getModel().getObject().isActivated());
-				user.setExpireDate(new Date(expireCalendar.getTimeInMillis()));
-				user.setRole(roleChoice.getModel().getObject().getId());
-
-				dao.insert(user);
-
-				if (user.getAuthorityId() == null) {
-					user.setAuthorityId(user.getId());
-
-					dao.update(user);
-				}
-
-				log.info("ユーザーを新規登録しました。" + user);
-
-				setResponsePage(UsersPage.class);
-
-			});
+			setResponsePage(UsersPage.class);
 
 		}
 
@@ -173,7 +145,10 @@ public class UserRegistrationPage extends AdminLayoutPage {
 	 */
 	private final RadioChoice<ActivatedOption> activatedChoice = new RadioChoice<ActivatedOption>(
 			"activated", new Model<ActivatedOption>(), activatedOptions,
-			new AcitivatedChoiceRenderer());
+			new ActivatedChoiceRenderer());
+
+	@Inject
+	private UserRegistrationService userRegistrationService;
 
 	/**
 	 * コンストラクタです。
@@ -222,50 +197,5 @@ public class UserRegistrationPage extends AdminLayoutPage {
 		userProfileForm.add(roleChoice);
 		userProfileForm.add(activatedChoice);
 		add(userProfileForm);
-	}
-}
-
-/**
- * 
- * @author Aogiri
- * 
- */
-class AcitivatedChoiceRenderer implements IChoiceRenderer<ActivatedOption> {
-
-	@Override
-	public Object getDisplayValue(ActivatedOption activatedOption) {
-		return activatedOption.getDisplay();
-	}
-
-	@Override
-	public String getIdValue(ActivatedOption activatedOption, int index) {
-		return Boolean.toString(activatedOption.isActivated());
-	}
-
-}
-
-/**
- * 
- * @author Aogiri
- * 
- */
-class ActivatedOption implements Serializable {
-
-	private final boolean activated;
-
-	private final String display;
-
-	public ActivatedOption(boolean activated, String display) {
-		super();
-		this.activated = activated;
-		this.display = display;
-	}
-
-	public boolean isActivated() {
-		return activated;
-	}
-
-	public String getDisplay() {
-		return display;
 	}
 }

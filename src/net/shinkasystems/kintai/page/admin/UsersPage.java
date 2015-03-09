@@ -1,29 +1,22 @@
 package net.shinkasystems.kintai.page.admin;
 
-import java.util.Iterator;
-import java.util.List;
-
 import net.shinkasystems.kintai.KintaiConstants;
-import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
-import net.shinkasystems.kintai.entity.UserDao;
+import net.shinkasystems.kintai.component.UserDataProvider;
 import net.shinkasystems.kintai.entity.sub.UserData;
 import net.shinkasystems.kintai.panel.PaginationPanel;
-import net.shinkasystems.kintai.util.DaoFactory;
+import net.shinkasystems.kintai.service.admin.UserService;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.seasar.doma.jdbc.SelectOptions;
-import org.seasar.doma.jdbc.tx.TransactionManager;
+
+import com.google.inject.Inject;
 
 /**
  * 
@@ -39,10 +32,21 @@ public class UsersPage extends AdminLayoutPage {
 	public static final String PARAMETER_ID = "id";
 
 	/**
+	 * ユーザー一覧画面用のサービスです。
+	 */
+	@Inject
+	private UserService userService;
+
+	/**
+	 * ユーザー一覧情報のデータプロバイダーです。
+	 */
+	UserDataProvider userDataProvider = new UserDataProvider(userService);
+
+	/**
 	 * 
 	 */
 	private final DataView<UserData> userDataView = new DataView<UserData>(
-			"user-data-view", new UserDataProvider(), 20) {
+			"user-data-view", userDataProvider, 20) {
 
 		@Override
 		protected void populateItem(Item<UserData> item) {
@@ -107,50 +111,4 @@ public class UsersPage extends AdminLayoutPage {
 		add(pagingNavigator);
 	}
 
-}
-
-/**
- * 
- * @author Aogiri
- * 
- */
-class UserDataProvider extends SortableDataProvider<UserData, String> {
-
-	@Override
-	public Iterator<UserData> iterator(long first, long count) {
-
-		SelectOptions options = SelectOptions.get().offset((int) first).limit((int) count);
-
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
-
-		List<UserData> userDatas = transactionManager.required(() -> {
-
-			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-			return dao.selectUserData(options);
-		});
-
-		return userDatas.iterator();
-	}
-
-	@Override
-	public IModel<UserData> model(UserData user) {
-		return new Model<UserData>(user);
-	}
-
-	@Override
-	public long size() {
-
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
-
-		return transactionManager.required(() -> {
-
-			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-			return dao.selectCountUser();
-		});
-
-	}
 }

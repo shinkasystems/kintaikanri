@@ -3,7 +3,6 @@ package net.shinkasystems.kintai.page.admin;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.ConfirmSubmitButton;
@@ -13,13 +12,10 @@ import net.shinkasystems.kintai.component.RoleOption;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
-import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.User;
-import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.panel.InfomationPanel;
-import net.shinkasystems.kintai.util.Authentication;
-import net.shinkasystems.kintai.util.DaoFactory;
+import net.shinkasystems.kintai.service.admin.UserEditService;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.Button;
@@ -33,9 +29,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.value.ValueMap;
-import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Strings;
+import com.google.inject.Inject;
 
 /**
  * ユーザーの編集を行います。
@@ -133,39 +131,30 @@ public class UserEditPage extends AdminLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			TransactionManager transactionManager = KintaiDB.singleton()
-					.getTransactionManager();
+			int userId = userIdTextField.getModelObject();
+			String password = null;
+			String displayName = null;
+			String emailAddress = null;
+			int authorityId = 0;
+			String role = null;
 
-			transactionManager.required(() -> {
+			if (Strings.isNullOrEmpty(passwordTextField.getModelObject())) {
+				password = passwordTextField.getModelObject();
+			}
+			if (Strings.isNullOrEmpty(displayNameTextField.getModelObject())) {
+				displayName = displayNameTextField.getModelObject();
+			}
+			if (Strings.isNullOrEmpty(emailAddressTextField.getModelObject())) {
+				emailAddress = emailAddressTextField.getModelObject();
+			}
+			if (authorityDropDownChoice.getModelObject() != null) {
+				authorityId = authorityDropDownChoice.getModelObject().getId();
+			}
+			if (Strings.isNullOrEmpty(roleChoice.getModelObject().getId())) {
+				role = roleChoice.getModelObject().getId();
+			}
 
-				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-				final User user = dao.selectById(userIdTextField.getModelObject());
-
-				if (passwordTextField.getModelObject() != null
-						&& passwordTextField.getModelObject().isEmpty() == false) {
-					user.setPassword(new Authentication(user.getUserName(), passwordTextField.getModelObject())
-							.getPasswordHash());
-				}
-				if (displayNameTextField.getModelObject() != null
-						&& displayNameTextField.getModelObject().isEmpty() == false) {
-					user.setDisplayName(displayNameTextField.getModelObject());
-				}
-				if (emailAddressTextField.getModelObject() != null
-						&& emailAddressTextField.getModelObject().isEmpty() == false) {
-					user.setEmailAddress(emailAddressTextField.getModelObject());
-				}
-				if (authorityDropDownChoice.getModelObject() != null) {
-					user.setAuthorityId(authorityDropDownChoice.getModelObject().getId());
-				}
-				if (roleChoice.getModelObject() != null) {
-					user.setRole(roleChoice.getModelObject().getId());
-				}
-
-				dao.update(user);
-
-				log.info("ユーザーを編集しました。");
-			});
+			userEditService.updateUser(userId, password, displayName, emailAddress, authorityId, role);
 
 			infomationPanel.setMessage(getString("update-message"));
 			infomationPanel.setVisible(true);
@@ -182,21 +171,7 @@ public class UserEditPage extends AdminLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			TransactionManager transactionManager = KintaiDB.singleton()
-					.getTransactionManager();
-
-			transactionManager.required(() -> {
-
-				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-				final User user = dao.selectById(userIdTextField.getModelObject());
-
-				user.setActivated(true);
-
-				dao.update(user);
-
-				log.info("ユーザーを有効化しました。");
-			});
+			userEditService.activateUser(userIdTextField.getModelObject());
 
 			infomationPanel.setMessage(getString("activate-message"));
 			infomationPanel.setVisible(true);
@@ -213,21 +188,7 @@ public class UserEditPage extends AdminLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			TransactionManager transactionManager = KintaiDB.singleton()
-					.getTransactionManager();
-
-			transactionManager.required(() -> {
-
-				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-				final User user = dao.selectById(userIdTextField.getModelObject());
-
-				user.setActivated(false);
-
-				dao.update(user);
-
-				log.info("ユーザーを無効化しました。");
-			});
+			userEditService.disableUser(userIdTextField.getModelObject());
 
 			infomationPanel.setMessage(getString("invalidate-message"));
 			infomationPanel.setVisible(true);
@@ -244,26 +205,16 @@ public class UserEditPage extends AdminLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			TransactionManager transactionManager = KintaiDB.singleton()
-					.getTransactionManager();
-
-			transactionManager.required(() -> {
-
-				final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-				final User user = dao.selectById(userIdTextField.getModelObject());
-
-				dao.delete(user);
-
-				log.info("ユーザーを削除しました。");
-
-			});
+			userEditService.deleteUser(userIdTextField.getModelObject());
 
 			infomationPanel.setMessage(getString("delete-message"));
 			infomationPanel.setVisible(true);
 		}
 
 	};
+
+	@Inject
+	private UserEditService userEditService;
 
 	/**
 	 * コンストラクタです。
@@ -282,7 +233,7 @@ public class UserEditPage extends AdminLayoutPage {
 
 		final int id = parameters.getParameterValue(UsersPage.PARAMETER_ID).toInt();
 
-		final User user = getUser(id);
+		final User user = userEditService.getUser(id);
 
 		/*
 		 * コンポーネントの生成
@@ -327,7 +278,7 @@ public class UserEditPage extends AdminLayoutPage {
 
 		activateButton.setVisible(!user.getActivated());
 		invalidateButton.setVisible(user.getActivated() && user.getId() != loginUser.getId());
-		deleteButton.setVisible(!isHistoryExists(user.getId()) && user.getId() != loginUser.getId());
+		deleteButton.setVisible(!userEditService.isHistoryExists(user.getId()) && user.getId() != loginUser.getId());
 
 		/*
 		 * コンポーネントの組立
@@ -351,38 +302,5 @@ public class UserEditPage extends AdminLayoutPage {
 
 		add(userProfileForm);
 
-	}
-
-	/**
-	 * 指定IDのユーザーを取得します。
-	 * 
-	 * @param id
-	 * @return
-	 */
-	private static User getUser(int id) {
-
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
-
-		return transactionManager.required(() -> {
-			
-			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-
-			return dao.selectById(id);
-		});
-
-	}
-
-	private static boolean isHistoryExists(int id) {
-
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
-
-		return transactionManager.required(() -> {
-			
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
-
-			return dao.selectHistoryExists(id);
-		});
 	}
 }
