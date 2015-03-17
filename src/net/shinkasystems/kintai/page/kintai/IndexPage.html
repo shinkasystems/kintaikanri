@@ -42,25 +42,25 @@
 	<fieldset>
 		<legend>検索</legend>
 		<div class="row">
-			<div class="span3">
+			<div class="col-sm-3">
 				<label>From</label>
-				<input type="text" id="from" name="from" wicket:id="from">
+				<input type="text" id="from" class="form-control" name="from" wicket:id="from">
 			</div>
-			<div class="span3">
+			<div class="col-sm-3">
 				<label>To</label>
-				<input type="text" id="to" name="to" wicket:id="to">
+				<input type="text" id="to" class="form-control" name="to" wicket:id="to">
 			</div>
-			<div class="span3">
+			<div class="col-sm-3">
 				<label>申請者</label>
-				<select name="applicant" wicket:id="applicant">
+				<select class="form-control" name="applicant" wicket:id="applicant">
 					<option value=""></option>
 					<option value="">進化　太郎</option>
 					<option value="">進化　次郎</option>
 				</select>
 			</div>
-			<div class="span3">
+			<div class="col-sm-3">
 				<label>ステータス</label>
-				<select name="status" wicket:id="status">
+				<select class="form-control" name="status" wicket:id="status">
 					<option value=""></option>
 					<option value="">申請中</option>
 					<option value="">承認</option>
@@ -70,7 +70,11 @@
 				</select>
 			</div>
 		</div>
-		<button type="submit" class="btn btn-primary pull-right">検索</button>
+		<div class="row">
+			<div class="col-sm-12">
+				<button type="submit" class="btn btn-primary pull-right">検索</button>
+			</div>
+		</div>
 	</fieldset>
 </form>
 

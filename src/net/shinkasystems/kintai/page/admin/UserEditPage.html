@@ -18,63 +18,63 @@
 
 
 <form id="user-profile-form" class="form-horizontal" wicket:id="user-profile-form">
-	<div class="control-group">
-		<label class="control-label" for="user-name">ユーザーID</label>
-		<div class="controls">
-			<input type="text" name="user-id" class="span2" wicket:id="user-id">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="user-name">ユーザーID</label>
+		<div class="col-sm-2">
+			<input type="text" name="user-id" class="form-control" wicket:id="user-id">
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="user-name">ユーザー名</label>
-		<div class="controls">
-			<input type="text" name="user-name" class="span2" wicket:id="user-name">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="user-name">ユーザー名</label>
+		<div class="col-sm-2">
+			<input type="text" name="user-name" class="form-control" wicket:id="user-name">
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="password">パスワード</label>
-		<div class="controls">
-			<input type="password" name="password" class="span4" wicket:id="password">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="password">パスワード</label>
+		<div class="col-sm-4">
+			<input type="password" name="password" class="form-control" wicket:id="password">
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="password-confirm">パスワード（確認）</label>
-		<div class="controls">
-			<input type="password" name="password-confirm" class="span4" wicket:id="password-confirm">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="password-confirm">パスワード（確認）</label>
+		<div class="col-sm-4">
+			<input type="password" name="password-confirm" class="form-control" wicket:id="password-confirm">
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="display-name">表示名</label>
-		<div class="controls">
-			<input type="text" name="display-name" class="span4" wicket:id="display-name">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="display-name">表示名</label>
+		<div class="col-sm-4">
+			<input type="text" name="display-name" class="form-control" wicket:id="display-name">
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="email-address">メールアドレス</label>
-		<div class="controls">
-			<input type="text" name="email-address" class="span4" wicket:id="email-address">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="email-address">メールアドレス</label>
+		<div class="col-sm-4">
+			<input type="text" name="email-address" class="form-control" wicket:id="email-address">
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="authority">決裁者</label>
-		<div class="controls">
-			<select name="display-name" wicket:id="authority">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="authority">決裁者</label>
+		<div class="col-sm-4">
+			<select name="display-name" class="form-control" wicket:id="authority">
 				<option>進化　太郎</option>
 				<option>進化　次郎</option>
 			</select>
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="role">権限</label>
-		<div class="controls">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="role">権限</label>
+		<div class="col-sm-10">
 			<span wicket:id="role"></span>
 		</div>
 	</div>
-	<div class="control-group">
-		<div class="controls">
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
 			<div class="btn-group">
-				<button class="btn" wicket:id="update-button">更新</button>
-				<button class="btn" wicket:id="activate-button">有効化</button>
-				<button class="btn btn-inverse" wicket:id="invalidate-button">無効化</button>
+				<button class="btn btn-default" wicket:id="update-button">更新</button>
+				<button class="btn btn-default" wicket:id="activate-button">有効化</button>
+				<button class="btn btn-warning" wicket:id="invalidate-button">無効化</button>
 				<button class="btn btn-danger" wicket:id="delete-button">削除</button>
 			</div>
 		</div>

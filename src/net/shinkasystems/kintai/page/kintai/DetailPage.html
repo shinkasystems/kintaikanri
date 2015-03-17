@@ -13,91 +13,91 @@
 
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">ID</p>
+	<div class="col-sm-2">
+		<p class="head">ID</p>
 	</div>
-	<div class="span10">
+	<div class="col-sm-10">
 		<p wicket:id="id">123</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">期日</p>
+	<div class="col-sm-2">
+		<p class="head">期日</p>
 	</div>
-	<div class="span10">
+	<div class="col-sm-10">
 		<p wicket:id="term">2013-11-30</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">申請者</p>
+	<div class="col-sm-2">
+		<p class="head">申請者</p>
 	</div>
-	<div class="span10">
+	<div class="col-sm-10">
 		<p wicket:id="applicant">進化　太郎</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">申請内容</p>
+	<div class="col-sm-2">
+		<p class="head">申請内容</p>
 	</div>
-	<div class="span10">
+	<div class="col-sm-10">
 		<p wicket:id="type">有給休暇</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">申請者のコメント</p>
+	<div class="col-sm-2">
+		<p class="head">申請者のコメント</p>
 	</div>
-	<div class="span10" wicket:id="comment">
+	<div class="col-sm-10" wicket:id="comment">
 		私用のため
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">申請日</p>
+	<div class="col-sm-2">
+		<p class="head">申請日</p>
 	</div>
-	<div class="span10">
+	<div class="col-sm-10">
 		<p wicket:id="created">2013-11-11</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">ステータス</p>
+	<div class="col-sm-2">
+		<p class="head">ステータス</p>
 	</div>
-	<div class="span10">
+	<div class="col-sm-10">
 		<p><span wicket:id="status">申請中</span></p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">決裁者</p>
+	<div class="col-sm-2">
+		<p class="head">決裁者</p>
 	</div>
-	<div class="span10">
+	<div class="col-sm-10">
 		<p wicket:id="authority">進化　次郎</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">決裁日</p>
+	<div class="col-sm-2">
+		<p class="head">決裁日</p>
 	</div>
-	<div class="span10">
+	<div class="col-sm-10">
 		<p wicket:id="updated">2013-11-20</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="span2">
-		<p class="head pull-right">決裁者のコメント</p>
+	<div class="col-sm-2">
+		<p class="head">決裁者のコメント</p>
 	</div>
-	<div class="span10" wicket:id="comment-authority">
+	<div class="col-sm-10" wicket:id="comment-authority">
 		○○のため
 	</div>
 </div>
@@ -109,20 +109,20 @@
 	<input type="hidden" wicket:id="id-hidden" />
 	<input type="hidden" wicket:id="status-hidden" />
 
-	<div class="control-group">
-		<label class="control-label" for="comment-authority">決裁者のコメント</label>
-		<div class="controls">
-			<textarea id="comment-authority" name="comment-authority" rows="4" cols="80" class="span8"
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="comment-authority">決裁者のコメント</label>
+		<div class="col-sm-10">
+			<textarea id="comment-authority" name="comment-authority" rows="4" cols="80" class="form-control"
 					wicket:id="comment-authority-textarea"></textarea>
 		</div>
 	</div>
 
-	<div class="control-group">
-		<div class="controls">
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
 			<div class="btn-group">
 				<button class="btn btn-success" wicket:id="approve">承認</button>
 				<button class="btn btn-warning" wicket:id="reject">却下</button>
-				<button class="btn" wicket:id="withdraw">取下げ</button>
+				<button class="btn btn-default" wicket:id="withdraw">取下げ</button>
 			</div>
 		</div>
 	</div>

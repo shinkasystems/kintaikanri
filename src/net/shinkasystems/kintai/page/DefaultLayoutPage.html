@@ -1,80 +1,86 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="initial-scale=1">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1">
 
-	<title>勤怠管理ツール</title>
+		<title>勤怠管理ツール</title>
 
-	<meta name="keywords" content="">
-	<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="description" content="">
 
-	<!-- Bootstrap -->
-	<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<!-- Bootstrap -->
+		<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
-	<!-- Application -->
-	<link href="/css/screen.css" rel="stylesheet" media="screen">
-	
+		<!-- Application -->
+		<link href="/css/screen.css" rel="stylesheet" media="screen">
 
-</head>
-<body style="padding-top: 4em;">
+	</head>
+	<body style="padding-top: 4em;">
 
-	<header class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
+		<header class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container-fluid">
-				<a class="brand" href="/">勤怠管理</a>
 
-				<wicket:enclosure child='user-name'>
-				<ul class="nav">
-					<li><a href="/" class="active">一覧</a></li>
-					<li><a href="/entry">申請</a></li>
-				</ul>
-				
-				<ul class="nav pull-right">
-					<li class="dropdown">
-						<a href="" class="dropdown-toggle" data-toggle="dropdown">
-							@<span wicket:id="user-name">username</span>
-							<span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="/config"><i class="icon-user"></i> 設定</a></li>
-							<li><a href="/signin"><i class="icon-off"></i> ログアウト</a></li>
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/">勤怠管理</a>
+				</div>
+
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<wicket:enclosure child='user-name'>
+
+						<ul class="nav navbar-nav">
+							<li>
+								<a href="/">一覧</a>
+							</li>
+							<li>
+								<a href="/entry">申請</a>
+							</li>
 						</ul>
-					</li>
-				</ul>
-				</wicket:enclosure>
-				
-				<wicket:enclosure child='admin-link-label'>
-				<ul class="nav pull-right">
-					<li><a href="/admin"><span wicket:id="admin-link-label">管理</span></a></li>
-				</ul>
-				</wicket:enclosure>
+						<ul class="nav navbar-nav navbar-right">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> @<span wicket:id="user-name">username</span> <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="/config"> <span class="glyphicon glyphicon-user" aria-hidden="true"></span> 設定 </a>
+									</li>
+									<li>
+										<a href="/signin"> <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> ログアウト </a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</wicket:enclosure>
+
+					<wicket:enclosure child='admin-link-label'>
+						<ul class="nav navbar-nav navbar-right">
+							<li>
+								<a href="/admin"><span wicket:id="admin-link-label">管理</span></a>
+							</li>
+						</ul>
+					</wicket:enclosure>
+				</div><!-- /.navbar-collapse -->
 			</div>
-		</div>
-	</header>
+		</header>
 
+		<section class="container">
 
+			<wicket:child>
+				<p>
+					この場所にコンテンツが表示されます
+				</p>
+			</wicket:child>
 
-	<section class="container">
+		</section>
 
-<wicket:child>
-	<p>この場所にコンテンツが表示されます</p>
-</wicket:child>
+		<footer>
+			<div class="container">
+				&copy; 2013  シンカ・システムズ株式会社
+			</div>
+		</footer>
 
-	</section>
+		<!-- JQuery and Bootstrap -->
+		<script src="http://code.jquery.com/jquery.js"></script>
+		<script src="/bootstrap/js/bootstrap.min.js"></script>
 
-
-
-	<footer>
-		<div class="container">
-			&copy; 2013  シンカ・システムズ株式会社
-		</div>
-	</footer>
-
-	<!-- JQuery and Bootstrap -->
-	<script src="http://code.jquery.com/jquery.js"></script>
-	<script src="/bootstrap/js/bootstrap.min.js"></script>
-
-
-</body>
+	</body>
 </html>
