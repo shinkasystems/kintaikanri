@@ -5,6 +5,7 @@ import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.PasswordDuplicateValidator;
 import net.shinkasystems.kintai.panel.AlertPanel;
+import net.shinkasystems.kintai.panel.InfomationPanel;
 import net.shinkasystems.kintai.service.ConfigService;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -38,6 +39,11 @@ public class ConfigPage extends DefaultLayoutPage {
 	private final Panel alertPanel = new AlertPanel("alert-panel");
 
 	/**
+	 * 情報パネルです。
+	 */
+	private final InfomationPanel infomationPanel = new InfomationPanel("infomation-panel");
+
+	/**
 	 * 設定フォームです。
 	 */
 	private final Form<ValueMap> configForm = new Form<ValueMap>("config-form") {
@@ -56,6 +62,9 @@ public class ConfigPage extends DefaultLayoutPage {
 			 * ロール（期限切れ）をリセットするために、 新しいパスワードでサインインしなおす。
 			 */
 			KintaiSession.get().signIn(((KintaiSession) KintaiSession.get()).getUser().getUserName(), password);
+
+			infomationPanel.setMessage(getString("pasword-changed"));
+			infomationPanel.setVisible(true);
 		}
 
 		@Override
@@ -92,6 +101,7 @@ public class ConfigPage extends DefaultLayoutPage {
 		 * コンポーネントの編集
 		 */
 		alertPanel.setVisible(false);
+		infomationPanel.setVisible(false);
 
 		passwordTextField.setRequired(true);
 		passwordTextField.add(StringValidator.minimumLength(8));
@@ -107,6 +117,7 @@ public class ConfigPage extends DefaultLayoutPage {
 		configForm.add(passwordTextField);
 		configForm.add(confirmTextField);
 
+		add(infomationPanel);
 		add(alertPanel);
 		add(configForm);
 	}
