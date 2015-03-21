@@ -41,7 +41,7 @@ public class PasswordDuplicateValidator implements IValidator<String> {
 			if (new Authentication(user.getUserName(), validatable.getValue()).getPasswordHash().equals(
 					user.getPassword())) {
 				
-				validatable.error(new ValidationError());
+				validatable.error(new ValidationError(this));;
 			}
 
 		});
