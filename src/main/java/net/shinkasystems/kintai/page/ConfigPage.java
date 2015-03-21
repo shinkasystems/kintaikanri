@@ -51,6 +51,11 @@ public class ConfigPage extends DefaultLayoutPage {
 			final String password = passwordTextField.getModelObject();
 
 			configService.changePassword(userId, password);
+
+			/*
+			 * ロール（期限切れ）をリセットするために、 新しいパスワードでサインインしなおす。
+			 */
+			KintaiSession.get().signIn(((KintaiSession) KintaiSession.get()).getUser().getUserName(), password);
 		}
 
 		@Override
