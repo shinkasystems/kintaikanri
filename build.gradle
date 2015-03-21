@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'application'
 
+sourceCompatibility = targetCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 // JavaクラスとSQLファイルの出力先ディレクトリを同じにする
 processResources.destinationDir = compileJava.destinationDir
@@ -12,45 +12,67 @@ def aptGeneratePath = 'build/apt_generated'
 compileJava.options.compilerArgs = ['-s', aptGeneratePath]
 new File(aptGeneratePath).mkdirs()
 
-compileJava {
-    options.encoding = 'UTF-8'
-}
-
-compileTestJava {
-    options.encoding = 'UTF-8'
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-	compile 'org.eclipse.jetty:jetty-server:9.2.7.v20150116'
-	compile 'org.eclipse.jetty:jetty-webapp:9.2.7.v20150116'
-	compile 'org.apache.wicket:wicket:6.18.0'
-	compile 'org.apache.wicket:wicket-auth-roles:6.18.0'
-	compile 'org.apache.wicket:wicket-datetime:6.18.0'
-	compile 'org.apache.wicket:wicket-extensions:6.18.0'
-	compile 'org.apache.wicket:wicket-guice:6.18.0'
-	
-	compile 'com.h2database:h2:1.4.185'
-	compile 'org.seasar.doma:doma:2.1.0'
-	compile 'org.seasar.doma:doma-gen:2.1.0'
-	
-	compile 'ch.qos.logback:logback-classic:1.1.2'
-	compile 'ch.qos.logback:logback-core:1.1.2'
-	compile 'org.slf4j:slf4j-api:1.7.10'
-	
-	compile 'commons-codec:commons-codec:1.10'
-	compile 'org.apache.commons:commons-lang3:3.3.2'
-	
-	compile 'javax.mail:mail:1.4.7'
-	compile 'org.subethamail:subethasmtp:3.1.7'
-	
-	compile 'com.google.inject:guice:3.0'
-	compile 'com.google.guava:guava:12.0'
-	
-	compile 'junit:junit:4.12'
+  compile 'org.eclipse.jetty:jetty-server:9.2.7.v20150116'
+  compile 'org.eclipse.jetty:jetty-webapp:9.2.7.v20150116'
+  compile 'org.apache.wicket:wicket:6.18.0'
+  compile 'org.apache.wicket:wicket-auth-roles:6.18.0'
+  compile 'org.apache.wicket:wicket-datetime:6.18.0'
+  compile 'org.apache.wicket:wicket-extensions:6.18.0'
+  compile 'org.apache.wicket:wicket-guice:6.18.0'
+  
+  compile 'com.h2database:h2:1.4.185'
+  compile 'org.seasar.doma:doma:2.1.0'
+  compile 'org.seasar.doma:doma-gen:2.1.0'
+  
+  compile 'ch.qos.logback:logback-classic:1.1.2'
+  compile 'ch.qos.logback:logback-core:1.1.2'
+  compile 'org.slf4j:slf4j-api:1.7.10'
+  
+  compile 'commons-codec:commons-codec:1.10'
+  compile 'org.apache.commons:commons-lang3:3.3.2'
+  
+  compile 'javax.mail:mail:1.4.7'
+  compile 'org.subethamail:subethasmtp:3.1.7'
+  
+  compile 'com.google.inject:guice:3.0'
+  compile 'com.google.guava:guava:12.0'
+  
+  compile 'junit:junit:4.12'
+}
+
+compileJava {
+	copy {
+    	from 'src/main/java'
+        into 'build/classes/main'
+        include '**/*.html'
+        include '**/*.properties'
+        include '**/*.script'
+        include '**/*.sql'
+        include '**/*.xml'
+    }
+}
+
+jar {
+	jar.baseName='kintaikanri'
+    manifest {
+        attributes 'Main-Class' : 'net.shinkasystems.kintai.Start'
+    }
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+task distributeKintaiApp(type: Zip, dependsOn: jar) {
+
+	archiveName = "kintaikanri.${extension}"
+
+    from 'build/libs/kintaikanri.jar'
+    into('war') {
+    	from 'war'
+    }
 }
 
 eclipse {
