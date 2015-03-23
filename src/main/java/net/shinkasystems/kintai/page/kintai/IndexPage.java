@@ -220,6 +220,9 @@ public class IndexPage extends DefaultLayoutPage {
 		 */
 		fromTextField.add(new DatePicker());
 		toTextField.add(new DatePicker());
+		
+		userDropDownChoice.setNullValid(true);
+		statusDropDownChoice.setNullValid(true);
 
 		/*
 		 * コンポーネントの組立
