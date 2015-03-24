@@ -21,6 +21,8 @@ public class KintaiMailArgument {
 	private String form;
 	
 	private String comment;
+	
+	private String url;
 
 	public String getReceiverName() {
 		return receiverName;
@@ -76,5 +78,13 @@ public class KintaiMailArgument {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

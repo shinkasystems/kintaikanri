@@ -29,6 +29,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +73,7 @@ public class EntryPage extends DefaultLayoutPage {
 			 * 申請処理
 			 */
 			final Application application = new Application();
-			
+
 			if (applicantDropDownChoice.getModelObject() != null) {
 				application.setApplicantId(applicantDropDownChoice.getModelObject().getId());
 				application.setProxyId(((KintaiSession) KintaiSession.get()).getUser().getId());
@@ -82,7 +85,16 @@ public class EntryPage extends DefaultLayoutPage {
 			application.setCommentApplycant(commentTextArea.getModelObject());
 
 			entryService.entry(application);
-			
+
+			/*
+			 * 詳細ページの URL を作成する
+			 */
+			PageParameters pageParameters = new PageParameters();
+			pageParameters.set("id", application.getId());
+
+			String urlString = RequestCycle.get().getUrlRenderer().renderFullUrl(
+					Url.parse(urlFor(DetailPage.class, pageParameters).toString()));
+
 			/*
 			 * メール送信処理
 			 */
@@ -97,6 +109,7 @@ public class EntryPage extends DefaultLayoutPage {
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(termTextField.getModelObject().getTime()));
 			argument.setForm(typeDropDownChoice.getModelObject().display);
 			argument.setComment(commentTextArea.getModelObject());
+			argument.setUrl(urlString);
 
 			KintaiMail.ENTRY.send(argument);
 
