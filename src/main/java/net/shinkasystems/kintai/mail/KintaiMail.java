@@ -107,7 +107,8 @@ public enum KintaiMail {
 				argument.getSenderName(),
 				argument.getTerm(),
 				argument.getForm(),
-				argument.getComment());
+				argument.getComment(),
+				argument.getUrl());
 
 		final Session session = Session.getInstance(KintaiMailPropery.PROPERTIES, new Authenticator() {
 

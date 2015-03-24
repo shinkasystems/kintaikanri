@@ -31,7 +31,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,6 +151,7 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
 			argument.setForm(KintaiType.valueOf(application.getType()).display);
 			argument.setComment(application.getCommentAuthority());
+			argument.setUrl(getDetailPageUrlString(application));
 
 			KintaiMail.APPROVAL.send(argument);
 
@@ -191,6 +194,7 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
 			argument.setForm(KintaiType.valueOf(application.getType()).display);
 			argument.setComment(application.getCommentAuthority());
+			argument.setUrl(getDetailPageUrlString(application));
 
 			KintaiMail.REJECTION.send(argument);
 
@@ -234,6 +238,7 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
 			argument.setForm(KintaiType.valueOf(application.getType()).display);
 			argument.setComment(application.getCommentApplycant());
+			argument.setUrl(getDetailPageUrlString(application));
 
 			KintaiMail.WITHDRAWAL.send(argument);
 
@@ -353,4 +358,20 @@ public class DetailPage extends DefaultLayoutPage {
 		withdrawButton.setVisible(loginUser.getId() == applicant.getId() && status == KintaiStatus.PENDING);
 	}
 
+	/**
+	 * 詳細画面のURL文字列を返します。
+	 * 
+	 * @param application 申請情報
+	 * @return 詳細画面のURL
+	 */
+	private String getDetailPageUrlString(Application application) {
+
+		PageParameters pageParameters = new PageParameters();
+		pageParameters.set("id", application.getId());
+
+		String urlString = RequestCycle.get().getUrlRenderer().renderFullUrl(
+				Url.parse(urlFor(DetailPage.class, pageParameters).toString()));
+
+		return urlString;
+	}
 }
