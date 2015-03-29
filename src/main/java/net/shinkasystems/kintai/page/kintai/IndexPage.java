@@ -6,7 +6,6 @@ import java.util.Date;
 import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiStatus;
-import net.shinkasystems.kintai.KintaiType;
 import net.shinkasystems.kintai.component.ApplicationDataProvider;
 import net.shinkasystems.kintai.component.StatusChoiceRenderer;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
@@ -92,12 +91,12 @@ public class IndexPage extends DefaultLayoutPage {
 			 */
 			final Label idLabel = new Label("id", applicationData.getId());
 			final Label termLabel = new Label("term", KintaiConstants.DATE_FORMAT.format(applicationData.getTerm()));
-			final Label typeLabel = new Label("type", KintaiType.valueOf(applicationData.getType()).display);
+			final Label typeLabel = new Label("type", applicationData.getType().display);
 			final Label commentLabel = new Label("comment", applicationData.getCommentApplycant());
 			final Label dateLabel = new Label("date", KintaiConstants.DATE_FORMAT.format(applicationData
 					.getCreateDate()));
 			final Label applicantLabel = new Label("applicant", applicationData.getApplicantDisplayName());
-			final Label statusLabel = new Label("status", KintaiStatus.valueOf(applicationData.getStatus()).display);
+			final Label statusLabel = new Label("status", applicationData.getStatus().display);
 
 			final Link<String> typeLink = new StatelessLink<String>("link") {
 

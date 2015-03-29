@@ -149,7 +149,7 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setSenderName(authority.getDisplayName());
 			argument.setSenderMailAddress(authority.getEmailAddress());
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-			argument.setForm(KintaiType.valueOf(application.getType()).display);
+			argument.setForm(application.getType().display);
 			argument.setComment(application.getCommentAuthority());
 			argument.setUrl(getDetailPageUrlString(application));
 
@@ -192,7 +192,7 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setSenderName(authority.getDisplayName());
 			argument.setSenderMailAddress(authority.getEmailAddress());
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-			argument.setForm(KintaiType.valueOf(application.getType()).display);
+			argument.setForm(application.getType().display);
 			argument.setComment(application.getCommentAuthority());
 			argument.setUrl(getDetailPageUrlString(application));
 
@@ -236,7 +236,7 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setSenderName(applicant.getDisplayName());
 			argument.setSenderMailAddress(applicant.getEmailAddress());
 			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-			argument.setForm(KintaiType.valueOf(application.getType()).display);
+			argument.setForm(application.getType().display);
 			argument.setComment(application.getCommentApplycant());
 			argument.setUrl(getDetailPageUrlString(application));
 
@@ -326,8 +326,8 @@ public class DetailPage extends DefaultLayoutPage {
 	 */
 	private void updatePage(Application application, User applicant, User authority, User loginUser) {
 
-		final KintaiType type = KintaiType.valueOf(application.getType());
-		final KintaiStatus status = KintaiStatus.valueOf(application.getStatus());
+		final KintaiType type = application.getType();
+		final KintaiStatus status = application.getStatus();
 
 		idModel.setObject(application.getId());
 		statusModel.setObject(status);

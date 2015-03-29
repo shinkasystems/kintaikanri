@@ -80,7 +80,7 @@ public class EntryPage extends DefaultLayoutPage {
 			} else {
 				application.setApplicantId(((KintaiSession) KintaiSession.get()).getUser().getId());
 			}
-			application.setType(typeDropDownChoice.getModelObject().name());
+			application.setType(typeDropDownChoice.getModelObject());
 			application.setTerm(new Date(termTextField.getModelObject().getTime()));
 			application.setCommentApplycant(commentTextArea.getModelObject());
 

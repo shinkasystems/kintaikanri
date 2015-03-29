@@ -33,7 +33,7 @@ public class DetailService {
 
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-			application.setStatus(KintaiStatus.APPROVED.name());
+			application.setStatus(KintaiStatus.APPROVED);
 			application.setUpdateDate(new java.sql.Date(new Date().getTime()));
 			dao.update(application);
 
@@ -50,7 +50,7 @@ public class DetailService {
 
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-			application.setStatus(KintaiStatus.REJECTED.name());
+			application.setStatus(KintaiStatus.REJECTED);
 			application.setUpdateDate(new java.sql.Date(new Date().getTime()));
 			dao.update(application);
 
@@ -67,7 +67,7 @@ public class DetailService {
 
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
-			application.setStatus(KintaiStatus.WITHDRAWN.name());
+			application.setStatus(KintaiStatus.WITHDRAWN);
 			application.setUpdateDate(new java.sql.Date(new Date().getTime()));
 			dao.update(application);
 

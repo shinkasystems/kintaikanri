@@ -2,6 +2,9 @@ package net.shinkasystems.kintai.entity;
 
 import java.sql.Date;
 
+import net.shinkasystems.kintai.KintaiStatus;
+import net.shinkasystems.kintai.KintaiType;
+
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
 import org.seasar.doma.GeneratedValue;
@@ -32,7 +35,7 @@ public class Application {
 
 	/**  */
 	@Column(name = "TYPE")
-	String type;
+	KintaiType type;
 
 	/**  */
 	@Column(name = "TERM")
@@ -48,7 +51,7 @@ public class Application {
 
 	/**  */
 	@Column(name = "STATUS")
-	String status;
+	KintaiStatus status;
 
 	/**  */
 	@Column(name = "CREATE_DATE")
@@ -117,7 +120,7 @@ public class Application {
 	 * 
 	 * @return the type
 	 */
-	public String getType() {
+	public KintaiType getType() {
 		return type;
 	}
 
@@ -126,7 +129,7 @@ public class Application {
 	 * 
 	 * @param type the type
 	 */
-	public void setType(String type) {
+	public void setType(KintaiType type) {
 		this.type = type;
 	}
 
@@ -189,7 +192,7 @@ public class Application {
 	 * 
 	 * @return the status
 	 */
-	public String getStatus() {
+	public KintaiStatus getStatus() {
 		return status;
 	}
 
@@ -198,7 +201,7 @@ public class Application {
 	 * 
 	 * @param status the status
 	 */
-	public void setStatus(String status) {
+	public void setStatus(KintaiStatus status) {
 		this.status = status;
 	}
 

@@ -49,7 +49,7 @@ public class StatusValidator extends AbstractFormValidator {
 
 		Application current = detailService.getApplication(id);
 
-		if (status != KintaiStatus.valueOf(current.getStatus())) {
+		if (status != current.getStatus()) {
 			error(null);
 		}
 	}

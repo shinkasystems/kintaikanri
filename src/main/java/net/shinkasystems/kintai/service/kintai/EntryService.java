@@ -39,7 +39,7 @@ public class EntryService {
 			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
 
 			application.setCreateDate(new Date(new java.util.Date().getTime()));
-			application.setStatus(KintaiStatus.PENDING.name());
+			application.setStatus(KintaiStatus.PENDING);
 
 			dao.insert(application);
 
