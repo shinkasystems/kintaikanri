@@ -3,7 +3,7 @@ package net.shinkasystems.kintai.component;
 import java.util.Date;
 import java.util.Iterator;
 
-import net.shinkasystems.kintai.KintaiStatus;
+import net.shinkasystems.kintai.domain.KintaiStatus;
 import net.shinkasystems.kintai.entity.sub.ApplicationData;
 import net.shinkasystems.kintai.service.kintai.IndexService;
 

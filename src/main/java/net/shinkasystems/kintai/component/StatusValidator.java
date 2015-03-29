@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai.component;
 
-import net.shinkasystems.kintai.KintaiStatus;
+import net.shinkasystems.kintai.domain.KintaiStatus;
 import net.shinkasystems.kintai.entity.Application;
 import net.shinkasystems.kintai.service.kintai.DetailService;
 

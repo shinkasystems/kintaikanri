@@ -5,12 +5,12 @@ import java.util.Date;
 
 import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiRole;
-import net.shinkasystems.kintai.KintaiStatus;
 import net.shinkasystems.kintai.component.ApplicationDataProvider;
 import net.shinkasystems.kintai.component.StatusChoiceRenderer;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
+import net.shinkasystems.kintai.domain.KintaiStatus;
 import net.shinkasystems.kintai.entity.sub.ApplicationData;
 import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.PaginationPanel;

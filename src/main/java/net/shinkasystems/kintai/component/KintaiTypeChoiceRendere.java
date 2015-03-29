@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai.component;
 
-import net.shinkasystems.kintai.KintaiType;
+import net.shinkasystems.kintai.domain.KintaiType;
 
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 

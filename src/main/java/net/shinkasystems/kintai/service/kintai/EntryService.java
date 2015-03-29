@@ -3,7 +3,7 @@ package net.shinkasystems.kintai.service.kintai;
 import java.sql.Date;
 
 import net.shinkasystems.kintai.KintaiDB;
-import net.shinkasystems.kintai.KintaiStatus;
+import net.shinkasystems.kintai.domain.KintaiStatus;
 import net.shinkasystems.kintai.entity.Application;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.User;

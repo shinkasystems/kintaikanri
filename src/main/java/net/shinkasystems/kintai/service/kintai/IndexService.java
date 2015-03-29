@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.shinkasystems.kintai.KintaiDB;
-import net.shinkasystems.kintai.KintaiStatus;
+import net.shinkasystems.kintai.domain.KintaiStatus;
 import net.shinkasystems.kintai.entity.ApplicationDao;
 import net.shinkasystems.kintai.entity.sub.ApplicationData;
 import net.shinkasystems.kintai.util.DaoFactory;

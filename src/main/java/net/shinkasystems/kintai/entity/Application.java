@@ -2,8 +2,8 @@ package net.shinkasystems.kintai.entity;
 
 import java.sql.Date;
 
-import net.shinkasystems.kintai.KintaiStatus;
-import net.shinkasystems.kintai.KintaiType;
+import net.shinkasystems.kintai.domain.KintaiStatus;
+import net.shinkasystems.kintai.domain.KintaiType;
 
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;

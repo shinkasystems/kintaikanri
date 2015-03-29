@@ -1,4 +1,4 @@
-package net.shinkasystems.kintai;
+package net.shinkasystems.kintai.domain;
 
 import org.seasar.doma.Domain;
 
