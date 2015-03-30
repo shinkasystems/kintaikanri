@@ -75,6 +75,11 @@ task distributeKintaiApp(type: Zip, dependsOn: jar) {
     }
 }
 
+javadoc {
+    options.encoding = "UTF-8"
+    options.charSet = "utf-8"
+}
+
 eclipse {
     project {
         name = 'Kintai'
