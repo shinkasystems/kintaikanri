@@ -9,7 +9,7 @@ import org.seasar.doma.Domain;
  *
  */
 @Domain(valueType = String.class, factoryMethod = "of")
-public enum KintaiType {
+public enum NotificationType {
 
 	/**
 	 * 終日の有給休暇です。
@@ -70,20 +70,20 @@ public enum KintaiType {
 	 * コンストラクタです。
 	 * @param display
 	 */
-	private KintaiType(String display) {
+	private NotificationType(String display) {
 		this.display = display;
 	}
 
 	/**
-	 * ドメイン文字列から KintaiType へ変換します。
+	 * ドメイン文字列から NotificationType へ変換します。
 	 * @param value ドメイン文字列
 	 * @return 勤怠の申請種類
 	 */
-	public static KintaiType of(String value) {
+	public static NotificationType of(String value) {
 
-		for (KintaiType kintaiType : KintaiType.values()) {
-			if (kintaiType.name().equals(value)) {
-				return kintaiType;
+		for (NotificationType notificationType : NotificationType.values()) {
+			if (notificationType.name().equals(value)) {
+				return notificationType;
 			}
 		}
 		throw new IllegalArgumentException(value);

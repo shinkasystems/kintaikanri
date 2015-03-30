@@ -8,7 +8,7 @@ import org.seasar.doma.Domain;
  *
  */
 @Domain(valueType = String.class, factoryMethod = "of")
-public enum KintaiStatus {
+public enum NotificationStatus {
 
 	/**
 	 * 「未決」のステータスです。
@@ -39,20 +39,20 @@ public enum KintaiStatus {
 	 * コンストラクタです。
 	 * @param display
 	 */
-	private KintaiStatus(String display) {
+	private NotificationStatus(String display) {
 		this.display = display;
 	}
 
 	/**
-	 * ドメイン文字列から KintaiStatus へ変換します。
+	 * ドメイン文字列から NotificationStatus へ変換します。
 	 * @param value ドメイン文字列
 	 * @return 申請情報のステータス
 	 */
-	public static KintaiStatus of(String value) {
+	public static NotificationStatus of(String value) {
 
-		for (KintaiStatus kintaiStatus : KintaiStatus.values()) {
-			if (kintaiStatus.name().equals(value)) {
-				return kintaiStatus;
+		for (NotificationStatus notificationStatus : NotificationStatus.values()) {
+			if (notificationStatus.name().equals(value)) {
+				return notificationStatus;
 			}
 		}
 		throw new IllegalArgumentException(value);

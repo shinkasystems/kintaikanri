@@ -2,8 +2,8 @@ package net.shinkasystems.kintai.entity;
 
 import java.sql.Date;
 
-import net.shinkasystems.kintai.domain.KintaiStatus;
-import net.shinkasystems.kintai.domain.KintaiType;
+import net.shinkasystems.kintai.domain.NotificationStatus;
+import net.shinkasystems.kintai.domain.NotificationType;
 
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
@@ -15,9 +15,9 @@ import org.seasar.doma.Table;
 /**
  * 
  */
-@Entity(listener = ApplicationListener.class)
-@Table(name = "APPLICATION")
-public class Application {
+@Entity(listener = NotificationListener.class)
+@Table(name = "NOTIFICATION")
+public class Notification {
 
 	/**  */
 	@Id
@@ -35,7 +35,7 @@ public class Application {
 
 	/**  */
 	@Column(name = "TYPE")
-	KintaiType type;
+	NotificationType type;
 
 	/**  */
 	@Column(name = "TERM")
@@ -51,7 +51,7 @@ public class Application {
 
 	/**  */
 	@Column(name = "STATUS")
-	KintaiStatus status;
+	NotificationStatus status;
 
 	/**  */
 	@Column(name = "CREATE_DATE")
@@ -120,7 +120,7 @@ public class Application {
 	 * 
 	 * @return the type
 	 */
-	public KintaiType getType() {
+	public NotificationType getType() {
 		return type;
 	}
 
@@ -129,7 +129,7 @@ public class Application {
 	 * 
 	 * @param type the type
 	 */
-	public void setType(KintaiType type) {
+	public void setType(NotificationType type) {
 		this.type = type;
 	}
 
@@ -192,7 +192,7 @@ public class Application {
 	 * 
 	 * @return the status
 	 */
-	public KintaiStatus getStatus() {
+	public NotificationStatus getStatus() {
 		return status;
 	}
 
@@ -201,7 +201,7 @@ public class Application {
 	 * 
 	 * @param status the status
 	 */
-	public void setStatus(KintaiStatus status) {
+	public void setStatus(NotificationStatus status) {
 		this.status = status;
 	}
 

@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai;
 
-import net.shinkasystems.kintai.entity.ApplicationDao;
+import net.shinkasystems.kintai.entity.NotificationDao;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.util.DaoFactory;
 
@@ -90,7 +90,7 @@ public class Start {
 				dao.createTable();
 			}
 			{
-				ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+				NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 				dao.createTable();
 			}
 

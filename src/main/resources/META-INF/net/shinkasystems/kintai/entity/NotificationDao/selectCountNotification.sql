@@ -1,4 +1,4 @@
 select
 	count(*)
 from
-	APPLICATION
+	NOTIFICATION

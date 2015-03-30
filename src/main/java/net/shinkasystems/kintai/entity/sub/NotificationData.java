@@ -2,8 +2,8 @@ package net.shinkasystems.kintai.entity.sub;
 
 import java.io.Serializable;
 
-import net.shinkasystems.kintai.entity.Application;
-import net.shinkasystems.kintai.entity.ApplicationListener;
+import net.shinkasystems.kintai.entity.Notification;
+import net.shinkasystems.kintai.entity.NotificationListener;
 
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
@@ -14,8 +14,8 @@ import org.seasar.doma.Entity;
  * @author Aogiri
  *
  */
-@Entity(listener = ApplicationListener.class)
-public class ApplicationData extends Application implements Serializable {
+@Entity(listener = NotificationListener.class)
+public class NotificationData extends Notification implements Serializable {
 
 	/**
 	 * 申請者の表示名です。

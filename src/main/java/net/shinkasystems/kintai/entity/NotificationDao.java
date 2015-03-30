@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import net.shinkasystems.kintai.KintaiDB;
-import net.shinkasystems.kintai.entity.sub.ApplicationData;
+import net.shinkasystems.kintai.entity.sub.NotificationData;
 
 import org.seasar.doma.Dao;
 import org.seasar.doma.Delete;
@@ -18,7 +18,7 @@ import org.seasar.doma.jdbc.SelectOptions;
  * 
  */
 @Dao(config = KintaiDB.class)
-public interface ApplicationDao {
+public interface NotificationDao {
 
 	/**
 	 * テーブルを作成します。
@@ -29,10 +29,10 @@ public interface ApplicationDao {
 	/**
 	 * 
 	 * @param id
-	 * @return the Application entity
+	 * @return the Notification entity
 	 */
 	@Select
-	Application selectById(Integer id);
+	Notification selectById(Integer id);
 
 	/**
 	 * 
@@ -40,7 +40,7 @@ public interface ApplicationDao {
 	 * @return
 	 */
 	@Select
-	List<ApplicationData> selectApplicationData(SelectOptions options, Date from, Date to, Integer applicantID,
+	List<NotificationData> selectNotificationData(SelectOptions options, Date from, Date to, Integer applicantID,
 			String status, String orderBy);
 
 	/**
@@ -48,7 +48,7 @@ public interface ApplicationDao {
 	 * @return
 	 */
 	@Select
-	long selectCountApplication();
+	long selectCountNotification();
 
 	/**
 	 * 
@@ -63,19 +63,19 @@ public interface ApplicationDao {
 	 * @return affected rows
 	 */
 	@Insert
-	int insert(Application entity);
+	int insert(Notification entity);
 
 	/**
 	 * @param entity
 	 * @return affected rows
 	 */
 	@Update
-	int update(Application entity);
+	int update(Notification entity);
 
 	/**
 	 * @param entity
 	 * @return affected rows
 	 */
 	@Delete
-	int delete(Application entity);
+	int delete(Notification entity);
 }

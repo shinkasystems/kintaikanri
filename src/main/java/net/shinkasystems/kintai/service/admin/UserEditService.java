@@ -1,7 +1,7 @@
 package net.shinkasystems.kintai.service.admin;
 
 import net.shinkasystems.kintai.KintaiDB;
-import net.shinkasystems.kintai.entity.ApplicationDao;
+import net.shinkasystems.kintai.entity.NotificationDao;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.util.Authentication;
@@ -173,7 +173,7 @@ public class UserEditService {
 
 		return transactionManager.required(() -> {
 
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
 			return dao.selectHistoryExists(id);
 		});

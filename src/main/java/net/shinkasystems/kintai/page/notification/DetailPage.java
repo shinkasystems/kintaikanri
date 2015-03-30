@@ -1,4 +1,4 @@
-package net.shinkasystems.kintai.page.kintai;
+package net.shinkasystems.kintai.page.notification;
 
 import java.util.Date;
 
@@ -7,16 +7,16 @@ import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.ConfirmSubmitButton;
 import net.shinkasystems.kintai.component.StatusValidator;
-import net.shinkasystems.kintai.domain.KintaiStatus;
-import net.shinkasystems.kintai.domain.KintaiType;
-import net.shinkasystems.kintai.entity.Application;
+import net.shinkasystems.kintai.domain.NotificationStatus;
+import net.shinkasystems.kintai.domain.NotificationType;
+import net.shinkasystems.kintai.entity.Notification;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.mail.KintaiMail;
 import net.shinkasystems.kintai.mail.KintaiMailArgument;
 import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.panel.InfomationPanel;
-import net.shinkasystems.kintai.service.kintai.DetailService;
+import net.shinkasystems.kintai.service.notification.DetailService;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -79,9 +79,9 @@ public class DetailPage extends DefaultLayoutPage {
 
 	private final HiddenField<Integer> idField = new HiddenField<Integer>("id-hidden", idModel);
 
-	private final IModel<KintaiStatus> statusModel = new Model<KintaiStatus>();
+	private final IModel<NotificationStatus> statusModel = new Model<NotificationStatus>();
 
-	private final HiddenField<KintaiStatus> statusField = new HiddenField<>("status-hidden", statusModel);
+	private final HiddenField<NotificationStatus> statusField = new HiddenField<>("status-hidden", statusModel);
 
 	private final IModel<String> commentAuthorityModel = new Model<String>();
 
@@ -98,7 +98,7 @@ public class DetailPage extends DefaultLayoutPage {
 
 	private final Label applicantLabel = new Label("applicant", applicantModel);
 
-	private final IModel<KintaiType> typeModel = new Model<KintaiType>();
+	private final IModel<NotificationType> typeModel = new Model<NotificationType>();
 
 	private final Label typeLabel = new Label("type", typeModel);
 
@@ -130,17 +130,17 @@ public class DetailPage extends DefaultLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			final Integer applicationID = idField.getModelObject();
-			final Application application = detailService.getApplication(applicationID);
+			final Integer notificationID = idField.getModelObject();
+			final Notification notification = detailService.getNotification(notificationID);
 
-			application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
+			notification.setCommentAuthority(commentAuthorityTextArea.getModelObject());
 
-			detailService.approve(application);
+			detailService.approve(notification);
 
 			/*
 			 * メール送信処理
 			 */
-			final User applicant = detailService.getUser(application.getApplicantId());
+			final User applicant = detailService.getUser(notification.getApplicantId());
 			final User authority = detailService.getUser(applicant.getAuthorityId());
 
 			final KintaiMailArgument argument = new KintaiMailArgument();
@@ -148,17 +148,17 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setReceiverMailAddress(applicant.getEmailAddress());
 			argument.setSenderName(authority.getDisplayName());
 			argument.setSenderMailAddress(authority.getEmailAddress());
-			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-			argument.setForm(application.getType().display);
-			argument.setComment(application.getCommentAuthority());
-			argument.setUrl(getDetailPageUrlString(application));
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(notification.getTerm()));
+			argument.setForm(notification.getType().display);
+			argument.setComment(notification.getCommentAuthority());
+			argument.setUrl(getDetailPageUrlString(notification));
 
 			KintaiMail.APPROVAL.send(argument);
 
 			/*
 			 * ページ情報の更新
 			 */
-			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
+			updatePage(notification, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
 
 			infomationPanel.setMessage(getString("approve-message"));
 			infomationPanel.setVisible(true);
@@ -173,17 +173,17 @@ public class DetailPage extends DefaultLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			final Integer applicationID = idField.getModelObject();
-			final Application application = detailService.getApplication(applicationID);
+			final Integer notificationID = idField.getModelObject();
+			final Notification notification = detailService.getNotification(notificationID);
 
-			application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
+			notification.setCommentAuthority(commentAuthorityTextArea.getModelObject());
 
-			detailService.reject(application);
+			detailService.reject(notification);
 
 			/*
 			 * メール送信処理
 			 */
-			final User applicant = detailService.getUser(application.getApplicantId());
+			final User applicant = detailService.getUser(notification.getApplicantId());
 			final User authority = detailService.getUser(applicant.getAuthorityId());
 
 			final KintaiMailArgument argument = new KintaiMailArgument();
@@ -191,17 +191,17 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setReceiverMailAddress(applicant.getEmailAddress());
 			argument.setSenderName(authority.getDisplayName());
 			argument.setSenderMailAddress(authority.getEmailAddress());
-			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-			argument.setForm(application.getType().display);
-			argument.setComment(application.getCommentAuthority());
-			argument.setUrl(getDetailPageUrlString(application));
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(notification.getTerm()));
+			argument.setForm(notification.getType().display);
+			argument.setComment(notification.getCommentAuthority());
+			argument.setUrl(getDetailPageUrlString(notification));
 
 			KintaiMail.REJECTION.send(argument);
 
 			/*
 			 * ページ情報の更新
 			 */
-			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
+			updatePage(notification, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
 
 			infomationPanel.setMessage(getString("reject-message"));
 			infomationPanel.setVisible(true);
@@ -217,17 +217,17 @@ public class DetailPage extends DefaultLayoutPage {
 		@Override
 		public void onSubmit() {
 
-			final Integer applicationID = idField.getModelObject();
-			final Application application = detailService.getApplication(applicationID);
+			final Integer notificationID = idField.getModelObject();
+			final Notification notification = detailService.getNotification(notificationID);
 
-			application.setCommentAuthority(commentAuthorityTextArea.getModelObject());
+			notification.setCommentAuthority(commentAuthorityTextArea.getModelObject());
 
-			detailService.withdraw(application);
+			detailService.withdraw(notification);
 
 			/*
 			 * メール送信処理
 			 */
-			final User applicant = detailService.getUser(application.getApplicantId());
+			final User applicant = detailService.getUser(notification.getApplicantId());
 			final User authority = detailService.getUser(applicant.getAuthorityId());
 
 			final KintaiMailArgument argument = new KintaiMailArgument();
@@ -235,17 +235,17 @@ public class DetailPage extends DefaultLayoutPage {
 			argument.setReceiverMailAddress(authority.getEmailAddress());
 			argument.setSenderName(applicant.getDisplayName());
 			argument.setSenderMailAddress(applicant.getEmailAddress());
-			argument.setTerm(KintaiConstants.DATE_FORMAT.format(application.getTerm()));
-			argument.setForm(application.getType().display);
-			argument.setComment(application.getCommentApplycant());
-			argument.setUrl(getDetailPageUrlString(application));
+			argument.setTerm(KintaiConstants.DATE_FORMAT.format(notification.getTerm()));
+			argument.setForm(notification.getType().display);
+			argument.setComment(notification.getCommentApplycant());
+			argument.setUrl(getDetailPageUrlString(notification));
 
 			KintaiMail.WITHDRAWAL.send(argument);
 
 			/*
 			 * ページ情報の更新
 			 */
-			updatePage(application, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
+			updatePage(notification, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
 
 			infomationPanel.setMessage(getString("withdraw-message"));
 			infomationPanel.setVisible(true);
@@ -273,8 +273,8 @@ public class DetailPage extends DefaultLayoutPage {
 
 		final int id = parameters.getParameterValue(IndexPage.PARAMETER_ID).toInt();
 
-		final Application application = detailService.getApplication(id);
-		final User applicant = detailService.getUser(application.getApplicantId());
+		final Notification notification = detailService.getNotification(id);
+		final User applicant = detailService.getUser(notification.getApplicantId());
 		final User authority = detailService.getUser(applicant.getAuthorityId());
 
 		/*
@@ -288,7 +288,7 @@ public class DetailPage extends DefaultLayoutPage {
 
 		form.add(new StatusValidator(idField, statusField, detailService));
 
-		updatePage(application, applicant, authority, loginUser);
+		updatePage(notification, applicant, authority, loginUser);
 
 		/*
 		 * コンポーネントの組立
@@ -319,55 +319,55 @@ public class DetailPage extends DefaultLayoutPage {
 	/**
 	 * ページの表示情報を更新します。
 	 * 
-	 * @param application
+	 * @param notification
 	 * @param applicant
 	 * @param authority
 	 * @param loginUser
 	 */
-	private void updatePage(Application application, User applicant, User authority, User loginUser) {
+	private void updatePage(Notification notification, User applicant, User authority, User loginUser) {
 
-		final KintaiType type = application.getType();
-		final KintaiStatus status = application.getStatus();
+		final NotificationType type = notification.getType();
+		final NotificationStatus status = notification.getStatus();
 
-		idModel.setObject(application.getId());
+		idModel.setObject(notification.getId());
 		statusModel.setObject(status);
-		termModel.setObject(application.getTerm());
+		termModel.setObject(notification.getTerm());
 		applicantModel.setObject(applicant.getDisplayName());
 		typeModel.setObject(type);
-		commentModel.setObject(application.getCommentApplycant());
-		createdModel.setObject(application.getCreateDate());
+		commentModel.setObject(notification.getCommentApplycant());
+		createdModel.setObject(notification.getCreateDate());
 		authorityModel.setObject(authority.getDisplayName());
-		updatedModel.setObject(application.getUpdateDate());
-		commentAuthorityModel.setObject(application.getCommentAuthority());
+		updatedModel.setObject(notification.getUpdateDate());
+		commentAuthorityModel.setObject(notification.getCommentAuthority());
 
-		if (status == KintaiStatus.PENDING) {
+		if (status == NotificationStatus.PENDING) {
 			statusLabel.add(new AttributeModifier("class", "label label-info"));
-		} else if (status == KintaiStatus.APPROVED) {
+		} else if (status == NotificationStatus.APPROVED) {
 			statusLabel.add(new AttributeModifier("class", "label label-success"));
-		} else if (status == KintaiStatus.REJECTED) {
+		} else if (status == NotificationStatus.REJECTED) {
 			statusLabel.add(new AttributeModifier("class", "label label-important"));
-		} else if (status == KintaiStatus.WITHDRAWN) {
+		} else if (status == NotificationStatus.WITHDRAWN) {
 			statusLabel.add(new AttributeModifier("class", "label label-inverse"));
 		}
 
 		approveButton.setVisible(loginUser.getId() == authority.getId()
-				&& (status == KintaiStatus.PENDING || status == KintaiStatus.REJECTED));
+				&& (status == NotificationStatus.PENDING || status == NotificationStatus.REJECTED));
 		rejectButton.setVisible(loginUser.getId() == authority.getId()
-				&& (status == KintaiStatus.PENDING || status == KintaiStatus.APPROVED));
+				&& (status == NotificationStatus.PENDING || status == NotificationStatus.APPROVED));
 		commentAuthorityTextArea.setEnabled(approveButton.isVisible() || rejectButton.isVisible());
-		withdrawButton.setVisible(loginUser.getId() == applicant.getId() && status == KintaiStatus.PENDING);
+		withdrawButton.setVisible(loginUser.getId() == applicant.getId() && status == NotificationStatus.PENDING);
 	}
 
 	/**
 	 * 詳細画面のURL文字列を返します。
 	 * 
-	 * @param application 申請情報
+	 * @param notification 申請情報
 	 * @return 詳細画面のURL
 	 */
-	private String getDetailPageUrlString(Application application) {
+	private String getDetailPageUrlString(Notification notification) {
 
 		PageParameters pageParameters = new PageParameters();
-		pageParameters.set("id", application.getId());
+		pageParameters.set("id", notification.getId());
 
 		String urlString = RequestCycle.get().getUrlRenderer().renderFullUrl(
 				Url.parse(urlFor(DetailPage.class, pageParameters).toString()));

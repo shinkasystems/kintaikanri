@@ -1,20 +1,20 @@
-package net.shinkasystems.kintai.page.kintai;
+package net.shinkasystems.kintai.page.notification;
 
 import java.util.Arrays;
 import java.util.Date;
 
 import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiRole;
-import net.shinkasystems.kintai.component.ApplicationDataProvider;
+import net.shinkasystems.kintai.component.NotificationDataProvider;
 import net.shinkasystems.kintai.component.StatusChoiceRenderer;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
-import net.shinkasystems.kintai.domain.KintaiStatus;
-import net.shinkasystems.kintai.entity.sub.ApplicationData;
+import net.shinkasystems.kintai.domain.NotificationStatus;
+import net.shinkasystems.kintai.entity.sub.NotificationData;
 import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.PaginationPanel;
-import net.shinkasystems.kintai.service.kintai.IndexService;
+import net.shinkasystems.kintai.service.notification.IndexService;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -69,34 +69,34 @@ public class IndexPage extends DefaultLayoutPage {
 	/**
 	 * 申請情報一覧のデータプロバイダーです。
 	 */
-	private ApplicationDataProvider applicationDataProvider = new ApplicationDataProvider(indexService);
+	private NotificationDataProvider notificationDataProvider = new NotificationDataProvider(indexService);
 
 	/**
 	 * 申請情報一覧です。
 	 */
-	private final DataView<ApplicationData> applicationDataView = new DataView<ApplicationData>(
-			"index-data-view", applicationDataProvider, 100) {
+	private final DataView<NotificationData> notificationDataView = new DataView<NotificationData>(
+			"index-data-view", notificationDataProvider, 100) {
 
 		@Override
-		protected void populateItem(Item<ApplicationData> item) {
+		protected void populateItem(Item<NotificationData> item) {
 
-			final ApplicationData applicationData = item.getModelObject();
+			final NotificationData notificationData = item.getModelObject();
 
-			if (applicationData.getCommentApplycant().length() > 20) {
-				applicationData.setCommentApplycant(applicationData.getCommentApplycant().substring(0, 20) + "...");
+			if (notificationData.getCommentApplycant().length() > 20) {
+				notificationData.setCommentApplycant(notificationData.getCommentApplycant().substring(0, 20) + "...");
 			}
 
 			/*
 			 * コンポーネントの生成
 			 */
-			final Label idLabel = new Label("id", applicationData.getId());
-			final Label termLabel = new Label("term", KintaiConstants.DATE_FORMAT.format(applicationData.getTerm()));
-			final Label typeLabel = new Label("type", applicationData.getType().display);
-			final Label commentLabel = new Label("comment", applicationData.getCommentApplycant());
-			final Label dateLabel = new Label("date", KintaiConstants.DATE_FORMAT.format(applicationData
+			final Label idLabel = new Label("id", notificationData.getId());
+			final Label termLabel = new Label("term", KintaiConstants.DATE_FORMAT.format(notificationData.getTerm()));
+			final Label typeLabel = new Label("type", notificationData.getType().display);
+			final Label commentLabel = new Label("comment", notificationData.getCommentApplycant());
+			final Label dateLabel = new Label("date", KintaiConstants.DATE_FORMAT.format(notificationData
 					.getCreateDate()));
-			final Label applicantLabel = new Label("applicant", applicationData.getApplicantDisplayName());
-			final Label statusLabel = new Label("status", applicationData.getStatus().display);
+			final Label applicantLabel = new Label("applicant", notificationData.getApplicantDisplayName());
+			final Label statusLabel = new Label("status", notificationData.getStatus().display);
 
 			final Link<String> typeLink = new StatelessLink<String>("link") {
 
@@ -105,7 +105,7 @@ public class IndexPage extends DefaultLayoutPage {
 
 					final PageParameters parameters = new PageParameters();
 
-					parameters.set(PARAMETER_ID, applicationData.getId());
+					parameters.set(PARAMETER_ID, notificationData.getId());
 
 					IndexPage.this.setResponsePage(DetailPage.class, parameters);
 				}
@@ -147,7 +147,7 @@ public class IndexPage extends DefaultLayoutPage {
 			java.sql.Date from = null;
 			java.sql.Date to = null;
 			Integer applicantId = null;
-			KintaiStatus status = null;
+			NotificationStatus status = null;
 
 			if (fromTextField.getModelObject() != null) {
 				from = new java.sql.Date(fromTextField.getModelObject().getTime());
@@ -162,11 +162,11 @@ public class IndexPage extends DefaultLayoutPage {
 				status = statusDropDownChoice.getModelObject();
 			}
 
-			applicationDataProvider.setFrom(from);
-			applicationDataProvider.setTo(to);
-			applicationDataProvider.setApplicantId(applicantId);
-			applicationDataProvider.setStatus(status);
-			applicationDataProvider.setSort("term", SortOrder.DESCENDING);
+			notificationDataProvider.setFrom(from);
+			notificationDataProvider.setTo(to);
+			notificationDataProvider.setApplicantId(applicantId);
+			notificationDataProvider.setStatus(status);
+			notificationDataProvider.setSort("term", SortOrder.DESCENDING);
 		}
 
 	};
@@ -191,8 +191,8 @@ public class IndexPage extends DefaultLayoutPage {
 	/**
 	 * ステータスの選択コンポーネントです。
 	 */
-	private final DropDownChoice<KintaiStatus> statusDropDownChoice = new DropDownChoice<KintaiStatus>(
-			"status", new Model<KintaiStatus>(), Arrays.asList(KintaiStatus.values()), new StatusChoiceRenderer());
+	private final DropDownChoice<NotificationStatus> statusDropDownChoice = new DropDownChoice<NotificationStatus>(
+			"status", new Model<NotificationStatus>(), Arrays.asList(NotificationStatus.values()), new StatusChoiceRenderer());
 
 	/**
 	 * コンストラクタです。
@@ -204,15 +204,15 @@ public class IndexPage extends DefaultLayoutPage {
 		 * コンポーネントの生成
 		 */
 		final OrderByBorder<String> termOrderByBorder = new OrderByBorder<String>("orderByTerm", "TERM",
-				applicationDataProvider) {
+				notificationDataProvider) {
 
 			@Override
 			protected void onSortChanged() {
-				applicationDataView.setCurrentPage(0);
+				notificationDataView.setCurrentPage(0);
 			}
 
 		};
-		final PagingNavigator pagingNavigator = new PaginationPanel("page-navigator", applicationDataView);
+		final PagingNavigator pagingNavigator = new PaginationPanel("page-navigator", notificationDataView);
 
 		/*
 		 * コンポーネントの編集
@@ -227,7 +227,7 @@ public class IndexPage extends DefaultLayoutPage {
 		 * コンポーネントの組立
 		 */
 		add(termOrderByBorder);
-		add(applicationDataView);
+		add(notificationDataView);
 		add(pagingNavigator);
 
 		form.add(fromTextField);

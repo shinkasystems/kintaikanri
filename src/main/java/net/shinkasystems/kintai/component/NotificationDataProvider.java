@@ -3,9 +3,9 @@ package net.shinkasystems.kintai.component;
 import java.util.Date;
 import java.util.Iterator;
 
-import net.shinkasystems.kintai.domain.KintaiStatus;
-import net.shinkasystems.kintai.entity.sub.ApplicationData;
-import net.shinkasystems.kintai.service.kintai.IndexService;
+import net.shinkasystems.kintai.domain.NotificationStatus;
+import net.shinkasystems.kintai.entity.sub.NotificationData;
+import net.shinkasystems.kintai.service.notification.IndexService;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -18,7 +18,7 @@ import org.apache.wicket.model.Model;
  * @author Aogiri
  *
  */
-public class ApplicationDataProvider extends SortableDataProvider<ApplicationData, String> {
+public class NotificationDataProvider extends SortableDataProvider<NotificationData, String> {
 
 	private java.sql.Date from;
 
@@ -26,22 +26,22 @@ public class ApplicationDataProvider extends SortableDataProvider<ApplicationDat
 
 	private Integer applicantId;
 
-	private KintaiStatus status;
+	private NotificationStatus status;
 
 	private final IndexService indexService;
 
 	/**
 	 * コンストラクタです。
 	 */
-	public ApplicationDataProvider(IndexService indexService) {
+	public NotificationDataProvider(IndexService indexService) {
 		this(new java.sql.Date(new Date().getTime()), null, null, null, indexService);
 	}
 
-	public ApplicationDataProvider(
+	public NotificationDataProvider(
 			java.sql.Date from,
 			java.sql.Date to,
 			Integer applicantId,
-			KintaiStatus status,
+			NotificationStatus status,
 			IndexService indexService) {
 
 		super();
@@ -57,7 +57,7 @@ public class ApplicationDataProvider extends SortableDataProvider<ApplicationDat
 	}
 
 	@Override
-	public Iterator<? extends ApplicationData> iterator(long first, long count) {
+	public Iterator<? extends NotificationData> iterator(long first, long count) {
 
 		/*
 		 * 
@@ -74,14 +74,14 @@ public class ApplicationDataProvider extends SortableDataProvider<ApplicationDat
 	}
 
 	@Override
-	public IModel<ApplicationData> model(ApplicationData applicationData) {
-		return new Model<ApplicationData>(applicationData);
+	public IModel<NotificationData> model(NotificationData notificationData) {
+		return new Model<NotificationData>(notificationData);
 	}
 
 	@Override
 	public long size() {
 
-		return indexService.countApplication();
+		return indexService.countNotification();
 	}
 
 	public java.sql.Date getFrom() {
@@ -108,11 +108,11 @@ public class ApplicationDataProvider extends SortableDataProvider<ApplicationDat
 		this.applicantId = applicantId;
 	}
 
-	public KintaiStatus getStatus() {
+	public NotificationStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(KintaiStatus status) {
+	public void setStatus(NotificationStatus status) {
 		this.status = status;
 	}
 }

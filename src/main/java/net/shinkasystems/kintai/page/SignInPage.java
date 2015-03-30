@@ -1,7 +1,7 @@
 package net.shinkasystems.kintai.page;
 
 import net.shinkasystems.kintai.KintaiSession;
-import net.shinkasystems.kintai.page.kintai.IndexPage;
+import net.shinkasystems.kintai.page.notification.IndexPage;
 import net.shinkasystems.kintai.panel.AlertPanel;
 
 import org.apache.wicket.markup.html.form.Form;

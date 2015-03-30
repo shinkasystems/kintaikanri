@@ -1,4 +1,4 @@
-package net.shinkasystems.kintai.service.kintai;
+package net.shinkasystems.kintai.service.notification;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.shinkasystems.kintai.KintaiDB;
-import net.shinkasystems.kintai.domain.KintaiStatus;
-import net.shinkasystems.kintai.entity.ApplicationDao;
-import net.shinkasystems.kintai.entity.sub.ApplicationData;
+import net.shinkasystems.kintai.domain.NotificationStatus;
+import net.shinkasystems.kintai.entity.NotificationDao;
+import net.shinkasystems.kintai.entity.sub.NotificationData;
 import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.seasar.doma.jdbc.SelectOptions;
@@ -35,8 +35,8 @@ public class IndexService implements Serializable {
 	 * @param ascending ソート順
 	 * @return
 	 */
-	public Iterator<ApplicationData> getApplivcationDataIterator(
-			Date from, Date to, Integer applicantId, KintaiStatus status,
+	public Iterator<NotificationData> getApplivcationDataIterator(
+			Date from, Date to, Integer applicantId, NotificationStatus status,
 			long first, long count, String sortProperty, boolean ascending) {
 
 		SelectOptions options = SelectOptions.get().offset((int) first).limit((int) count);
@@ -44,11 +44,11 @@ public class IndexService implements Serializable {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
-		List<ApplicationData> applicationDatas = transactionManager.required(() -> {
+		List<NotificationData> notificationDatas = transactionManager.required(() -> {
 
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
-			return dao.selectApplicationData(
+			return dao.selectNotificationData(
 					options,
 					from,
 					to,
@@ -57,7 +57,7 @@ public class IndexService implements Serializable {
 					orderBy);
 		});
 
-		return applicationDatas.iterator();
+		return notificationDatas.iterator();
 	}
 
 	/**
@@ -65,15 +65,15 @@ public class IndexService implements Serializable {
 	 * 
 	 * @return 勤怠情報の申請件数
 	 */
-	public long countApplication() {
+	public long countNotification() {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
 		return transactionManager.required(() -> {
 
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
-			return dao.selectCountApplication();
+			return dao.selectCountNotification();
 		});
 	}
 }

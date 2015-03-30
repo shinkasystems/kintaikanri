@@ -1,4 +1,4 @@
-package net.shinkasystems.kintai.page.kintai;
+package net.shinkasystems.kintai.page.notification;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -8,18 +8,18 @@ import java.util.List;
 import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
-import net.shinkasystems.kintai.component.KintaiTypeChoiceRendere;
+import net.shinkasystems.kintai.component.NotificationTypeChoiceRendere;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
 import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
-import net.shinkasystems.kintai.domain.KintaiType;
-import net.shinkasystems.kintai.entity.Application;
+import net.shinkasystems.kintai.domain.NotificationType;
+import net.shinkasystems.kintai.entity.Notification;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.mail.KintaiMail;
 import net.shinkasystems.kintai.mail.KintaiMailArgument;
 import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.AlertPanel;
-import net.shinkasystems.kintai.service.kintai.EntryService;
+import net.shinkasystems.kintai.service.notification.EntryService;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -72,25 +72,25 @@ public class EntryPage extends DefaultLayoutPage {
 			/*
 			 * 申請処理
 			 */
-			final Application application = new Application();
+			final Notification notification = new Notification();
 
 			if (applicantDropDownChoice.getModelObject() != null) {
-				application.setApplicantId(applicantDropDownChoice.getModelObject().getId());
-				application.setProxyId(((KintaiSession) KintaiSession.get()).getUser().getId());
+				notification.setApplicantId(applicantDropDownChoice.getModelObject().getId());
+				notification.setProxyId(((KintaiSession) KintaiSession.get()).getUser().getId());
 			} else {
-				application.setApplicantId(((KintaiSession) KintaiSession.get()).getUser().getId());
+				notification.setApplicantId(((KintaiSession) KintaiSession.get()).getUser().getId());
 			}
-			application.setType(typeDropDownChoice.getModelObject());
-			application.setTerm(new Date(termTextField.getModelObject().getTime()));
-			application.setCommentApplycant(commentTextArea.getModelObject());
+			notification.setType(typeDropDownChoice.getModelObject());
+			notification.setTerm(new Date(termTextField.getModelObject().getTime()));
+			notification.setCommentApplycant(commentTextArea.getModelObject());
 
-			entryService.entry(application);
+			entryService.entry(notification);
 
 			/*
 			 * 詳細ページの URL を作成する
 			 */
 			PageParameters pageParameters = new PageParameters();
-			pageParameters.set("id", application.getId());
+			pageParameters.set("id", notification.getId());
 
 			String urlString = RequestCycle.get().getUrlRenderer().renderFullUrl(
 					Url.parse(urlFor(DetailPage.class, pageParameters).toString()));
@@ -98,7 +98,7 @@ public class EntryPage extends DefaultLayoutPage {
 			/*
 			 * メール送信処理
 			 */
-			final User sender = entryService.getUser(application.getApplicantId());
+			final User sender = entryService.getUser(notification.getApplicantId());
 			final User receiver = entryService.getUser(sender.getAuthorityId());
 
 			final KintaiMailArgument argument = new KintaiMailArgument();
@@ -121,11 +121,11 @@ public class EntryPage extends DefaultLayoutPage {
 	/**
 	 * 勤怠申請の種類を管理するドロップダウンです。
 	 */
-	private final DropDownChoice<KintaiType> typeDropDownChoice = new DropDownChoice<KintaiType>(
+	private final DropDownChoice<NotificationType> typeDropDownChoice = new DropDownChoice<NotificationType>(
 			"type",
-			new Model<KintaiType>(),
-			Arrays.asList(KintaiType.values()),
-			new KintaiTypeChoiceRendere());
+			new Model<NotificationType>(),
+			Arrays.asList(NotificationType.values()),
+			new NotificationTypeChoiceRendere());
 
 	/**
 	 * 期日の入力フィールドです。

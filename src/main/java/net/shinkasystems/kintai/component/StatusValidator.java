@@ -1,8 +1,8 @@
 package net.shinkasystems.kintai.component;
 
-import net.shinkasystems.kintai.domain.KintaiStatus;
-import net.shinkasystems.kintai.entity.Application;
-import net.shinkasystems.kintai.service.kintai.DetailService;
+import net.shinkasystems.kintai.domain.NotificationStatus;
+import net.shinkasystems.kintai.entity.Notification;
+import net.shinkasystems.kintai.service.notification.DetailService;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -20,14 +20,14 @@ public class StatusValidator extends AbstractFormValidator {
 
 	private final FormComponent<Integer> idComponent;
 
-	private final FormComponent<KintaiStatus> statusComponent;
+	private final FormComponent<NotificationStatus> statusComponent;
 
 	private final DetailService detailService;
 
 	@Inject
 	public StatusValidator(
 			FormComponent<Integer> idComponent,
-			FormComponent<KintaiStatus> statusComponent,
+			FormComponent<NotificationStatus> statusComponent,
 			DetailService detailService) {
 		
 		super();
@@ -45,9 +45,9 @@ public class StatusValidator extends AbstractFormValidator {
 	public void validate(Form<?> form) {
 
 		final int id = idComponent.getModelObject();
-		final KintaiStatus status = statusComponent.getModelObject();
+		final NotificationStatus status = statusComponent.getModelObject();
 
-		Application current = detailService.getApplication(id);
+		Notification current = detailService.getNotification(id);
 
 		if (status != current.getStatus()) {
 			error(null);

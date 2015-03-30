@@ -1,11 +1,11 @@
-package net.shinkasystems.kintai.service.kintai;
+package net.shinkasystems.kintai.service.notification;
 
 import java.sql.Date;
 
 import net.shinkasystems.kintai.KintaiDB;
-import net.shinkasystems.kintai.domain.KintaiStatus;
-import net.shinkasystems.kintai.entity.Application;
-import net.shinkasystems.kintai.entity.ApplicationDao;
+import net.shinkasystems.kintai.domain.NotificationStatus;
+import net.shinkasystems.kintai.entity.Notification;
+import net.shinkasystems.kintai.entity.NotificationDao;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.util.DaoFactory;
@@ -28,22 +28,22 @@ public class EntryService {
 	/**
 	 * 勤怠情報を申請します。
 	 * 
-	 * @param application 勤怠情報
+	 * @param notification 勤怠情報
 	 */
-	public void entry(Application application) {
+	public void entry(Notification notification) {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
 		transactionManager.required(() -> {
 
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
-			application.setCreateDate(new Date(new java.util.Date().getTime()));
-			application.setStatus(KintaiStatus.PENDING);
+			notification.setCreateDate(new Date(new java.util.Date().getTime()));
+			notification.setStatus(NotificationStatus.PENDING);
 
-			dao.insert(application);
+			dao.insert(notification);
 
-			log.info("勤怠情報を申請しました。" + application);
+			log.info("勤怠情報を申請しました。" + notification);
 		});
 
 	}

@@ -1,11 +1,11 @@
-package net.shinkasystems.kintai.service.kintai;
+package net.shinkasystems.kintai.service.notification;
 
 import java.util.Date;
 
 import net.shinkasystems.kintai.KintaiDB;
-import net.shinkasystems.kintai.domain.KintaiStatus;
-import net.shinkasystems.kintai.entity.Application;
-import net.shinkasystems.kintai.entity.ApplicationDao;
+import net.shinkasystems.kintai.domain.NotificationStatus;
+import net.shinkasystems.kintai.entity.Notification;
+import net.shinkasystems.kintai.entity.NotificationDao;
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.util.DaoFactory;
@@ -25,51 +25,51 @@ public class DetailService {
 	/** ロガー */
 	private static final Logger log = LoggerFactory.getLogger(DetailService.class);
 
-	public void approve(Application application) {
+	public void approve(Notification notification) {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
 		transactionManager.required(() -> {
 
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
-			application.setStatus(KintaiStatus.APPROVED);
-			application.setUpdateDate(new java.sql.Date(new Date().getTime()));
-			dao.update(application);
+			notification.setStatus(NotificationStatus.APPROVED);
+			notification.setUpdateDate(new java.sql.Date(new Date().getTime()));
+			dao.update(notification);
 
 			log.info("承認しました");
 		});
 
 	}
 
-	public void reject(Application application) {
+	public void reject(Notification notification) {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
 		transactionManager.required(() -> {
 
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
-			application.setStatus(KintaiStatus.REJECTED);
-			application.setUpdateDate(new java.sql.Date(new Date().getTime()));
-			dao.update(application);
+			notification.setStatus(NotificationStatus.REJECTED);
+			notification.setUpdateDate(new java.sql.Date(new Date().getTime()));
+			dao.update(notification);
 
 			log.info("却下しました");
 		});
 
 	}
 
-	public void withdraw(Application application) {
+	public void withdraw(Notification notification) {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
 		transactionManager.required(() -> {
 
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
-			application.setStatus(KintaiStatus.WITHDRAWN);
-			application.setUpdateDate(new java.sql.Date(new Date().getTime()));
-			dao.update(application);
+			notification.setStatus(NotificationStatus.WITHDRAWN);
+			notification.setUpdateDate(new java.sql.Date(new Date().getTime()));
+			dao.update(notification);
 
 			log.info("取消しました");
 		});
@@ -82,13 +82,13 @@ public class DetailService {
 	 * @param id 勤怠情報ID
 	 * @return 勤怠情報
 	 */
-	public Application getApplication(int id) {
+	public Notification getNotification(int id) {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
 		return transactionManager.required(() -> {
 
-			final ApplicationDao dao = DaoFactory.createDaoImplements(ApplicationDao.class);
+			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
 			return dao.selectById(id);
 		});

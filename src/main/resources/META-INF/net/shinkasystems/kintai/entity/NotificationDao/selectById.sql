@@ -10,6 +10,6 @@ select
   CREATE_DATE,
   UPDATE_DATE
 from
-  APPLICATION
+  NOTIFICATION
 where
   ID = /* id */1

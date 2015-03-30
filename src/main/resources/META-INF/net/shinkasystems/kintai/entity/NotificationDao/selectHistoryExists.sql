@@ -3,9 +3,9 @@ select
 		select
 			*
 		from
-			APPLICATION
+			NOTIFICATION
 			inner join USER APPLICANT
-				on APPLICATION.APPLICANT_ID = APPLICANT.ID
+				on NOTIFICATION.APPLICANT_ID = APPLICANT.ID
 		where
 			APPLICANT.ID = /* userID */1
 			or APPLICANT.AUTHORITY_ID = /* userID */1

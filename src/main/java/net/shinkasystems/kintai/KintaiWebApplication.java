@@ -6,9 +6,9 @@ import net.shinkasystems.kintai.page.UnauthorizedPage;
 import net.shinkasystems.kintai.page.admin.UserEditPage;
 import net.shinkasystems.kintai.page.admin.UserRegistrationPage;
 import net.shinkasystems.kintai.page.admin.UsersPage;
-import net.shinkasystems.kintai.page.kintai.DetailPage;
-import net.shinkasystems.kintai.page.kintai.EntryPage;
-import net.shinkasystems.kintai.page.kintai.IndexPage;
+import net.shinkasystems.kintai.page.notification.DetailPage;
+import net.shinkasystems.kintai.page.notification.EntryPage;
+import net.shinkasystems.kintai.page.notification.IndexPage;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
