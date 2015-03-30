@@ -11,8 +11,7 @@ import net.shinkasystems.kintai.domain.NotificationStatus;
 import net.shinkasystems.kintai.domain.NotificationType;
 import net.shinkasystems.kintai.entity.Notification;
 import net.shinkasystems.kintai.entity.User;
-import net.shinkasystems.kintai.mail.KintaiMail;
-import net.shinkasystems.kintai.mail.KintaiMailArgument;
+import net.shinkasystems.kintai.mail.Mailer;
 import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.panel.InfomationPanel;
@@ -143,17 +142,15 @@ public class DetailPage extends DefaultLayoutPage {
 			final User applicant = detailService.getUser(notification.getApplicantId());
 			final User authority = detailService.getUser(applicant.getAuthorityId());
 
-			final KintaiMailArgument argument = new KintaiMailArgument();
-			argument.setReceiverName(applicant.getDisplayName());
-			argument.setReceiverMailAddress(applicant.getEmailAddress());
-			argument.setSenderName(authority.getDisplayName());
-			argument.setSenderMailAddress(authority.getEmailAddress());
-			argument.setTerm(KintaiConstants.DATE_FORMAT.format(notification.getTerm()));
-			argument.setForm(notification.getType().display);
-			argument.setComment(notification.getCommentAuthority());
-			argument.setUrl(getDetailPageUrlString(notification));
-
-			KintaiMail.APPROVAL.send(argument);
+			Mailer.NOTIFICATION_APPROVAL.send(
+					applicant.getEmailAddress(),
+					authority.getEmailAddress(),
+					applicant.getDisplayName(),
+					authority.getDisplayName(),
+					KintaiConstants.DATE_FORMAT.format(notification.getTerm()),
+					notification.getType().display,
+					notification.getCommentAuthority(),
+					getDetailPageUrlString(notification));
 
 			/*
 			 * ページ情報の更新
@@ -186,17 +183,15 @@ public class DetailPage extends DefaultLayoutPage {
 			final User applicant = detailService.getUser(notification.getApplicantId());
 			final User authority = detailService.getUser(applicant.getAuthorityId());
 
-			final KintaiMailArgument argument = new KintaiMailArgument();
-			argument.setReceiverName(applicant.getDisplayName());
-			argument.setReceiverMailAddress(applicant.getEmailAddress());
-			argument.setSenderName(authority.getDisplayName());
-			argument.setSenderMailAddress(authority.getEmailAddress());
-			argument.setTerm(KintaiConstants.DATE_FORMAT.format(notification.getTerm()));
-			argument.setForm(notification.getType().display);
-			argument.setComment(notification.getCommentAuthority());
-			argument.setUrl(getDetailPageUrlString(notification));
-
-			KintaiMail.REJECTION.send(argument);
+			Mailer.NOTIFICATION_REJECTION.send(
+					applicant.getEmailAddress(),
+					authority.getEmailAddress(),
+					applicant.getDisplayName(),
+					authority.getDisplayName(),
+					KintaiConstants.DATE_FORMAT.format(notification.getTerm()),
+					notification.getType().display,
+					notification.getCommentAuthority(),
+					getDetailPageUrlString(notification));
 
 			/*
 			 * ページ情報の更新
@@ -230,17 +225,15 @@ public class DetailPage extends DefaultLayoutPage {
 			final User applicant = detailService.getUser(notification.getApplicantId());
 			final User authority = detailService.getUser(applicant.getAuthorityId());
 
-			final KintaiMailArgument argument = new KintaiMailArgument();
-			argument.setReceiverName(authority.getDisplayName());
-			argument.setReceiverMailAddress(authority.getEmailAddress());
-			argument.setSenderName(applicant.getDisplayName());
-			argument.setSenderMailAddress(applicant.getEmailAddress());
-			argument.setTerm(KintaiConstants.DATE_FORMAT.format(notification.getTerm()));
-			argument.setForm(notification.getType().display);
-			argument.setComment(notification.getCommentApplycant());
-			argument.setUrl(getDetailPageUrlString(notification));
-
-			KintaiMail.WITHDRAWAL.send(argument);
+			Mailer.NOTIFICATION_WITHDRAWAL.send(
+					applicant.getEmailAddress(),
+					authority.getEmailAddress(),
+					applicant.getDisplayName(),
+					authority.getDisplayName(),
+					KintaiConstants.DATE_FORMAT.format(notification.getTerm()),
+					notification.getType().display,
+					notification.getCommentAuthority(),
+					getDetailPageUrlString(notification));
 
 			/*
 			 * ページ情報の更新

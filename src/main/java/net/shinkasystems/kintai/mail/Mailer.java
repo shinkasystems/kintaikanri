@@ -30,28 +30,28 @@ import org.slf4j.LoggerFactory;
  * @author Aogiri
  *
  */
-public enum KintaiMail {
+public enum Mailer {
 
 	/**
 	 * 申請メールです。
 	 */
-	ENTRY("【勤怠管理ツール】勤怠の申請"),
+	NOTIFICATION_ENTRY("【勤怠管理ツール】勤怠の申請"),
 
 	/**
 	 * 承認メールです。
 	 */
-	APPROVAL("【勤怠管理ツール】勤怠の承認"),
+	NOTIFICATION_APPROVAL("【勤怠管理ツール】勤怠の承認"),
 
 	/**
 	 * 却下メールです。
 	 */
-	REJECTION("【勤怠管理ツール】勤怠の却下"),
+	NOTIFICATION_REJECTION("【勤怠管理ツール】勤怠の却下"),
 
 	/**
 	 * 取り下げメールです。
 	 */
-	WITHDRAWAL("【勤怠管理ツール】勤怠の取り下げ");
-	
+	NOTIFICATION_WITHDRAWAL("【勤怠管理ツール】勤怠の取り下げ");
+
 	private static final String EMAIL_CHARSET = "UTF-8";
 
 	/**
@@ -60,21 +60,34 @@ public enum KintaiMail {
 	private final String subject;
 
 	/** ロガー */
-	private static final Logger log = LoggerFactory.getLogger(KintaiMail.class);
+	private static final Logger log = LoggerFactory.getLogger(Mailer.class);
 
 	/**
 	 * 
 	 * @param subject
 	 */
-	private KintaiMail(String subject) {
+	private Mailer(String subject) {
 		this.subject = subject;
 	}
 
 	/**
-	 * 
-	 * @param argument
+	 * メールを送信します。
+	 * @param sender 差出人のメールアドレス
+	 * @param receiver 宛先のメールアドレス
+	 * @param arguments メールテンプレートのプレースホルダに代入する値
 	 */
-	public void send(KintaiMailArgument argument) {
+	public void send(String receiver, String sender, Object... arguments) {
+
+		final String body = MessageFormat.format(this.getMailTemplate(), arguments);
+
+		this.sendMail(receiver, sender, body);
+	}
+
+	/**
+	 * メールのテンプレートファイルを読み込み文字列として返します。
+	 * @return メールのテンプレート文字列
+	 */
+	private String getMailTemplate() {
 
 		StringBuilder builder = new StringBuilder();
 		BufferedReader reader = null;
@@ -101,37 +114,37 @@ public enum KintaiMail {
 			}
 		}
 
-		final String text = MessageFormat.format(
-				builder.toString(),
-				argument.getReceiverName(),
-				argument.getSenderName(),
-				argument.getTerm(),
-				argument.getForm(),
-				argument.getComment(),
-				argument.getUrl());
+		return builder.toString();
+	}
 
-		final Session session = Session.getInstance(KintaiMailPropery.PROPERTIES, new Authenticator() {
+	/**
+	 * メールを送信します。
+	 * @param sender 差出人のメールアドレス
+	 * @param receiver 宛先のメールアドレス
+	 * @param body メール本文
+	 */
+	private void sendMail(String receiver, String sender, String body) {
+
+		final Session session = Session.getInstance(MailerProperty.PROPERTIES, new Authenticator() {
 
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(
-						KintaiMailPropery.USER.getValue(),
-						KintaiMailPropery.PASSWORD.getValue());
+						MailerProperty.USER.getValue(),
+						MailerProperty.PASSWORD.getValue());
 			}
 		});
 
 		try {
 			final MimeMessage message = new MimeMessage(session);
 			message.setHeader("Content-Transfer-Encoding", "7bit");
-			message.setRecipients(Message.RecipientType.TO,
-					new InternetAddress[] { new InternetAddress(argument.getReceiverMailAddress()) });
-			message.setRecipients(Message.RecipientType.CC,
-					new InternetAddress[] { new InternetAddress(argument.getSenderMailAddress()) });
-			message.setReplyTo(new InternetAddress[] { new InternetAddress(argument.getSenderMailAddress()) });
-			message.setFrom(new InternetAddress(KintaiMailPropery.USER.getValue()));
+			message.setRecipients(Message.RecipientType.TO, new InternetAddress[] { new InternetAddress(receiver) });
+			message.setRecipients(Message.RecipientType.CC, new InternetAddress[] { new InternetAddress(sender) });
+			message.setReplyTo(new InternetAddress[] { new InternetAddress(sender) });
+			message.setFrom(new InternetAddress(MailerProperty.USER.getValue()));
 			message.setSubject(subject, EMAIL_CHARSET);
 			message.setSentDate(new Date());
-			message.setContent(text, "text/plain;charset=" + EMAIL_CHARSET);
+			message.setContent(body, "text/plain;charset=" + EMAIL_CHARSET);
 
 			Transport.send(message);
 
@@ -141,5 +154,4 @@ public enum KintaiMail {
 			e.printStackTrace();
 		}
 	}
-
 }

@@ -15,8 +15,7 @@ import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.domain.NotificationType;
 import net.shinkasystems.kintai.entity.Notification;
 import net.shinkasystems.kintai.entity.User;
-import net.shinkasystems.kintai.mail.KintaiMail;
-import net.shinkasystems.kintai.mail.KintaiMailArgument;
+import net.shinkasystems.kintai.mail.Mailer;
 import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.service.notification.EntryService;
@@ -101,17 +100,15 @@ public class EntryPage extends DefaultLayoutPage {
 			final User sender = entryService.getUser(notification.getApplicantId());
 			final User receiver = entryService.getUser(sender.getAuthorityId());
 
-			final KintaiMailArgument argument = new KintaiMailArgument();
-			argument.setReceiverName(receiver.getDisplayName());
-			argument.setReceiverMailAddress(receiver.getEmailAddress());
-			argument.setSenderName(sender.getDisplayName());
-			argument.setSenderMailAddress(sender.getEmailAddress());
-			argument.setTerm(KintaiConstants.DATE_FORMAT.format(termTextField.getModelObject().getTime()));
-			argument.setForm(typeDropDownChoice.getModelObject().display);
-			argument.setComment(commentTextArea.getModelObject());
-			argument.setUrl(urlString);
-
-			KintaiMail.ENTRY.send(argument);
+			Mailer.NOTIFICATION_ENTRY.send(
+					receiver.getEmailAddress(),
+					sender.getEmailAddress(),
+					receiver.getDisplayName(),
+					sender.getDisplayName(),
+					KintaiConstants.DATE_FORMAT.format(termTextField.getModelObject().getTime()),
+					typeDropDownChoice.getModelObject().display,
+					commentTextArea.getModelObject(),
+					urlString);
 
 			setResponsePage(IndexPage.class);
 		}
