@@ -1,12 +1,7 @@
 package net.shinkasystems.kintai;
 
-import net.shinkasystems.kintai.entity.NotificationDao;
-import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.util.DaoFactory;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.seasar.doma.jdbc.tx.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,26 +69,14 @@ public class Start {
 	private static void initDB() {
 
 		if (KintaiConstants.APP_DB_FILE_WITH_EXTENSION.exists()) {
-			log.info("データベースファイルは既に存在しています。");
-			return;
-		} else {
-			log.info("データベースファイルが存在しません。データベースを新規作成します。");
-		}
-
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
-
-		transactionManager.required(() -> {
 			
-			{
-				UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-				dao.createTable();
-			}
-			{
-				NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
-				dao.createTable();
-			}
-
-		});
+			log.info("データベースファイルは既に存在しています。");
+			
+		} else {
+			
+			log.info("データベースファイルが存在しません。データベースを新規作成します。");
+			
+			KintaiDB.createDB();
+		}
 	}
 }
