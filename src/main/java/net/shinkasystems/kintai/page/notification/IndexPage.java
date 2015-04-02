@@ -1,5 +1,6 @@
 package net.shinkasystems.kintai.page.notification;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -90,11 +91,12 @@ public class IndexPage extends DefaultLayoutPage {
 			 * コンポーネントの生成
 			 */
 			final Label idLabel = new Label("id", notificationData.getId());
-			final Label termLabel = new Label("term", KintaiConstants.DATE_FORMAT.format(notificationData.getTerm()));
+			final Label termLabel = new Label("term",
+					notificationData.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE));
 			final Label typeLabel = new Label("type", notificationData.getType().display);
 			final Label commentLabel = new Label("comment", notificationData.getCommentApplycant());
-			final Label dateLabel = new Label("date", KintaiConstants.DATE_FORMAT.format(notificationData
-					.getCreateDate()));
+			final Label dateLabel = new Label("date",
+					notificationData.getCreateDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
 			final Label applicantLabel = new Label("applicant", notificationData.getApplicantDisplayName());
 			final Label statusLabel = new Label("status", notificationData.getStatus().display);
 
@@ -192,7 +194,8 @@ public class IndexPage extends DefaultLayoutPage {
 	 * ステータスの選択コンポーネントです。
 	 */
 	private final DropDownChoice<NotificationStatus> statusDropDownChoice = new DropDownChoice<NotificationStatus>(
-			"status", new Model<NotificationStatus>(), Arrays.asList(NotificationStatus.values()), new StatusChoiceRenderer());
+			"status", new Model<NotificationStatus>(), Arrays.asList(NotificationStatus.values()),
+			new StatusChoiceRenderer());
 
 	/**
 	 * コンストラクタです。
@@ -219,7 +222,7 @@ public class IndexPage extends DefaultLayoutPage {
 		 */
 		fromTextField.add(new DatePicker());
 		toTextField.add(new DatePicker());
-		
+
 		userDropDownChoice.setNullValid(true);
 		statusDropDownChoice.setNullValid(true);
 

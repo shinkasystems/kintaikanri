@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.entity.UserDao;
@@ -61,7 +61,7 @@ public class KintaiSession extends AuthenticatedWebSession {
 			this.user = user;
 
 			if (user.getExpireDate() != null
-					&& new Date().after(user.getExpireDate())) {
+					&& LocalDate.now().isAfter(user.getExpireDate())) {
 				roles = new Roles(KintaiRole.EXPIRED_USER);
 			} else if (KintaiRole.USER.equals(user.getRole())) {
 				roles = new Roles(KintaiRole.USER);

@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai.service.notification;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.domain.NotificationStatus;
@@ -34,7 +34,7 @@ public class DetailService {
 			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
 			notification.setStatus(NotificationStatus.APPROVED);
-			notification.setUpdateDate(new java.sql.Date(new Date().getTime()));
+			notification.setUpdateDate(LocalDate.now());
 			dao.update(notification);
 
 			log.info("承認しました");
@@ -51,7 +51,7 @@ public class DetailService {
 			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
 			notification.setStatus(NotificationStatus.REJECTED);
-			notification.setUpdateDate(new java.sql.Date(new Date().getTime()));
+			notification.setUpdateDate(LocalDate.now());
 			dao.update(notification);
 
 			log.info("却下しました");
@@ -68,7 +68,7 @@ public class DetailService {
 			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
 			notification.setStatus(NotificationStatus.WITHDRAWN);
-			notification.setUpdateDate(new java.sql.Date(new Date().getTime()));
+			notification.setUpdateDate(LocalDate.now());
 			dao.update(notification);
 
 			log.info("取消しました");

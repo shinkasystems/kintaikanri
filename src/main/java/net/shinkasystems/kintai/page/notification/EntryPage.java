@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai.page.notification;
 
-import java.sql.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +19,7 @@ import net.shinkasystems.kintai.mail.Mailer;
 import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.service.notification.EntryService;
+import net.shinkasystems.kintai.util.DateUtils;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -80,7 +81,7 @@ public class EntryPage extends DefaultLayoutPage {
 				notification.setApplicantId(((KintaiSession) KintaiSession.get()).getUser().getId());
 			}
 			notification.setType(typeDropDownChoice.getModelObject());
-			notification.setTerm(new Date(termTextField.getModelObject().getTime()));
+			notification.setTerm(DateUtils.toLocalDate(termTextField.getModelObject()));
 			notification.setCommentApplycant(commentTextArea.getModelObject());
 
 			entryService.entry(notification);
@@ -105,9 +106,9 @@ public class EntryPage extends DefaultLayoutPage {
 					sender.getEmailAddress(),
 					receiver.getDisplayName(),
 					sender.getDisplayName(),
-					KintaiConstants.DATE_FORMAT.format(termTextField.getModelObject().getTime()),
-					typeDropDownChoice.getModelObject().display,
-					commentTextArea.getModelObject(),
+					notification.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE),
+					notification.getType().display,
+					notification.getCommentApplycant(),
 					urlString);
 
 			setResponsePage(IndexPage.class);

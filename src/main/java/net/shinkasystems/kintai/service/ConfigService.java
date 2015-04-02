@@ -1,7 +1,6 @@
 package net.shinkasystems.kintai.service;
 
-import java.sql.Date;
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.entity.User;
@@ -32,11 +31,9 @@ public class ConfigService {
 	 */
 	public void changePassword(int userId, String password) {
 
-		Calendar expireCalendar = Calendar.getInstance();
-		expireCalendar.add(Calendar.MONTH, 3);
+		LocalDate expiredLocalDate = LocalDate.now().plusMonths(3);
 
-		TransactionManager transactionManager = KintaiDB.singleton()
-				.getTransactionManager();
+		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
 		transactionManager.required(() -> {
 
@@ -45,7 +42,7 @@ public class ConfigService {
 			final User user = dao.selectById(userId);
 
 			user.setPassword(new Authentication(user.getUserName(), password).getPasswordHash());
-			user.setExpireDate(new Date(expireCalendar.getTimeInMillis()));
+			user.setExpireDate(expiredLocalDate);
 
 			dao.update(user);
 

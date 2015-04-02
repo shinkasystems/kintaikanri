@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai.service.notification;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.domain.NotificationStatus;
@@ -38,7 +38,7 @@ public class EntryService {
 
 			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
-			notification.setCreateDate(new Date(new java.util.Date().getTime()));
+			notification.setCreateDate(LocalDate.now());
 			notification.setStatus(NotificationStatus.PENDING);
 
 			dao.insert(notification);
@@ -60,7 +60,7 @@ public class EntryService {
 
 		return transactionManager.required(() -> {
 
-			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
+			final UserDao dao = (UserDao) DaoFactory.createDaoImplements(UserDao.class);
 
 			return dao.selectById(id);
 		});

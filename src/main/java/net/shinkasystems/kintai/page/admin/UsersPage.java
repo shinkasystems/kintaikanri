@@ -1,6 +1,7 @@
 package net.shinkasystems.kintai.page.admin;
 
-import net.shinkasystems.kintai.KintaiConstants;
+import java.time.format.DateTimeFormatter;
+
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.component.UserDataProvider;
 import net.shinkasystems.kintai.entity.sub.UserData;
@@ -59,8 +60,8 @@ public class UsersPage extends AdminLayoutPage {
 			final Label userAuthorityDisplayNameLabel = new Label("authority-display-name",
 					user.getAuthorityDisplayName());
 			final Label userRoleLabel = new Label("role", user.getRole());
-			final Label userExpiredLabel = new Label("expire-date", KintaiConstants.DATE_FORMAT.format(user
-					.getExpireDate()));
+			final Label userExpiredLabel = new Label("expire-date",
+					user.getExpireDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
 			final Label userActivatedLabel = new Label("activated", user.getActivated() ? "有効" : "無効");
 
 			final Link<String> userLink = new StatelessLink<String>("link") {

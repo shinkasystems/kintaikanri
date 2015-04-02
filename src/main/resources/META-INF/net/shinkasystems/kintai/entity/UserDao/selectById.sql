@@ -1,13 +1,5 @@
 select
-  ID,
-  AUTHORITY_ID,
-  USER_NAME,
-  PASSWORD,
-  DISPLAY_NAME,
-  EMAIL_ADDRESS,
-  ACTIVATED,
-  EXPIRE_DATE,
-  ROLE
+  /*%expand*/*
 from
   USER
 where

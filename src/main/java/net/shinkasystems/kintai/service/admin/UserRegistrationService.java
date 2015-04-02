@@ -1,7 +1,6 @@
 package net.shinkasystems.kintai.service.admin;
 
-import java.sql.Date;
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.entity.User;
@@ -42,8 +41,7 @@ public class UserRegistrationService {
 			boolean activated,
 			String role) {
 
-		Calendar expireCalendar = Calendar.getInstance();
-		expireCalendar.add(Calendar.MONTH, 3);
+		LocalDate expiredLocalDate = LocalDate.now().plusMonths(3);
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
@@ -62,7 +60,7 @@ public class UserRegistrationService {
 				user.setAuthorityId(null);
 			}
 			user.setActivated(activated);
-			user.setExpireDate(new Date(expireCalendar.getTimeInMillis()));
+			user.setExpireDate(expiredLocalDate);
 			user.setRole(role);
 
 			dao.insert(user);

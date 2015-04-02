@@ -1,5 +1,6 @@
 package net.shinkasystems.kintai.page.notification;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import net.shinkasystems.kintai.KintaiConstants;
@@ -16,6 +17,7 @@ import net.shinkasystems.kintai.page.DefaultLayoutPage;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.panel.InfomationPanel;
 import net.shinkasystems.kintai.service.notification.DetailService;
+import net.shinkasystems.kintai.util.DateUtils;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -147,7 +149,7 @@ public class DetailPage extends DefaultLayoutPage {
 					authority.getEmailAddress(),
 					applicant.getDisplayName(),
 					authority.getDisplayName(),
-					KintaiConstants.DATE_FORMAT.format(notification.getTerm()),
+					notification.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE),
 					notification.getType().display,
 					notification.getCommentAuthority(),
 					getDetailPageUrlString(notification));
@@ -188,7 +190,7 @@ public class DetailPage extends DefaultLayoutPage {
 					authority.getEmailAddress(),
 					applicant.getDisplayName(),
 					authority.getDisplayName(),
-					KintaiConstants.DATE_FORMAT.format(notification.getTerm()),
+					notification.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE),
 					notification.getType().display,
 					notification.getCommentAuthority(),
 					getDetailPageUrlString(notification));
@@ -230,7 +232,7 @@ public class DetailPage extends DefaultLayoutPage {
 					authority.getEmailAddress(),
 					applicant.getDisplayName(),
 					authority.getDisplayName(),
-					KintaiConstants.DATE_FORMAT.format(notification.getTerm()),
+					notification.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE),
 					notification.getType().display,
 					notification.getCommentAuthority(),
 					getDetailPageUrlString(notification));
@@ -324,13 +326,13 @@ public class DetailPage extends DefaultLayoutPage {
 
 		idModel.setObject(notification.getId());
 		statusModel.setObject(status);
-		termModel.setObject(notification.getTerm());
+		termModel.setObject(DateUtils.toDate(notification.getTerm()));
 		applicantModel.setObject(applicant.getDisplayName());
 		typeModel.setObject(type);
 		commentModel.setObject(notification.getCommentApplycant());
-		createdModel.setObject(notification.getCreateDate());
+		createdModel.setObject(DateUtils.toDate(notification.getCreateDate()));
 		authorityModel.setObject(authority.getDisplayName());
-		updatedModel.setObject(notification.getUpdateDate());
+		updatedModel.setObject(DateUtils.toDate(notification.getUpdateDate()));
 		commentAuthorityModel.setObject(notification.getCommentAuthority());
 
 		if (status == NotificationStatus.PENDING) {

@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
@@ -48,7 +48,7 @@ public class User {
 
 	/**  */
 	@Column(name = "EXPIRE_DATE")
-	Date expireDate;
+	LocalDate expireDate;
 
 	/**  */
 	@Column(name = "ROLE")
@@ -185,7 +185,7 @@ public class User {
 	 * 
 	 * @return the expireDate
 	 */
-	public Date getExpireDate() {
+	public LocalDate getExpireDate() {
 		return expireDate;
 	}
 
@@ -194,7 +194,7 @@ public class User {
 	 * 
 	 * @param expireDate the expireDate
 	 */
-	public void setExpireDate(Date expireDate) {
+	public void setExpireDate(LocalDate expireDate) {
 		this.expireDate = expireDate;
 	}
 

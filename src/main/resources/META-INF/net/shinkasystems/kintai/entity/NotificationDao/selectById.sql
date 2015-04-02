@@ -1,14 +1,5 @@
 select
-  ID,
-  APPLICANT_ID,
-  PROXY_ID,
-  TYPE,
-  TERM,
-  COMMENT_APPLYCANT,
-  COMMENT_AUTHORITY,
-  STATUS,
-  CREATE_DATE,
-  UPDATE_DATE
+  /*%expand*/*
 from
   NOTIFICATION
 where

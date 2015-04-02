@@ -1,6 +1,6 @@
 package net.shinkasystems.kintai.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import net.shinkasystems.kintai.domain.NotificationStatus;
 import net.shinkasystems.kintai.domain.NotificationType;
@@ -39,7 +39,7 @@ public class Notification {
 
 	/**  */
 	@Column(name = "TERM")
-	Date term;
+	LocalDate term;
 
 	/**  */
 	@Column(name = "COMMENT_APPLYCANT")
@@ -55,11 +55,11 @@ public class Notification {
 
 	/**  */
 	@Column(name = "CREATE_DATE")
-	Date createDate;
+	LocalDate createDate;
 
 	/**  */
 	@Column(name = "UPDATE_DATE")
-	Date updateDate;
+	LocalDate updateDate;
 
 	/** 
 	 * Returns the id.
@@ -138,7 +138,7 @@ public class Notification {
 	 * 
 	 * @return the term
 	 */
-	public Date getTerm() {
+	public LocalDate getTerm() {
 		return term;
 	}
 
@@ -147,7 +147,7 @@ public class Notification {
 	 * 
 	 * @param term the term
 	 */
-	public void setTerm(Date term) {
+	public void setTerm(LocalDate term) {
 		this.term = term;
 	}
 
@@ -210,7 +210,7 @@ public class Notification {
 	 * 
 	 * @return the createDate
 	 */
-	public Date getCreateDate() {
+	public LocalDate getCreateDate() {
 		return createDate;
 	}
 
@@ -219,7 +219,7 @@ public class Notification {
 	 * 
 	 * @param createDate the createDate
 	 */
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(LocalDate createDate) {
 		this.createDate = createDate;
 	}
 
@@ -228,7 +228,7 @@ public class Notification {
 	 * 
 	 * @return the updateDate
 	 */
-	public Date getUpdateDate() {
+	public LocalDate getUpdateDate() {
 		return updateDate;
 	}
 
@@ -237,7 +237,7 @@ public class Notification {
 	 * 
 	 * @param updateDate the updateDate
 	 */
-	public void setUpdateDate(Date updateDate) {
+	public void setUpdateDate(LocalDate updateDate) {
 		this.updateDate = updateDate;
 	}
 }
