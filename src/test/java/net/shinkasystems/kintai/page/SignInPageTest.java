@@ -4,6 +4,7 @@
 package net.shinkasystems.kintai.page;
 
 import java.io.File;
+import java.util.Locale;
 
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.KintaiWebApplication;
@@ -43,6 +44,11 @@ public class SignInPageTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		
+		/*
+		 * Locale
+		 */
+		Locale.setDefault(Locale.JAPANESE);
 
 		/*
 		 * Application
@@ -66,7 +72,8 @@ public class SignInPageTest {
 				null // schema
 		);
 
-		databaseTester.setDataSet(new CsvDataSet(new File("src/test/resources/SignInPageTest")));
+		databaseTester.setDataSet(new CsvDataSet(
+				new File("src/test/resources/META-INF/net/shinkasystems/kintai/page/SignInPageTest")));
 		databaseTester.setSetUpOperation(DatabaseOperation.INSERT);
 		databaseTester.onSetup();
 	}
