@@ -70,11 +70,11 @@ public class Start {
 
 		if (KintaiConstants.APP_DB_FILE_WITH_EXTENSION.exists()) {
 			
-			log.info("データベースファイルは既に存在しています。");
+			log.info(KintaiLog.INFOMATION_001.get());
 			
 		} else {
 			
-			log.info("データベースファイルが存在しません。データベースを新規作成します。");
+			log.info(KintaiLog.INFOMATION_002.get());
 			
 			KintaiDB.createDB();
 		}
