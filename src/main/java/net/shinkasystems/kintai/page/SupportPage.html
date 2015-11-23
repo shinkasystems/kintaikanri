@@ -1,0 +1,127 @@
+<wicket:extend>
+
+	<h1>ヘルプ</h1>
+
+	<div class="accordion support-page">
+
+		<input type="checkbox" id="notification-view" class="on-off" />
+		<label for="notification-view">届書の閲覧</label>
+
+		<div>
+			<ol>
+				<li>
+					一覧には今日を含む未来日の申請が昇順で表示されます。
+				</li>
+				<li>
+					検索フォームの期間、申請者、ステータスを条件に、任意の届書を検索することができます。
+				</li>
+				<li>
+					一覧は期日で昇順／降順ソートをすることができます。
+					<img src="/img/notification_index-03.png" class="img-responsive" />
+				</li>
+			</ol>
+		</div>
+
+		<input type="checkbox" id="notification-apply" class="on-off" />
+		<label for="notification-apply">届書の申請</label>
+
+		<div>
+			<ol>
+				<li>
+					届書の申請は、申請画面から行います。
+					<img src="/img/notification_apply-01.png" class="img-responsive" />
+				</li>
+				<li>
+					申請すると、申請者本人と決裁者へメールが送信されます。
+				</li>
+				<li>
+					申請内容を変更することはできません。
+				</li>
+				<li>
+					申請内容に誤りがある場合は、取下げ、または却下したうえで、新しく申請し直します。
+					<img src="/img/notification_apply-02.png" class="img-responsive" />
+				</li>
+			</ol>
+		</div>
+
+		<input type="checkbox" id="notification-apply-proxy" class="on-off" />
+		<label for="notification-apply-proxy">代理申請</label>
+
+		<div>
+			<ol>
+				<li>
+					申請者の上長（決裁者）は申請者の代理で届書を申請することができます。
+				</li>
+				<li>
+					代理申請を行う場合、申請画面の代理申請欄に、代理で申請したい申請者を選択してください。
+					<img src="/img/notification_apply-proxy.png" class="img-responsive" />
+				</li>
+				<li>
+					メールは通常の申請通り、申請者の決裁者の双方に送られます。
+				</li>
+			</ol>
+		</div>
+
+		<input type="checkbox" id="notification-decision" class="on-off" />
+		<label for="notification-decision">届書の承認、却下</label>
+
+		<div>
+			<ol>
+				<li>
+					申請者が届書を申請すると、決裁者にメールが届きます。
+				</li>
+				<li>
+					決裁者はメールに記載された URL にアクセスするか、一覧画面から検索し詳細画面を開きます。
+				</li>
+				<li>
+					詳細画面では、決裁者にのみ承認／却下ボタンが表示されます。
+					<img src="/img/notification_decision-01.png" class="img-responsive" />
+				</li>
+				<li>
+					承認／却下すると、決裁者本人と申請者へメールが送信されます。
+				</li>
+			</ol>
+		</div>
+
+		<input type="checkbox" id="config-password" class="on-off" />
+		<label for="config-password">パスワード変更</label>
+
+		<div>
+			<ol>
+				<li>
+					設定画面にて、パスワードの変更を行うことができます。
+					<img src="/img/config-01.png" class="img-responsive" />
+				</li>
+				<li>
+					パスワードの有効期限は 3 ヶ月です。パスワードは定期的に変更してください。
+				</li>
+				<li>
+					パスワードの期限が切れるとパスワード変更以外の操作が制限されます（ログインは可能です）。
+				</li>
+			</ol>
+		</div>
+
+		<input type="checkbox" id="admin-user" class="on-off" />
+		<label for="admin-user">ユーザーの管理（管理者向け）</label>
+
+		<div>
+			<ol>
+				<li>
+					管理権限を持つユーザーは管理画面を閲覧することができます。
+					<img src="/img/admin-01.png" class="img-responsive" />
+				</li>
+				<li>
+					管理画面では、ユーザーの登録／編集／削除／有効化／無効化を行うことができます。
+				</li>
+				<li>
+					いずれかの申請が存在するユーザーは削除できません（誤登録に対する救済機能）。
+				</li>
+				<li>
+					無効化されたユーザー（退職した社員を想定）はログイン不可となります。
+				</li>
+			</ol>
+		</div>
+
+	</div>
+
+</wicket:extend>

@@ -2,6 +2,7 @@ package net.shinkasystems.kintai;
 
 import net.shinkasystems.kintai.page.ConfigPage;
 import net.shinkasystems.kintai.page.SignInPage;
+import net.shinkasystems.kintai.page.SupportPage;
 import net.shinkasystems.kintai.page.UnauthorizedPage;
 import net.shinkasystems.kintai.page.admin.UserEditPage;
 import net.shinkasystems.kintai.page.admin.UserRegistrationPage;
@@ -45,6 +46,7 @@ public class KintaiWebApplication extends AuthenticatedWebApplication {
 		mountPage("/admin/user/registration", UserRegistrationPage.class);
 		mountPage("/admin/user/edit", UserEditPage.class);
 		mountPage("/signin", SignInPage.class);
+		mountPage("/support", SupportPage.class);
 
 		getComponentInstantiationListeners().add(new GuiceComponentInjector(this));
 	}
