@@ -19,7 +19,6 @@ import net.shinkasystems.kintai.panel.InfomationPanel;
 import net.shinkasystems.kintai.service.notification.DetailService;
 import net.shinkasystems.kintai.util.DateUtils;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.markup.html.basic.Label;
@@ -112,7 +111,13 @@ public class DetailPage extends DefaultLayoutPage {
 
 	private final Label createdLabel = DateLabel.forDatePattern("created", createdModel, KintaiConstants.DATE_PATTERN);
 
-	private final Label statusLabel = new Label("status", statusModel);
+	private final Label statusPendingLabel = new Label("status-pending", NotificationStatus.PENDING.display);
+
+	private final Label statusApprovedLabel = new Label("status-approved", NotificationStatus.APPROVED.display);
+
+	private final Label statusRejectedLabel = new Label("status-rejected", NotificationStatus.REJECTED.display);
+
+	private final Label statusWithdrawnLabel = new Label("status-withdrawn", NotificationStatus.WITHDRAWN.display);
 
 	private final IModel<String> authorityModel = new Model<String>();
 
@@ -297,7 +302,10 @@ public class DetailPage extends DefaultLayoutPage {
 		add(typeLabel);
 		add(commentLabel);
 		add(createdLabel);
-		add(statusLabel);
+		add(statusPendingLabel);
+		add(statusApprovedLabel);
+		add(statusRejectedLabel);
+		add(statusWithdrawnLabel);
 		add(authorityLabel);
 		add(updatedLabel);
 		add(commentAuthorityLabel);
@@ -336,15 +344,10 @@ public class DetailPage extends DefaultLayoutPage {
 		updatedModel.setObject(DateUtils.toDate(notification.getUpdateDate()));
 		commentAuthorityModel.setObject(notification.getCommentAuthority());
 
-		if (status == NotificationStatus.PENDING) {
-			statusLabel.add(new AttributeModifier("class", "label label-info"));
-		} else if (status == NotificationStatus.APPROVED) {
-			statusLabel.add(new AttributeModifier("class", "label label-success"));
-		} else if (status == NotificationStatus.REJECTED) {
-			statusLabel.add(new AttributeModifier("class", "label label-important"));
-		} else if (status == NotificationStatus.WITHDRAWN) {
-			statusLabel.add(new AttributeModifier("class", "label label-inverse"));
-		}
+		statusPendingLabel.setVisible(status == NotificationStatus.PENDING);
+		statusApprovedLabel.setVisible(status == NotificationStatus.APPROVED);
+		statusRejectedLabel.setVisible(status == NotificationStatus.REJECTED);
+		statusWithdrawnLabel.setVisible(status == NotificationStatus.WITHDRAWN);
 
 		approveButton.setVisible(loginUser.getId() == authority.getId()
 				&& (status == NotificationStatus.PENDING || status == NotificationStatus.REJECTED));

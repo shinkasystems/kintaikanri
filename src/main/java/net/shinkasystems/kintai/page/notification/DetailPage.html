@@ -71,7 +71,12 @@
 		<p class="head">ステータス</p>
 	</div>
 	<div class="col-sm-10">
-		<p><span wicket:id="status">申請中</span></p>
+		<p>
+			<span class="label label-primary" wicket:id="status-pending">未決</span>
+			<span class="label label-success" wicket:id="status-approved">承認</span>
+			<span class="label label-warning" wicket:id="status-rejected">却下</span>
+			<span class="label label-default" wicket:id="status-withdrawn">取下げ</span>
+		</p>
 	</div>
 </div>
 
