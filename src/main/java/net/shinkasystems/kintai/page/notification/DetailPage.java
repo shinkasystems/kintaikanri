@@ -39,6 +39,7 @@ import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -151,7 +152,7 @@ public class DetailPage extends DefaultLayoutPage {
 					authority.getDisplayName(),
 					notification.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE),
 					notification.getType().display,
-					notification.getCommentAuthority(),
+					Strings.nullToEmpty(notification.getCommentAuthority()),
 					getDetailPageUrlString(notification));
 
 			/*
@@ -192,7 +193,7 @@ public class DetailPage extends DefaultLayoutPage {
 					authority.getDisplayName(),
 					notification.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE),
 					notification.getType().display,
-					notification.getCommentAuthority(),
+					Strings.nullToEmpty(notification.getCommentAuthority()),
 					getDetailPageUrlString(notification));
 
 			/*
@@ -234,7 +235,7 @@ public class DetailPage extends DefaultLayoutPage {
 					authority.getDisplayName(),
 					notification.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE),
 					notification.getType().display,
-					notification.getCommentAuthority(),
+					Strings.nullToEmpty(notification.getCommentAuthority()),
 					getDetailPageUrlString(notification));
 
 			/*
