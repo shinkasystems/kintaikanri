@@ -10,6 +10,7 @@ import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.RoleChoiceRenderer;
 import net.shinkasystems.kintai.component.RoleOption;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
+import net.shinkasystems.kintai.component.UserNameDuplicateValidator;
 import net.shinkasystems.kintai.component.UserOption;
 import net.shinkasystems.kintai.component.UserOptionUtility;
 import net.shinkasystems.kintai.panel.AlertPanel;
@@ -64,7 +65,7 @@ public class UserRegistrationPage extends AdminLayoutPage {
 
 		@Override
 		protected void onSubmit() {
-			
+
 			int authorityId = 0;
 			if (authorityDropDownChoice.getModel().getObject() != null) {
 				authorityId = authorityDropDownChoice.getModel().getObject().getId();
@@ -181,6 +182,7 @@ public class UserRegistrationPage extends AdminLayoutPage {
 		activatedChoice.setRequired(true);
 		activatedChoice.setSuffix("&nbsp;");
 
+		userNameTextField.add(new UserNameDuplicateValidator());
 		userProfileForm.add(new PasswordConfirmValidator(passwordTextField, passwordConfirmTextField));
 
 		/*
