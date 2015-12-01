@@ -138,19 +138,19 @@ public class UserEditPage extends AdminLayoutPage {
 			int authorityId = 0;
 			String role = null;
 
-			if (Strings.isNullOrEmpty(passwordTextField.getModelObject())) {
+			if (!Strings.isNullOrEmpty(passwordTextField.getModelObject())) {
 				password = passwordTextField.getModelObject();
 			}
-			if (Strings.isNullOrEmpty(displayNameTextField.getModelObject())) {
+			if (!Strings.isNullOrEmpty(displayNameTextField.getModelObject())) {
 				displayName = displayNameTextField.getModelObject();
 			}
-			if (Strings.isNullOrEmpty(emailAddressTextField.getModelObject())) {
+			if (!Strings.isNullOrEmpty(emailAddressTextField.getModelObject())) {
 				emailAddress = emailAddressTextField.getModelObject();
 			}
 			if (authorityDropDownChoice.getModelObject() != null) {
 				authorityId = authorityDropDownChoice.getModelObject().getId();
 			}
-			if (Strings.isNullOrEmpty(roleChoice.getModelObject().getId())) {
+			if (!Strings.isNullOrEmpty(roleChoice.getModelObject().getId())) {
 				role = roleChoice.getModelObject().getId();
 			}
 
@@ -175,6 +175,9 @@ public class UserEditPage extends AdminLayoutPage {
 
 			infomationPanel.setMessage(getString("activate-message"));
 			infomationPanel.setVisible(true);
+			
+			activateButton.setVisible(false);
+			invalidateButton.setVisible(true);
 		}
 
 	};
@@ -193,6 +196,8 @@ public class UserEditPage extends AdminLayoutPage {
 			infomationPanel.setMessage(getString("invalidate-message"));
 			infomationPanel.setVisible(true);
 
+			activateButton.setVisible(true);
+			invalidateButton.setVisible(false);
 		}
 
 	};
@@ -209,6 +214,11 @@ public class UserEditPage extends AdminLayoutPage {
 
 			infomationPanel.setMessage(getString("delete-message"));
 			infomationPanel.setVisible(true);
+			
+			updateButton.setVisible(false);
+			activateButton.setVisible(false);
+			invalidateButton.setVisible(false);
+			deleteButton.setVisible(false);
 		}
 
 	};

@@ -50,19 +50,19 @@ public class UserEditService {
 
 			final User user = dao.selectById(userId);
 
-			if (Strings.isNullOrEmpty(password)) {
+			if (!Strings.isNullOrEmpty(password)) {
 				user.setPassword(new Authentication(user.getUserName(), password).getPasswordHash());
 			}
-			if (Strings.isNullOrEmpty(displayName)) {
+			if (!Strings.isNullOrEmpty(displayName)) {
 				user.setDisplayName(displayName);
 			}
-			if (Strings.isNullOrEmpty(emailAddress)) {
+			if (!Strings.isNullOrEmpty(emailAddress)) {
 				user.setEmailAddress(emailAddress);
 			}
 			if (authorityId > 0) {
 				user.setAuthorityId(authorityId);
 			}
-			if (Strings.isNullOrEmpty(role)) {
+			if (!Strings.isNullOrEmpty(role)) {
 				user.setRole(role);
 			}
 
