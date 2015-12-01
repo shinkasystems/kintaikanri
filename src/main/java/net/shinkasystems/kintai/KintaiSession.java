@@ -102,4 +102,11 @@ public class KintaiSession extends AuthenticatedWebSession {
 		this.roles = roles;
 	}
 
+	/**
+	 * テストコードのために強制的にサインインします。
+	 * このメソッドはアプリケーションコードからは呼び出さないでください。
+	 */
+	public void signInForTest() {
+		this.signIn(true);
+	}
 }
