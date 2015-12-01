@@ -81,7 +81,11 @@ public class NotificationDataProvider extends SortableDataProvider<NotificationD
 	@Override
 	public long size() {
 
-		return indexService.countNotification();
+		return indexService.countNotification(
+				from,
+				to,
+				applicantId,
+				status);
 	}
 
 	public java.sql.Date getFrom() {

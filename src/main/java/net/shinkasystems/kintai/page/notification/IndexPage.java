@@ -60,6 +60,11 @@ public class IndexPage extends DefaultLayoutPage {
 	private static final Logger log = LoggerFactory.getLogger(IndexPage.class);
 
 	/**
+	 * 単位ページあたりの申請情報の表示件数です。
+	 */
+	private static final int NUMBER_OF_ITEMS_PER_PAGE = 20;
+
+	/**
 	 * パラメータ「id」のキー名称です。
 	 */
 	public static final String PARAMETER_ID = "id";
@@ -76,7 +81,7 @@ public class IndexPage extends DefaultLayoutPage {
 	 * 申請情報一覧です。
 	 */
 	private final DataView<NotificationData> notificationDataView = new DataView<NotificationData>(
-			"index-data-view", notificationDataProvider, 100) {
+			"index-data-view", notificationDataProvider, NUMBER_OF_ITEMS_PER_PAGE) {
 
 		@Override
 		protected void populateItem(Item<NotificationData> item) {

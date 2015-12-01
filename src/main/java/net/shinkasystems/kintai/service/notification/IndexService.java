@@ -65,7 +65,7 @@ public class IndexService implements Serializable {
 	 * 
 	 * @return 勤怠情報の申請件数
 	 */
-	public long countNotification() {
+	public long countNotification(Date from, Date to, Integer applicantId, NotificationStatus status) {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
@@ -73,7 +73,11 @@ public class IndexService implements Serializable {
 
 			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
-			return dao.selectCountNotification();
+			return dao.selectCountNotification(
+					from,
+					to,
+					applicantId,
+					status != null ? status.name() : null);
 		});
 	}
 }

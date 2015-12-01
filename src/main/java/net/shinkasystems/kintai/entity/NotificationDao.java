@@ -48,7 +48,7 @@ public interface NotificationDao {
 	 * @return
 	 */
 	@Select
-	long selectCountNotification();
+	long selectCountNotification(Date from, Date to, Integer applicantID, String status);
 
 	/**
 	 * 
