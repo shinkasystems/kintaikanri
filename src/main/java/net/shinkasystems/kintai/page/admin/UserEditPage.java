@@ -288,7 +288,7 @@ public class UserEditPage extends AdminLayoutPage {
 
 		activateButton.setVisible(!user.getActivated());
 		invalidateButton.setVisible(user.getActivated() && user.getId() != loginUser.getId());
-		deleteButton.setVisible(!userEditService.isHistoryExists(user.getId()) && user.getId() != loginUser.getId());
+		deleteButton.setVisible(userEditService.canDelete(user.getId()) && user.getId() != loginUser.getId());
 
 		/*
 		 * コンポーネントの組立

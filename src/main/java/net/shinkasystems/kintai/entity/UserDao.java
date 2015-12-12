@@ -63,6 +63,14 @@ public interface UserDao {
 	List<UserData> selectUserData(SelectOptions options);
 
 	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Select
+	boolean selectAuthorityExists(Integer userID);
+
+	/**
 	 * @param entity
 	 * @return affected rows
 	 */

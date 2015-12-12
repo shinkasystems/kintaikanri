@@ -160,6 +160,17 @@ public class UserEditService {
 		});
 
 	}
+	
+	/**
+	 * ユーザーを削除できるかどうかを返します。
+	 * 
+	 * @param id
+	 * @return ユーザーが削除可能な場合 true、それ以外は false
+	 */
+	public boolean canDelete(int id) {
+		
+		return !hasAuthority(id) && !hasHistory(id);
+	}
 
 	/**
 	 * 指定のIDのユーザーに申請履歴が存在するか返します。
@@ -167,7 +178,7 @@ public class UserEditService {
 	 * @param id ユーザーID
 	 * @return 申請履歴が存在すれば true、しなければ false
 	 */
-	public boolean isHistoryExists(int id) {
+	private boolean hasHistory(int id) {
 
 		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
 
@@ -176,6 +187,24 @@ public class UserEditService {
 			final NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
 
 			return dao.selectHistoryExists(id);
+		});
+	}
+	
+	/**
+	 * 指定のIDのユーザーが他ユーザーに対する決裁権を持っているかどうかを返します。
+	 * 
+	 * @param idc ユーザー ID
+	 * @return 決裁権を持っていれば true、持っていなければ false
+	 */
+	private boolean hasAuthority(int id) {
+		
+		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
+
+		return transactionManager.required(() -> {
+
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
+
+			return dao.selectAuthorityExists(id);
 		});
 	}
 }
