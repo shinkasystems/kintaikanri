@@ -57,6 +57,7 @@ compileJava {
 		include '**/*.script'
 		include '**/*.sql'
 		include '**/*.xml'
+		include '**/*.txt'
 	}
 }
 
