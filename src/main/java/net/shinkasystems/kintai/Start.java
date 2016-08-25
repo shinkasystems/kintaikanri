@@ -1,5 +1,10 @@
 package net.shinkasystems.kintai;
 
+import java.util.Optional;
+
+import net.shinkasystems.kintai.entity.UserDao;
+import net.shinkasystems.kintai.util.DaoFactory;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
@@ -22,7 +27,6 @@ public class Start {
 	public static void main(String[] args) {
 
 		try {
-			initAppDataDir();
 			initDB();
 			startApplicationServer();
 
@@ -51,31 +55,39 @@ public class Start {
 	}
 
 	/**
-	 * アプリケーションデータディレクトリを初期化します。 アプリケーションデータを格納するディレクトリが存在しない場合、ディレクトリを作成します。
-	 * 存在する場合は、このメソッドは何も処理しません。
-	 */
-	private static void initAppDataDir() {
-
-		if (KintaiConstants.APP_DATA_DIR.exists()) {
-			return;
-		} else {
-			KintaiConstants.APP_DATA_DIR.mkdir();
-		}
-	}
-
-	/**
 	 * DBファイルが存在しない場合、DBファイルを生成します。 テーブルを作成し、スタティックデータ（マスタ）を追加します。
 	 */
 	private static void initDB() {
 
-		if (KintaiConstants.APP_DB_FILE_WITH_EXTENSION.exists()) {
-			
-			log.info(KintaiLog.INFOMATION_001.get());
-			
+		/*
+		 * モード設定
+		 */
+		Optional<String> modeOptional = Optional.ofNullable(System.getProperty("wicket.configuration"));
+		String mode = modeOptional.orElse("DEVELOPMENT");
+
+		if (mode.toUpperCase().equals("DEPLOYMENT")) {
+			KintaiDB.setMode(KintaiDB.DEPLOYMENT);
 		} else {
-			
+			KintaiDB.setMode(KintaiDB.DEVELOPMENT);
+		}
+
+		/*
+		 * テーブル件数を取得し、0件だった場合、テーブルを再作成する
+		 */
+		int numberOfTable = KintaiDB.singleton().getTransactionManager().required(() -> {
+
+			UserDao systemDao = DaoFactory.createDaoImplements(UserDao.class);
+			return systemDao.selectCountTable();
+		});
+
+		if (numberOfTable == 0) {
+
+			log.info(KintaiLog.INFOMATION_001.get());
+
+		} else {
+
 			log.info(KintaiLog.INFOMATION_002.get());
-			
+
 			KintaiDB.createDB();
 		}
 	}

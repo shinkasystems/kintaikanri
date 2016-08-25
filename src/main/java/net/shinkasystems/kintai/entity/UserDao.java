@@ -24,6 +24,13 @@ public interface UserDao {
 	 */
 	@Script
 	void createTable();
+	
+	/**
+	 * アプリケーションで使用するテーブルの件数を取得します。
+	 * @return
+	 */
+	@Select
+	int selectCountTable();
 
 	/**
 	 * @param id

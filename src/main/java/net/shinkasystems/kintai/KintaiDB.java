@@ -16,6 +16,8 @@ import org.seasar.doma.jdbc.dialect.H2Dialect;
 import org.seasar.doma.jdbc.tx.LocalTransactionDataSource;
 import org.seasar.doma.jdbc.tx.LocalTransactionManager;
 import org.seasar.doma.jdbc.tx.TransactionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 勤怠管理ツールの JDBC に関する設定です。
@@ -26,11 +28,12 @@ import org.seasar.doma.jdbc.tx.TransactionManager;
 public enum KintaiDB implements Config {
 
 	/**
-	 * アプリケーション向けの設定です。
+	 * 開発向けの設定です。
+	 * 組み込みモードでデータベースファイルにアクセスします。
 	 */
-	APPLICATION(
+	DEVELOPMENT(
 			new LocalTransactionDataSource(
-					"jdbc:h2:file:" + KintaiConstants.APP_DB_FILE.getAbsolutePath(),
+					"jdbc:h2:file:~/kintai_data/kintai",
 					"sa",
 					null)
 	),
@@ -42,6 +45,17 @@ public enum KintaiDB implements Config {
 	TEST(
 			new LocalTransactionDataSource(
 					"jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
+					"sa",
+					null)
+	),
+
+	/**
+	 * 運用向けの設定です。
+	 * サーバーモードでデータベースファイルへアクセスします。
+	 */
+	DEPLOYMENT(
+			new LocalTransactionDataSource(
+					"jdbc:h2:tcp://localhost:9092/~/kintai_data/kintai",
 					"sa",
 					null)
 	);
@@ -63,9 +77,12 @@ public enum KintaiDB implements Config {
 
 	/**
 	 * モードです。
-	 * デフォルトは APPLICATION です。
+	 * デフォルトは DEVELOPMENT です。
 	 */
-	private static KintaiDB mode = APPLICATION;
+	private static KintaiDB mode = null;
+
+	/** ロガー */
+	private static final Logger log = LoggerFactory.getLogger(KintaiDB.class);
 
 	/**
 	 * コンストラクタです。
@@ -133,5 +150,8 @@ public enum KintaiDB implements Config {
 	 */
 	public static void setMode(KintaiDB mode) {
 		KintaiDB.mode = mode;
+
+		log.info("JDBC設定モードを *{}* に変更しました。", singleton().toString());
+		;
 	}
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -125,13 +126,14 @@ public enum Mailer {
 	 */
 	private void sendMail(String receiver, String sender, String body) {
 
-		final Session session = Session.getInstance(MailerProperty.PROPERTIES, new Authenticator() {
+		final Properties properties = MailerPropertyFactory.getProperties();
+		final Session session = Session.getInstance(properties, new Authenticator() {
 
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(
-						MailerProperty.USER.getValue(),
-						MailerProperty.PASSWORD.getValue());
+						properties.getProperty(MailerProperty.USER.getKey()),
+						properties.getProperty(MailerProperty.PASSWORD.getKey()));
 			}
 		});
 
@@ -141,7 +143,7 @@ public enum Mailer {
 			message.setRecipients(Message.RecipientType.TO, new InternetAddress[] { new InternetAddress(receiver) });
 			message.setRecipients(Message.RecipientType.CC, new InternetAddress[] { new InternetAddress(sender) });
 			message.setReplyTo(new InternetAddress[] { new InternetAddress(sender) });
-			message.setFrom(new InternetAddress(MailerProperty.USER.getValue()));
+			message.setFrom(new InternetAddress(properties.getProperty(MailerProperty.USER.getKey())));
 			message.setSubject(subject, EMAIL_CHARSET);
 			message.setSentDate(new Date());
 			message.setContent(body, "text/plain;charset=" + EMAIL_CHARSET);
