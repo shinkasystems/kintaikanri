@@ -4,11 +4,13 @@ import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.PasswordDuplicateValidator;
+import net.shinkasystems.kintai.entity.User;
 import net.shinkasystems.kintai.panel.AlertPanel;
 import net.shinkasystems.kintai.panel.InfomationPanel;
 import net.shinkasystems.kintai.service.ConfigService;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -86,6 +88,46 @@ public class ConfigPage extends DefaultLayoutPage {
 	private final PasswordTextField confirmTextField = new PasswordTextField("password-confirm", new Model<String>());
 
 	/**
+	 * その他の設定フォームです。
+	 */
+	private final Form<ValueMap> otherForm = new Form<ValueMap>("other-form") {
+
+		@Override
+		protected void onSubmit() {
+
+			alertPanel.setVisible(false);
+
+			final int userId = ((KintaiSession) KintaiSession.get()).getUser().getId();
+			final boolean onlyApproved = onlyApprovedCheckBox.getModelObject();
+
+			configService.updateUser(userId, onlyApproved);
+			
+			/*
+			 * セッションのユーザー情報も変更する
+			 */
+			((KintaiSession) KintaiSession.get()).getUser().setOnlyApproved(onlyApproved);
+
+			/*
+			 * 通知メッセージを表示する
+			 */
+			infomationPanel.setMessage(getString("config-updated"));
+			infomationPanel.setVisible(true);
+		}
+
+		@Override
+		protected void onError() {
+
+			alertPanel.setVisible(true);
+		}
+
+	};
+
+	/**
+	 * 承認済みのみを表示するチェックボックスです。
+	 */
+	private final CheckBox onlyApprovedCheckBox = new CheckBox("only_approved", new Model<Boolean>());
+
+	/**
 	 * 設定ページのサービスです。
 	 */
 	@Inject
@@ -96,6 +138,11 @@ public class ConfigPage extends DefaultLayoutPage {
 	 */
 	public ConfigPage() {
 		super();
+
+		/*
+		 * ログインユーザー情報の取得
+		 */
+		final User loginUser = ((KintaiSession) KintaiSession.get()).getUser();
 
 		/*
 		 * コンポーネントの編集
@@ -111,15 +158,18 @@ public class ConfigPage extends DefaultLayoutPage {
 
 		configForm.add(new PasswordConfirmValidator(passwordTextField, confirmTextField));
 
+		onlyApprovedCheckBox.setDefaultModelObject(loginUser.getOnlyApproved());
+
 		/*
 		 * コンポーネントの組立
 		 */
 		configForm.add(passwordTextField);
 		configForm.add(confirmTextField);
+		otherForm.add(onlyApprovedCheckBox);
 
 		add(infomationPanel);
 		add(alertPanel);
 		add(configForm);
+		add(otherForm);
 	}
-
 }

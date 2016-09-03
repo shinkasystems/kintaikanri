@@ -54,6 +54,10 @@ public class User {
 	@Column(name = "ROLE")
 	String role;
 
+	/**  */
+	@Column(name = "ONLY_APPROVED")
+	Boolean onlyApproved;
+
 	/** 
 	 * Returns the id.
 	 * 
@@ -214,5 +218,23 @@ public class User {
 	 */
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	/** 
+	 * Returns the onlyApproved.
+	 * 
+	 * @return the onlyApproved
+	 */
+	public Boolean getOnlyApproved() {
+		return onlyApproved;
+	}
+
+	/** 
+	 * Sets the onlyApproved.
+	 * 
+	 * @param onlyApproved the onlyApproved
+	 */
+	public void setOnlyApproved(Boolean onlyApproved) {
+		this.onlyApproved = onlyApproved;
 	}
 }

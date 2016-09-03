@@ -1,36 +1,70 @@
 <wicket:extend>
 
-<h1>設定</h1>
+	<h1>設定</h1>
 
+	<div wicket:id="infomation-panel">
+		<p>
+			Infomation Panel
+		</p>
+	</div>
 
-<div wicket:id="infomation-panel">
-	<p>Infomation Panel</p>
-</div>
+	<div wicket:id="alert-panel">
+		<p>
+			Alert Panel
+		</p>
+	</div>
 
-<div wicket:id="alert-panel">
-	<p>Alert Panel</p>
-</div>
-
-
-<form id="config-form" class="form-horizontal" wicket:id="config-form">
-	<div class="form-group">
-		<label class="col-sm-2 control-label" for="password">パスワード</label>
-		<div class="col-sm-4">
-			<input type="password" name="password" class="form-control" wicket:id="password">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			パスワード変更
+		</div>
+		<div class="panel-body">
+			<form id="config-form" class="form-horizontal" wicket:id="config-form">
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="password">パスワード</label>
+					<div class="col-sm-4">
+						<input type="password" name="password" class="form-control" wicket:id="password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="password-confirm">パスワード（確認）</label>
+					<div class="col-sm-4">
+						<input type="password" name="password-confirm" class="form-control" wicket:id="password-confirm">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-4">
+						<input type="submit" name="submit" value="パスワード変更" class="btn btn-default">
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
-	<div class="form-group">
-		<label class="col-sm-2 control-label" for="password-confirm">パスワード（確認）</label>
-		<div class="col-sm-4">
-			<input type="password" name="password-confirm" class="form-control" wicket:id="password-confirm">
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-4">
-			<input type="submit" name="submit" value="保存" class="btn btn-default">
-		</div>
-	</div>
-</form>
 
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			その他の設定
+		</div>
+		<div class="panel-body">
+			<form wicket:id="other-form">
+				<div class="form-group">
+					<div class="col-sm-offset-2">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" wicket:id="only_approved">
+								届書一覧を表示したとき承認済みの届書のみを表示する </label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2">
+						<button type="submit" class="btn btn-default">
+							保存
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 
 </wicket:extend>

@@ -46,6 +46,30 @@ public class ConfigService {
 
 			dao.update(user);
 
+			log.info("パスワードを変更しました。" + user);
+
+		});
+	}
+
+	/**
+	 * 指定のユーザーIDのユーザー情報を変更します。
+	 * @param userId
+	 * @param onlyApproved
+	 */
+	public void updateUser(int userId, boolean onlyApproved) {
+
+		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
+
+		transactionManager.required(() -> {
+
+			final UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
+
+			final User user = dao.selectById(userId);
+
+			user.setOnlyApproved(onlyApproved);
+
+			dao.update(user);
+
 			log.info("ユーザー設定を変更しました。" + user);
 
 		});

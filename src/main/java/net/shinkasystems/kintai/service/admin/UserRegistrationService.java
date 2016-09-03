@@ -62,6 +62,7 @@ public class UserRegistrationService {
 			user.setActivated(activated);
 			user.setExpireDate(expiredLocalDate);
 			user.setRole(role);
+			user.setOnlyApproved(false);
 
 			dao.insert(user);
 

@@ -80,7 +80,7 @@ public class Start {
 			return systemDao.selectCountTable();
 		});
 
-		if (numberOfTable == 0) {
+		if (numberOfTable != 0) {
 
 			log.info(KintaiLog.INFOMATION_001.get());
 

@@ -8,6 +8,7 @@ import java.util.List;
 import net.shinkasystems.kintai.KintaiDB;
 import net.shinkasystems.kintai.domain.NotificationStatus;
 import net.shinkasystems.kintai.entity.NotificationDao;
+import net.shinkasystems.kintai.entity.UserDao;
 import net.shinkasystems.kintai.entity.sub.NotificationData;
 import net.shinkasystems.kintai.util.DaoFactory;
 
@@ -79,5 +80,23 @@ public class IndexService implements Serializable {
 					applicantId,
 					status != null ? status.name() : null);
 		});
+	}
+
+	/**
+	 * デフォルト表示時に検索するステータスを返します。
+	 * @param userId ユーザーID
+	 * @return ステータス
+	 */
+	public NotificationStatus getDefaultSelecetedStatus(int userId) {
+
+		TransactionManager transactionManager = KintaiDB.singleton().getTransactionManager();
+
+		return transactionManager.required(() -> {
+
+			final UserDao dao = (UserDao) DaoFactory.createDaoImplements(UserDao.class);
+
+			return dao.selectById(userId).getOnlyApproved() ? NotificationStatus.APPROVED : null;
+		});
+
 	}
 }

@@ -33,11 +33,17 @@ public class NotificationDataProvider extends SortableDataProvider<NotificationD
 	/**
 	 * コンストラクタです。
 	 */
-	public NotificationDataProvider(IndexService indexService) {
-		this(new java.sql.Date(new Date().getTime()), null, null, null, indexService);
+	public NotificationDataProvider(IndexService indexService, int userId) {
+
+		this(new java.sql.Date(
+				new Date().getTime()),
+				null,
+				null,
+				indexService.getDefaultSelecetedStatus(userId),
+				indexService);
 	}
 
-	public NotificationDataProvider(
+	private NotificationDataProvider(
 			java.sql.Date from,
 			java.sql.Date to,
 			Integer applicantId,

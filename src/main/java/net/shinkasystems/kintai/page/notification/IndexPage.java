@@ -6,6 +6,7 @@ import java.util.Date;
 
 import net.shinkasystems.kintai.KintaiConstants;
 import net.shinkasystems.kintai.KintaiRole;
+import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.NotificationDataProvider;
 import net.shinkasystems.kintai.component.StatusChoiceRenderer;
 import net.shinkasystems.kintai.component.UserChoiceRenderer;
@@ -75,7 +76,9 @@ public class IndexPage extends DefaultLayoutPage {
 	/**
 	 * 申請情報一覧のデータプロバイダーです。
 	 */
-	private NotificationDataProvider notificationDataProvider = new NotificationDataProvider(indexService);
+	private NotificationDataProvider notificationDataProvider = new NotificationDataProvider(
+			indexService,
+			((KintaiSession) KintaiSession.get()).getUser().getId());
 
 	/**
 	 * 申請情報一覧です。
