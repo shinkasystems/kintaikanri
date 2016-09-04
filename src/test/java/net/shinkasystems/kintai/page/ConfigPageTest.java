@@ -4,6 +4,7 @@
 package net.shinkasystems.kintai.page;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Locale;
 
@@ -179,7 +180,7 @@ public class ConfigPageTest {
 		IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
 				.build(
 				new File(
-						"src/test/resources/META-INF/net/shinkasystems/kintai/page/USER_PASSWORD_CHANGE_SUCCESS.xml"));
+						"src/test/resources/META-INF/net/shinkasystems/kintai/page/ConfigPageTest/testChangePasswordSuccess.xml"));
 
 		// 実際のDBの値を取得
 		IDataSet actualDataSet = databaseTester.getConnection().createDataSet();
@@ -188,5 +189,137 @@ public class ConfigPageTest {
 		Assert.assertEquals(
 				expectedDataSet.getTable("USER").getValue(0, "password"),
 				actualDataSet.getTable("USER").getValue(0, "password"));
+	}
+
+	/**
+	 * パスワードの必須チェックにかかること。
+	 * @throws Exception 
+	 */
+	@Test
+	public void testChangePasswordRequired() throws Exception {
+
+		// ログイン
+		login();
+
+		// 設定画面
+		wicketTester.startPage(ConfigPage.class);
+
+		FormTester formTester = wicketTester.newFormTester("config-form");
+
+		formTester.submit();
+
+		// 検証
+		wicketTester.assertErrorMessages(new String[] { "'パスワード' 欄 は必須です。", "'パスワード（確認）' 欄 は必須です。" });
+	}
+
+	/**
+	 * パスワードの変更前チェックにかかること。
+	 * @throws Exception 
+	 */
+	@Test
+	public void testChangePasswordDuplicate() throws Exception {
+
+		// ログイン
+		login();
+
+		// 設定画面
+		wicketTester.startPage(ConfigPage.class);
+
+		FormTester formTester = wicketTester.newFormTester("config-form");
+
+		formTester.setValue("password", "password");
+		formTester.setValue("password-confirm", "password");
+
+		formTester.submit();
+
+		// 検証
+		wicketTester.assertErrorMessages(new String[] { "変更前のパスワードと同じです。" });
+	}
+
+	/**
+	 * パスワードのサイズチェックにかかること。
+	 * @throws Exception 
+	 */
+	@Test
+	public void testChangePasswordLength() throws Exception {
+
+		// ログイン
+		login();
+
+		// 設定画面
+		wicketTester.startPage(ConfigPage.class);
+
+		FormTester formTester = wicketTester.newFormTester("config-form");
+
+		formTester.setValue("password", "aaa");
+		formTester.setValue("password-confirm", "aaa");
+
+		formTester.submit();
+
+		// 検証
+		wicketTester.assertErrorMessages(new String[] { "'パスワード' は最低 8 文字必要です。" });
+	}
+
+	/**
+	 * パスワードと確認用パスワードの一致チェックにかかること。
+	 * @throws Exception 
+	 */
+	@Test
+	public void testChangePasswordConfirm() throws Exception {
+
+		// ログイン
+		login();
+
+		// 設定画面
+		wicketTester.startPage(ConfigPage.class);
+
+		FormTester formTester = wicketTester.newFormTester("config-form");
+
+		formTester.setValue("password", "aaaaaaaa");
+		formTester.setValue("password-confirm", "bbbbbbbb");
+
+		formTester.submit();
+
+		// 検証
+		wicketTester.assertErrorMessages(new String[] { "パスワードが一致しません。" });
+	}
+
+	/**
+	 * 「承認のみ表示」が更新されること。
+	 * 更新されたことを通知するメッセージが表示されること。
+	 * 
+	 * @throws Exception 
+	 * @throws SQLException 
+	 */
+	@Test
+	public void testUpdateOnlyApproved() throws SQLException, Exception {
+
+		// ログイン
+		login();
+
+		// 設定画面
+		wicketTester.startPage(ConfigPage.class);
+
+		FormTester formTester = wicketTester.newFormTester("other-form");
+
+		formTester.setValue("only-approved", true);
+
+		formTester.submit();
+
+		// 期待値データを読み込み
+		IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+				.build(
+				new File(
+						"src/test/resources/META-INF/net/shinkasystems/kintai/page/ConfigPageTest/testUpdateOnlyApproved.xml"));
+
+		// 実際のDBの値を取得
+		IDataSet actualDataSet = databaseTester.getConnection().createDataSet();
+
+		// 比較
+		Assert.assertEquals(
+				expectedDataSet.getTable("USER").getValue(0, "only_approved").toString().toUpperCase(),
+				actualDataSet.getTable("USER").getValue(0, "only_approved").toString().toUpperCase());
+
+		wicketTester.assertInfoMessages(new String[] { "設定を更新しました。" });
 	}
 }

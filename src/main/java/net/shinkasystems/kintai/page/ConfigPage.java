@@ -53,8 +53,6 @@ public class ConfigPage extends DefaultLayoutPage {
 		@Override
 		protected void onSubmit() {
 
-			alertPanel.setVisible(false);
-
 			final int userId = ((KintaiSession) KintaiSession.get()).getUser().getId();
 			final String password = passwordTextField.getModelObject();
 
@@ -65,13 +63,16 @@ public class ConfigPage extends DefaultLayoutPage {
 			 */
 			KintaiSession.get().signIn(((KintaiSession) KintaiSession.get()).getUser().getUserName(), password);
 
-			infomationPanel.setMessage(getString("pasword-changed"));
+			info(getString("pasword-changed"));
+			
 			infomationPanel.setVisible(true);
+			alertPanel.setVisible(false);
 		}
 
 		@Override
 		protected void onError() {
 
+			infomationPanel.setVisible(false);
 			alertPanel.setVisible(true);
 		}
 
@@ -95,13 +96,11 @@ public class ConfigPage extends DefaultLayoutPage {
 		@Override
 		protected void onSubmit() {
 
-			alertPanel.setVisible(false);
-
 			final int userId = ((KintaiSession) KintaiSession.get()).getUser().getId();
 			final boolean onlyApproved = onlyApprovedCheckBox.getModelObject();
 
 			configService.updateUser(userId, onlyApproved);
-			
+
 			/*
 			 * セッションのユーザー情報も変更する
 			 */
@@ -110,13 +109,16 @@ public class ConfigPage extends DefaultLayoutPage {
 			/*
 			 * 通知メッセージを表示する
 			 */
-			infomationPanel.setMessage(getString("config-updated"));
+			info(getString("config-updated"));
+
 			infomationPanel.setVisible(true);
+			alertPanel.setVisible(false);
 		}
 
 		@Override
 		protected void onError() {
 
+			infomationPanel.setVisible(false);
 			alertPanel.setVisible(true);
 		}
 
@@ -125,7 +127,7 @@ public class ConfigPage extends DefaultLayoutPage {
 	/**
 	 * 承認済みのみを表示するチェックボックスです。
 	 */
-	private final CheckBox onlyApprovedCheckBox = new CheckBox("only_approved", new Model<Boolean>());
+	private final CheckBox onlyApprovedCheckBox = new CheckBox("only-approved", new Model<Boolean>());
 
 	/**
 	 * 設定ページのサービスです。

@@ -156,8 +156,9 @@ public class UserEditPage extends AdminLayoutPage {
 
 			userEditService.updateUser(userId, password, displayName, emailAddress, authorityId, role);
 
-			infomationPanel.setMessage(getString("update-message"));
+			info(getString("update-message"));
 			infomationPanel.setVisible(true);
+			alertPanel.setVisible(false);
 		}
 
 	};
@@ -173,8 +174,9 @@ public class UserEditPage extends AdminLayoutPage {
 
 			userEditService.activateUser(userIdTextField.getModelObject());
 
-			infomationPanel.setMessage(getString("activate-message"));
+			info(getString("activate-message"));
 			infomationPanel.setVisible(true);
+			alertPanel.setVisible(false);
 			
 			activateButton.setVisible(false);
 			invalidateButton.setVisible(true);
@@ -193,8 +195,9 @@ public class UserEditPage extends AdminLayoutPage {
 
 			userEditService.disableUser(userIdTextField.getModelObject());
 
-			infomationPanel.setMessage(getString("invalidate-message"));
+			info(getString("invalidate-message"));
 			infomationPanel.setVisible(true);
+			alertPanel.setVisible(false);
 
 			activateButton.setVisible(true);
 			invalidateButton.setVisible(false);
@@ -212,8 +215,9 @@ public class UserEditPage extends AdminLayoutPage {
 
 			userEditService.deleteUser(userIdTextField.getModelObject());
 
-			infomationPanel.setMessage(getString("delete-message"));
+			info(getString("delete-message"));
 			infomationPanel.setVisible(true);
+			alertPanel.setVisible(false);
 			
 			updateButton.setVisible(false);
 			activateButton.setVisible(false);

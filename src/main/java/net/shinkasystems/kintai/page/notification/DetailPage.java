@@ -165,7 +165,7 @@ public class DetailPage extends DefaultLayoutPage {
 			 */
 			updatePage(notification, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
 
-			infomationPanel.setMessage(getString("approve-message"));
+			info(getString("approve-message"));
 			infomationPanel.setVisible(true);
 		}
 	};
@@ -206,7 +206,7 @@ public class DetailPage extends DefaultLayoutPage {
 			 */
 			updatePage(notification, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
 
-			infomationPanel.setMessage(getString("reject-message"));
+			info(getString("reject-message"));
 			infomationPanel.setVisible(true);
 
 		}
@@ -248,7 +248,7 @@ public class DetailPage extends DefaultLayoutPage {
 			 */
 			updatePage(notification, applicant, authority, ((KintaiSession) KintaiSession.get()).getUser());
 
-			infomationPanel.setMessage(getString("withdraw-message"));
+			info(getString("withdraw-message"));
 			infomationPanel.setVisible(true);
 		}
 	};

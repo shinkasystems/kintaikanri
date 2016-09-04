@@ -1,35 +1,30 @@
 package net.shinkasystems.kintai.panel;
 
-import org.apache.wicket.markup.html.basic.MultiLineLabel;
+import org.apache.wicket.feedback.ErrorLevelFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 /**
+ * successレベルの情報を表示するパネルです。
  * 
  * @author Aogiri
  *
  */
 public class InfomationPanel extends Panel {
-	
-	private final IModel<String> messageModel = new Model<String>();
-	
-	private final MultiLineLabel messsageLabel;
 
 	/**
-	 * 
-	 * @param id
+	 * コンストラクタです。
+	 * @param id コンポーネントのwicket:id
 	 */
 	public InfomationPanel(String id) {
 		super(id);
 
-		messsageLabel = new MultiLineLabel("info-message", messageModel);
+		final FeedbackPanel feedbackPanel = new FeedbackPanel(
+				"info-feedback",
+				new ErrorLevelFeedbackMessageFilter(FeedbackMessage.INFO));
 
-		add(messsageLabel);
-	}
-
-	public void setMessage(String message) {
-		messageModel.setObject(message);
+		add(feedbackPanel);
 	}
 
 }
