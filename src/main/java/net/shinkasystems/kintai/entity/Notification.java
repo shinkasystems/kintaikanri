@@ -34,6 +34,10 @@ public class Notification {
 	Integer proxyId;
 
 	/**  */
+	@Column(name = "AUTHORITY_ID")
+	Integer authorityId;
+
+	/**  */
 	@Column(name = "TYPE")
 	NotificationType type;
 
@@ -113,6 +117,24 @@ public class Notification {
 	 */
 	public void setProxyId(Integer proxyId) {
 		this.proxyId = proxyId;
+	}
+
+	/** 
+	 * Returns the authorityId.
+	 * 
+	 * @return the authorityId
+	 */
+	public Integer getAuthorityId() {
+		return authorityId;
+	}
+
+	/** 
+	 * Sets the authorityId.
+	 * 
+	 * @param authorityId the authorityId
+	 */
+	public void setAuthorityId(Integer authorityId) {
+		this.authorityId = authorityId;
 	}
 
 	/** 

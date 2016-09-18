@@ -72,14 +72,32 @@ public class EntryPage extends DefaultLayoutPage {
 			/*
 			 * 申請処理
 			 */
-			final Notification notification = new Notification();
+			Integer aplcId = null;
+			Integer prxyId = null;
+			Integer authId = null;
 
 			if (applicantDropDownChoice.getModelObject() != null) {
-				notification.setApplicantId(applicantDropDownChoice.getModelObject().getId());
-				notification.setProxyId(((KintaiSession) KintaiSession.get()).getUser().getId());
+
+				/*
+				 * 代理申請の場合
+				 */
+				aplcId = applicantDropDownChoice.getModelObject().getId();
+				prxyId = ((KintaiSession) KintaiSession.get()).getUser().getId();
+				authId = entryService.getUser(applicantDropDownChoice.getModelObject().getId()).getAuthorityId();
 			} else {
-				notification.setApplicantId(((KintaiSession) KintaiSession.get()).getUser().getId());
+
+				/*
+				 * 代理申請でない場合
+				 */
+				aplcId = ((KintaiSession) KintaiSession.get()).getUser().getId();
+				authId = entryService.getUser(((KintaiSession) KintaiSession.get()).getUser().getId()).getAuthorityId();
 			}
+
+			final Notification notification = new Notification();
+
+			notification.setApplicantId(aplcId);
+			notification.setProxyId(prxyId);
+			notification.setAuthorityId(authId);
 			notification.setType(typeDropDownChoice.getModelObject());
 			notification.setTerm(DateUtils.toLocalDate(termTextField.getModelObject()));
 			notification.setCommentApplycant(commentTextArea.getModelObject());

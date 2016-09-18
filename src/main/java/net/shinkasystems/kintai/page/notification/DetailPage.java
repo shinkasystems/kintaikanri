@@ -276,7 +276,7 @@ public class DetailPage extends DefaultLayoutPage {
 
 		final Notification notification = detailService.getNotification(id);
 		final User applicant = detailService.getUser(notification.getApplicantId());
-		final User authority = detailService.getUser(applicant.getAuthorityId());
+		final User authority = detailService.getUser(notification.getAuthorityId());
 
 		/*
 		 * コンポーネントの編集
