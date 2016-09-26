@@ -104,6 +104,20 @@
 			</ol>
 		</div>
 
+		<input type="checkbox" id="config" class="on-off" />
+		<label for="config">ユーザー設定</label>
+
+		<div>
+			<ol>
+				<li>
+					【承認済みのみを表示する】
+					<img src="/img/config-02.png" class="img-responsive" />
+					チェックを入れると届書一覧を表示したとき承認済みのもののみ表示されます。
+					この設定は検索には反映されません。検索は任意のステータスで行うことが出来ます。
+				</li>
+			</ol>
+		</div>
+
 		<input type="checkbox" id="admin-user" class="on-off" />
 		<label for="admin-user">ユーザーの管理（管理者向け）</label>
 
@@ -121,6 +135,9 @@
 				</li>
 				<li>
 					無効化されたユーザー（退職した社員を想定）はログイン不可となります。
+				</li>
+				<li>
+					決裁者を変更しても申請済みの届書の決裁者は変更されません。
 				</li>
 			</ol>
 		</div>
