@@ -22,7 +22,8 @@ import net.shinkasystems.kintai.service.notification.EntryService;
 import net.shinkasystems.kintai.util.DateUtils;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.extensions.markup.html.form.DateTextField;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -146,8 +147,10 @@ public class EntryPage extends DefaultLayoutPage {
 	/**
 	 * 期日の入力フィールドです。
 	 */
-	private final DateTextField termTextField = new DateTextField("term", new Model<java.util.Date>(),
-			KintaiConstants.DATE_PATTERN);
+	private final DateTextField termTextField = new DateTextField(
+			"term",
+			new Model<java.util.Date>(),
+			new PatternDateConverter(KintaiConstants.DATE_PATTERN, false));
 
 	/**
 	 * 事由等のコメントを入力するテキストエリアです。
