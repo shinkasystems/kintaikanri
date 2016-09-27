@@ -6,6 +6,7 @@ import java.util.List;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.ConfirmSubmitButton;
+import net.shinkasystems.kintai.component.DisplayNameDuplicateValidator;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.RoleChoiceRenderer;
 import net.shinkasystems.kintai.component.RoleOption;
@@ -177,7 +178,7 @@ public class UserEditPage extends AdminLayoutPage {
 			info(getString("activate-message"));
 			infomationPanel.setVisible(true);
 			alertPanel.setVisible(false);
-			
+
 			activateButton.setVisible(false);
 			invalidateButton.setVisible(true);
 		}
@@ -218,7 +219,7 @@ public class UserEditPage extends AdminLayoutPage {
 			info(getString("delete-message"));
 			infomationPanel.setVisible(true);
 			alertPanel.setVisible(false);
-			
+
 			updateButton.setVisible(false);
 			activateButton.setVisible(false);
 			invalidateButton.setVisible(false);
@@ -289,6 +290,8 @@ public class UserEditPage extends AdminLayoutPage {
 		roleChoice.setDefaultModelObject(currentRole);
 		roleChoice.setSuffix("&nbsp;");
 		roleChoice.setEnabled(user.getId() != loginUser.getId());
+
+		displayNameTextField.add(new DisplayNameDuplicateValidator());
 
 		activateButton.setVisible(!user.getActivated());
 		invalidateButton.setVisible(user.getActivated() && user.getId() != loginUser.getId());

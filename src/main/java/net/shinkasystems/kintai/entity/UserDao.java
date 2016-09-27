@@ -55,6 +55,9 @@ public interface UserDao {
 	@Select
 	User selectByUserName(String userName);
 
+	@Select
+	User selectByDisplayName(String displayName);
+
 	/**
 	 * 
 	 * @return
