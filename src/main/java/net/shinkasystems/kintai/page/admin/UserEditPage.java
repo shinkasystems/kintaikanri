@@ -6,7 +6,7 @@ import java.util.List;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.KintaiSession;
 import net.shinkasystems.kintai.component.ConfirmSubmitButton;
-import net.shinkasystems.kintai.component.DisplayNameDuplicateValidator;
+import net.shinkasystems.kintai.component.DisplayNameDuplicateEditValidator;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.RoleChoiceRenderer;
 import net.shinkasystems.kintai.component.RoleOption;
@@ -162,6 +162,16 @@ public class UserEditPage extends AdminLayoutPage {
 			alertPanel.setVisible(false);
 		}
 
+		/* (非 Javadoc)
+		 * @see org.apache.wicket.markup.html.form.Button#onError()
+		 */
+		@Override
+		public void onError() {
+
+			infomationPanel.setVisible(false);
+			alertPanel.setVisible(true);
+		}
+
 	};
 
 	/**
@@ -291,7 +301,7 @@ public class UserEditPage extends AdminLayoutPage {
 		roleChoice.setSuffix("&nbsp;");
 		roleChoice.setEnabled(user.getId() != loginUser.getId());
 
-		displayNameTextField.add(new DisplayNameDuplicateValidator());
+		userProfileForm.add(new DisplayNameDuplicateEditValidator(userIdTextField, displayNameTextField));
 
 		activateButton.setVisible(!user.getActivated());
 		invalidateButton.setVisible(user.getActivated() && user.getId() != loginUser.getId());

@@ -6,7 +6,7 @@ import java.util.List;
 import net.shinkasystems.kintai.KintaiRole;
 import net.shinkasystems.kintai.component.ActivatedChoiceRenderer;
 import net.shinkasystems.kintai.component.ActivatedOption;
-import net.shinkasystems.kintai.component.DisplayNameDuplicateValidator;
+import net.shinkasystems.kintai.component.DisplayNameDuplicateRegisterValidator;
 import net.shinkasystems.kintai.component.PasswordConfirmValidator;
 import net.shinkasystems.kintai.component.RoleChoiceRenderer;
 import net.shinkasystems.kintai.component.RoleOption;
@@ -184,7 +184,7 @@ public class UserRegistrationPage extends AdminLayoutPage {
 		activatedChoice.setSuffix("&nbsp;");
 
 		userNameTextField.add(new UserNameDuplicateValidator());
-		displayNameTextField.add(new DisplayNameDuplicateValidator());
+		displayNameTextField.add(new DisplayNameDuplicateRegisterValidator());
 		userProfileForm.add(new PasswordConfirmValidator(passwordTextField, passwordConfirmTextField));
 
 		/*

@@ -19,7 +19,7 @@ import org.seasar.doma.jdbc.tx.TransactionManager;
  * @author Aogiri
  *
  */
-public class DisplayNameDuplicateValidator implements IValidator<String> {
+public class DisplayNameDuplicateRegisterValidator implements IValidator<String> {
 
 	/* (非 Javadoc)
 	 * @see org.apache.wicket.validation.IValidator#validate(org.apache.wicket.validation.IValidatable)
