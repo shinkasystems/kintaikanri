@@ -5,8 +5,7 @@ package net.shinkasystems.kintai;
 
 import javax.sql.DataSource;
 
-import net.shinkasystems.kintai.entity.NotificationDao;
-import net.shinkasystems.kintai.entity.UserDao;
+import net.shinkasystems.kintai.tool.DatabaseDao;
 import net.shinkasystems.kintai.util.DaoFactory;
 
 import org.seasar.doma.SingletonConfig;
@@ -110,25 +109,6 @@ public enum KintaiDB implements Config {
 	}
 
 	/**
-	 * DB を作成します。
-	 */
-	public static void createDB() {
-
-		singleton().transactionManager.required(() -> {
-
-			{
-				UserDao dao = DaoFactory.createDaoImplements(UserDao.class);
-				dao.createTable();
-			}
-			{
-				NotificationDao dao = DaoFactory.createDaoImplements(NotificationDao.class);
-				dao.createTable();
-			}
-
-		});
-	}
-
-	/**
 	 * KintaiDB の唯一のインスタンスを返します。
 	 * @return KintaiDB
 	 */
@@ -153,5 +133,19 @@ public enum KintaiDB implements Config {
 
 		log.info("JDBC設定モードを *{}* に変更しました。", singleton().toString());
 		;
+	}
+
+	/**
+	 * データベースを作成します。
+	 */
+	public static void createDB() {
+
+		singleton().getTransactionManager().required(() -> {
+			
+			DatabaseDao dao = DaoFactory.createDaoImplements(DatabaseDao.class);
+			
+			dao.user();
+			dao.notification();
+		});
 	}
 }

@@ -2,9 +2,6 @@ package net.shinkasystems.kintai;
 
 import java.util.Optional;
 
-import net.shinkasystems.kintai.entity.UserDao;
-import net.shinkasystems.kintai.util.DaoFactory;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
@@ -55,7 +52,7 @@ public class Start {
 	}
 
 	/**
-	 * DBファイルが存在しない場合、DBファイルを生成します。 テーブルを作成し、スタティックデータ（マスタ）を追加します。
+	 * DB設定を初期化します。
 	 */
 	private static void initDB() {
 
@@ -69,26 +66,6 @@ public class Start {
 			KintaiDB.setMode(KintaiDB.DEPLOYMENT);
 		} else {
 			KintaiDB.setMode(KintaiDB.DEVELOPMENT);
-		}
-
-		/*
-		 * テーブル件数を取得し、0件だった場合、テーブルを再作成する
-		 */
-		int numberOfTable = KintaiDB.singleton().getTransactionManager().required(() -> {
-
-			UserDao systemDao = DaoFactory.createDaoImplements(UserDao.class);
-			return systemDao.selectCountTable();
-		});
-
-		if (numberOfTable != 0) {
-
-			log.info(KintaiLog.INFOMATION_001.get());
-
-		} else {
-
-			log.info(KintaiLog.INFOMATION_002.get());
-
-			KintaiDB.createDB();
 		}
 	}
 }
