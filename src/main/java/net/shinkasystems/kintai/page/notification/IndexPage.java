@@ -91,10 +91,6 @@ public class IndexPage extends DefaultLayoutPage {
 
 			final NotificationData notificationData = item.getModelObject();
 
-			if (notificationData.getCommentApplycant().length() > 20) {
-				notificationData.setCommentApplycant(notificationData.getCommentApplycant().substring(0, 20) + "...");
-			}
-
 			/*
 			 * コンポーネントの生成
 			 */
@@ -102,7 +98,6 @@ public class IndexPage extends DefaultLayoutPage {
 			final Label termLabel = new Label("term",
 					notificationData.getTerm().format(DateTimeFormatter.ISO_LOCAL_DATE));
 			final Label typeLabel = new Label("type", notificationData.getType().display);
-			final Label commentLabel = new Label("comment", notificationData.getCommentApplycant());
 			final Label dateLabel = new Label("date",
 					notificationData.getCreateDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
 			final Label applicantLabel = new Label("applicant", notificationData.getApplicantDisplayName());
@@ -133,7 +128,6 @@ public class IndexPage extends DefaultLayoutPage {
 			item.add(idLabel);
 			item.add(termLabel);
 			item.add(typeLink);
-			item.add(commentLabel);
 			item.add(dateLabel);
 			item.add(applicantLabel);
 			item.add(statusLabel);

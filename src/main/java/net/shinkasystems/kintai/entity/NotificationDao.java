@@ -9,7 +9,6 @@ import net.shinkasystems.kintai.entity.sub.NotificationData;
 import org.seasar.doma.Dao;
 import org.seasar.doma.Delete;
 import org.seasar.doma.Insert;
-import org.seasar.doma.Script;
 import org.seasar.doma.Select;
 import org.seasar.doma.Update;
 import org.seasar.doma.jdbc.SelectOptions;
@@ -19,12 +18,6 @@ import org.seasar.doma.jdbc.SelectOptions;
  */
 @Dao(config = KintaiDB.class)
 public interface NotificationDao {
-
-	/**
-	 * テーブルを作成します。
-	 */
-	@Script
-	void createTable();
 
 	/**
 	 * 
